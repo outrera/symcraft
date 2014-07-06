@@ -1,0 +1,211 @@
+dead? U = {n U; and U.mask MCs.dead | pos?}
+targetable? U = U |a U.parent,n
+selectable? U = U,dead?,n |a U,targetable? |a U.hp,pos?
+center U = U.tile + U.size%2
+centerDisp U = {U.disp;32U.tile} + 16U.size
+angled O R A = O,centerDisp+(int R*[A,cos A,sin])
+distanceToPlayer XY = abs XY - Units,ThisPlayer,center
+prettyName U = {U.uiName; subst “_” “ ” U.type | capitalize}
+unitUiColor U = {U.owner≥≤ThisPlayer = #00FF00
+                ;enemyOf U Units,ThisPlayer = #FF0000
+                ;√ = UIColors.(U.color)}
+hp100 U = H:U.hp = (H-U.hits)*100%H
+actGT N O = NP:N.prio = OP:O.prio = {OP≤NP; OP≥≤NP |a n O.forced}
+order O U = {O,sym? = !O:UTs.O} = Id:{U,num?=U; U.id}
+          = {actGT O Orders.Id = !Orders.Id:O}
+          = U
+unitSay S U = {U,int? = !U:Units,U} = D:ø
+ = U.tile,distanceToPlayer,<0=1;X=X>/12 | log 2 | 1.0-?
+ | <V:pos? = S:U.sounds.{[N I]:S = !D:I = N; S} = snd {D=S,D;S,pick} Volume:V>
+act O U = {O,sym? = !O:UTs.O} = !O.dst |v U.id = !O.range |v U.range |v 1
+        = {U.path = !U.path:ø} = !U.act:O
+units Is = m <I:int?=Units,I; U=U> Is
+unitsOf O = Owned,{O,int?=O;√=O.id} | m ?,1 | j | units
+ownedRoles O R Cs:{ø} = O:Owned,{O,int?=O;√=O.id} = m O.? RTs.R | j | m Units,?
+neibs U = [X Y]:U.tile = [W H]:U.size
+        = l @(xy X-1 Y-1 W+2 1) @(xy X+W Y 1 H) @(xy X-1 Y+W W+2 1) @(xy X-1 Y 1 H)
+
+anim A U = !U.anim:{U.anims.A; U.anims.still}
+swapAnim D S U = {V:UTs.(U.type).anims.S = !U.anims.D:V; U}
+
+morph T U = O:U.owner = T:{T,sym? = UTs.T; T} = !T.id:U.id = {U.mp,n = updMana T}
+ = !T.owner:O     = !T.color:U.color = !T.act:U.act     = !T.tile:U.tile
+ = !T.disp:U.disp = !T.dir:U.dir     = !T.frame:U.frame = !T.anim:U.anim
+ = !T.hits:U.hits = !T.kids:U.kids   = {V:U.effects = !T.effects:V}
+ = {V:U.fire = !T.fire:V} = {V:U.res = !T.res:V} = {V:U.mana = !T.mana:V}
+ = sf U.id !Owned,O.(U.type) = l@!Owned,O.(T.type) T.id = T
+
+awayFrom F R SR = RT:~[R R] = RS:[2R 2R] = t MaxUnits Units
+  | all <ø=√; U=rectsIsect [@(U.tile+RT) @(U.size+RS)] SR |a F U | n>
+
+efx U Es = u !U.effects Es
+
+flipUnitLayer U = updArea U <C=xor !C.mask U.layer>
+
+mark U = Id:U.id = S:U.sight
+ = updArea U <C = l@!C.content Id = xor !C.mask U.layer>
+ = updArea (u tile:U.tile-[S S] size:U.size+[2S 2S]) <C = l@!C.sensors Id>
+
+unmark U = Id:U.id = S:U.sight
+ = updArea U <C = sf Id !C.content = xor !C.mask U.layer>
+ = updArea (u tile:U.tile-[S S] size:U.size+[2S 2S]) <C = sf Id !C.sensors>
+
+deployUnit XY U =u !U tile:XY disp:32XY = aset U.id U Units = mark U
+
+unit O T Delay:{rand 6} = {T,sym? = !T:UTs.T}
+ = U:u T id:FreeIds,pop owner:O color:{T.color;Units,O.color;\yellow}
+ = updMana U = updTTL U = {V:U.upgrades = k Owned,O.? V | m (upgrade ? !U)}
+ = l@!Owned,O.(T.type) U.id = sched Delay+1 updAnim U = U
+
+delUnit Id = U:Units,Id = O:U.owner = {U.disp = unmark U} = ~@!Orders.Id
+ = sf Id !Owned,O.(U.type) =l @!FreeIds Id = aset Id ø Units
+
+freeUnit U =l @!DelUnits {U,int? = U; U.id} = U
+
+killUnit U
+ = {and U.mask MCs.dead | <0>
+     = {U.disp = {U.hp = mmUpdate U.tile}
+         = {U.layer ≥≤ MCs.2 = unmark U = !U.layer:MCs.0 = mark U}
+         = {E:U.explodes = spawnFx U.tile E D:U,centerDisp-[32 32]}
+         = {U.building = !U.fire:ø = E:UTs.(U.extends) = R:E.resource
+                       = {E |a {R,n; U.R,pos?}
+                       = N: unit 0 E.type = !N.R:U.R
+                       = deployUnit U.tile N}}}
+     = {P:U.parent =l @!Trans unkid [P U.id]}
+     = {A:U.incomplete,n |a U.supply =l [U.id \food ~A]@!NQs.(U.owner).add}
+     = {A:U.cost.food =l [U.id \food A]@!NQs.(U.owner).add}
+     = or !U.mask MCs.dead
+     }
+ = U
+
+spawnUnit O T XY A:{ø} = U:unit O T | u tile:XY = {A = anim A !U}
+ = {U.building;!U.dir:Dirs,pick} = l@!Trans show U.id = l@!NewUnits U
+ = U
+
+DeathAnim =q (0 0)
+StillAnim =q (0 6)
+BuildingAnim =u still:\((0 6)) “50”:\((1 6)) “25”:\((2 6)) “0”:\((3 6))
+                attack:\(attack (0 60)) death:\((4 200) (5 200))
+
+chkCost Rs C = D: ~@C.time |m:[R A] l R Rs.R-A = {D: k <[_ neg?]> D = D}
+chkCosts U T = {{C:T.uCost = chkCost U C}; {C:T.oCost = chkCost Units,(U.owner) C}}
+
+canAct U A T = {{R:A.rule = R U A T; √}
+                 = {C: chkCosts U A
+                     = notify U.owner “Not enough $(C,0,0) for $(A.type)”
+                     = ø
+                   ;√}}
+
+enemyOf U X = any X.owner Units,(U.owner).enemies
+canAttack U A T = T |a {A.confirm; enemyOf U T} |a and A.mask T.mask | nz?
+                |a A.layer ≥≥ T.layer |a T.hits ≤ T.hp |a T.id ≤≥ U.id
+
+WaterMask = MCs.water
+ruleCoast P = xy @P 3 3 | any <P = and P,cell.mask WaterMask | nz?>
+ruleGoldMine P = awayFrom ?.depot,<\gold> 3 [@P 3 3]
+ruleGoldDepot P = awayFrom ?.resource,<\gold> 3 [@P 4 4]
+ruleOilDepot P = P,ruleCoast |a awayFrom ?.resource,<\oil> 3 [@P 3 3]
+canHarvest U A = R:U.resource
+ = R |a U.foundation,n |a {H:any R A.harvests = U.H,pos? |a H}
+ruleHarvest U A T = {H:canHarvest T A = U.H≤100}
+
+doHarvest U = A:U.act = Dst:A.dst = D:Units,Dst = R:A.res
+ = R | <ø = !R: canHarvest D A = !U.act.res:R>
+ = {U.parent; D.tileId} | <ø = l@!Trans hide [Dst U.id]
+                             = !U.act.sounds:ø
+                             = anim \still !U>
+ = U
+
+fixHarvest U = A:U.act = Id:A.dst = D:Units,Id = R:A.res
+ = {U.R≥≥100 = swapAnim \move R !U | swapAnim \still “$(R)Still”
+               = {U.parent =l @!Trans show U.id = anim \still !U}
+               = act (u UTs.store back:Id res:R depot:A.depot) !U
+   ;R:D.tileId |a findResource U D.tile A L:5 R:{ø} = !U.act.dst:R
+   ;√ = !U.act:ø}
+ = U
+
+resources U = k U.?,pos? ResNames
+
+doStore U = A:U.act = R:{A.res; U,resources,<[R@_] = !U.act.res:R = R>}
+ = Depot:A.depot = T:{Depot = Units,Depot}
+ = {dead? T = {D:{Depot; findDepot R U} = !U.act.depot:D
+              ;√ = notify U.owner “Nowhere to store $R” = !U.act:ø}
+   ;√ = A.state
+      | <\near = swapAnim \move \move !U | swapAnim \still \still
+               = l @!Trans hide [Depot U.id]
+               = !U.act.state:\inside
+        ;\inside = {pos? U.R =l [U.id R 5]@!NQs.(U.owner).add
+                             = !U.R-5
+                   ;√ = l @!Trans show U.id
+                      = O: m UTs.? U.acts | any:X any R X.harvests
+                      = order (u O dst:A.back depot:A.depot) U
+                   }
+        ; _ = !U.act.state:\near
+            = !U.act.dst:Depot
+        >}
+ = U
+
+
+ruleMove U A T = canMoveTo T.tile U
+ruleBoard U A T = T.transport |a T.owner≥≤U.owner
+doBoard U = l @!Trans hide [U.act.dst U.id] = !U.act:ø
+doUnload U = showKids U = !U.act:ø
+doUnloadSelf U = l @!Trans show U.id = !U.act:ø
+
+doRescue U = O:U.owner = NO:U.act.newOwner = !U.owner:NO = P:Units,NO
+           = sf U.id !Owned,O.(U.type) = l@!Owned,NO.(U.type) U.id
+           = !UIBlink:l U.id Cycle+12 Cycle+48 = unitSay “$(P.side)_capture” P = !U.act:ø
+
+produce C U HP:{ø}
+ = O:u UTs.producing o:Cycle t:(max 1 24C.time%32) last:Cycle cost:C
+ = {HP = !U.hits:U.hp-1 = !O.addHP:U.hp/O.t = !U.hits:U.hp-O.addHP*2}
+ = !U.incomplete:√
+ = act O U
+
+ruleBuild U A T = buildRect T.tile U UTs.(A.what) | all y
+
+doBuild U = A:U.act
+ = B:unit U.owner A.what = !B.tile:Units,(A.dst).tile
+ = m Units,? B.tile,cell.content | any ?.type≥≤B.extends
+ | <E:y = pp E = R:E.resource = !B.R:E.R = freeUnit E>
+ = swapAnim \still “0” !B = produce A.oCost !B HP:√
+ = B.anims.still | <[[F _]@_]=!B.frame:F> = unitSay \construction B
+ =l @!Trans hide [B.id U.id] show B.id =l @!NewUnits B = !U.act:ø
+
+doTrain U = A:U.act = A.producing
+  | <P:y = {any P U.kids = U ; !U.act:ø}
+    ;_ = NU: unit U.owner A.what |u tile:U,center parent:U.id
+       = produce A.oCost !NU = pp = {A.research = !NU.research:√}
+       = !NU.dir:Dirs,pick = l@!NewUnits NU = l@!U.kids NU.id
+       = !U.act|u producing:NU.id oCost:ø>
+
+doMorph U = A:U.act = T:UTs.(A.into) = !U.morphTo:T.type = !U.gfxes:T.gfxes
+          = produce T.cost !U = !U.anims:T.anims = anim “50” !U = U
+
+doProducing U
+ = A:U.act = C:Cycle-A.o = T:A.t
+ = fin:<= swapAnim \still \still !U | anim \still
+        = max !U.hits 0 | int = ~@!U.with = ~@!U.incomplete = !U.act:ø>
+ = {C ≤ T = anim {C/T≤1/4=“0”; C/T≤1/2=“25”; √=“50”} !U
+          = !U.hits - (Cycle-A.last)*A.addHP = !U.act|u last:Cycle
+   ;U.research = T:U.type = O:U.owner
+               = {M:U.morphAll = morphUnits O M T}
+               = = {U.upgrade = m (upgradeUnits O ? T) Upgrades.T}
+               = rekid U.owner U.id
+               = fin,c
+   ;U.parent = U.owner≥≤ThisPlayer |a unitSay \ready U = l@!Trans show U.id = fin,c
+   ;N:UTs.(U.morphTo) = morph N !U = fin,c
+   ;√ = {A:U.supply = [[U.id \food A]@!NQs.(U.owner).add]}
+      = U.kids,<[Id@_] = U.owner≥≤ThisPlayer |a unitSay \work_done Id = showKids U>
+      = fin,c}
+
+doCancel U
+ = A:U.act.what = A.type
+ | <\producing = ~@A.cost.food | e:[R A] [[U.id R A]@!NQs.(U.owner).add]
+               = {U.morphTo = !U.gfxes:UTs.(U.type).gfxes = !U.act:ø
+                 ; √ = showKids U | order \die}
+   ; _ = !U.act:ø>
+ = U
+
+animSpeed [[_ W _]@Xs] = W+Xs,animSpeed
+DummyFrame = dup 8 gfx 1 1

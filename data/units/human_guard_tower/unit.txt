@@ -1,0 +1,13 @@
+pud:96
+uiName:“Guard Tower”
+proto:\building
+size:q 2 2
+hp:130
+sight:7
+damage:q 4 12
+range:6
+acts:q ø stop arrow
+cost:u gold:500 wood:150 time:140
+deps:q elven_lumber_mill
+role:\guard_tower
+anims:u BuildingAnim “25”:«(1 5)» “0”:«(1 5)»

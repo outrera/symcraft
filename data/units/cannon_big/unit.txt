@@ -1,0 +1,4 @@
+proto:\ballista_bolt
+mc:q 2 wall
+impact:\cannon_impact
+anims:u move:«(0 1 8) (1 1 8) (2 1 8) (3 1 8)»

@@ -1,0 +1,9 @@
+pud:64
+uiName:“Watch Tower”
+proto:\building
+size:q 2 2
+hp:100
+sight:7
+cost:u gold:550 wood:200 time:60
+role:\watch_tower
+morphs:q human_guard_tower human_cannon_tower

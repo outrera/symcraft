@@ -1,0 +1,195 @@
+//Class PatternIndex From To @GfxIndices
+ 0 block 0
+ 0 waterL 319 320 320 321   0 322 323 324
+ 0 waterD 325 326 326 327   0 328 329 330
+ 0 mudL   331 332 333   0 334 335 336 337 338 339 334 338
+ 0 mudD   340 341 342   0 343 344 345 346 347 348 343 347
+ 0 plainL 349 350 351   0 352 353 354 355 356 357 358 359 360 361 362 363
+ 0 plainD 364 365 366   0 367 368 369 370 371 372 373 374 375 376 377 378
+ 0 forest 125 135 136
+ 0 rock   160 172 173 174
+33 wallH  16   0  52   0  88
+33 wallO  34   0  70   0  88
+34 wallH  33   0  69   0 101
+34 wallO  51   0  87   0 101
+ 0 block 0
+ 0 block 0
+ 0 block 0
+ 1 waterD 291 292
+ 2 waterD 293 294
+ 3 waterD 295 296 297
+ 4 waterD 298 299
+ 5 waterD 300 301 302
+ 6 waterD 303 304
+ 7 waterD 305 305
+ 8 waterD 306 307
+ 9 waterD 308 309
+10 waterD 310 311 312
+11 waterD 313 313
+12 waterD 314 315 316
+13 waterD 317 317
+14 waterD 318 318
+ 0 block 0
+ 0 block 0
+ 1 waterL 199 200
+ 2 waterL 201 202
+ 3 waterL 203 204 205
+ 4 waterL 206 207
+ 5 waterL 208 209 210
+ 6 waterL 211 211
+ 7 waterL 212 213
+ 8 waterL 214 215
+ 9 waterL 216 216
+10 waterL 217 218 219
+11 waterL 220 221
+12 waterL 222 223 224
+13 waterL 225 226
+14 waterL 227 228
+ 0 block 0
+ 0 block 0
+ 1 mudD 175 176
+ 2 mudD 177 178
+ 3 mudD 179 180 179
+ 4 mudD 181 182
+ 5 mudD 183 184 183
+ 6 mudD 185 186
+ 7 mudD 187 187
+ 8 mudD 188 189
+ 9 mudD 190 191
+10 mudD 192 193 192
+11 mudD 194 194
+12 mudD 195 196 195
+13 mudD 197 197
+14 mudD 198 198
+ 0 block 0
+ 0 block 0
+ 1 rock 145 168
+ 2 rock 137 162
+ 3 rock 159 171
+ 4 rock 142 166
+ 5 rock 144 167
+ 6 rock 149 170
+ 7 rock 146
+ 8 rock 139 164
+ 9 rock 148 169
+10 rock 138 163
+11 rock 147
+12 rock 141 165
+13 rock 143
+14 rock 140
+ 0 block 0
+ 0 block 0
+ 1 mudL 259 260
+ 2 mudL 261 262
+ 3 mudL 263 264 265
+ 4 mudL 266 267
+ 5 mudL 268 269 270
+ 6 mudL 271 272
+ 7 mudL 273 274
+ 8 mudL 275 276
+ 9 mudL 277 278
+10 mudL 279 280 281
+11 mudL 282 283
+12 mudL 284 285 286
+13 mudL 287 288
+14 mudL 289 290
+ 0 block 0
+ 0 block 0
+ 1 plainD 231 232
+ 2 plainD 233 234
+ 3 plainD 235 236 237
+ 4 plainD 238 239
+ 5 plainD 240 241 242
+ 6 plainD 243 244
+ 7 plainD 245 245
+ 8 plainD 246 247
+ 9 plainD 248 249
+10 plainD 250 251 252
+11 plainD 253 253
+12 plainD 254 255 256
+13 plainD 257 257
+14 plainD 258 258
+ 0 block 0
+ 0 block 0
+ 1 forest 110 133
+ 2 forest 102 127
+ 3 forest 124 134
+ 4 forest 107 131
+ 5 forest 109 132
+ 6 forest 114 114
+ 7 forest 111 111
+ 8 forest 104 129
+ 9 forest 113 113
+10 forest 103 128
+11 forest 112 112
+12 forest 106 130
+13 forest 108 108
+14 forest 105 105
+ 0 block 0
+ 0 block 0
+19 wallH 17 17 53 53
+22 wallH 18 18 54 54
+23 wallH 19 19 55 55
+21 wallH 20 20 56 56
+20 wallH 21 22 57 58
+24 wallH 23 23 59 59
+25 wallH 24 24 60 60
+26 wallH 25 25 61 61
+27 wallH 26 26 62 62
+28 wallH 27 28 63 64
+29 wallH 29 29 65 65
+30 wallH 30 30 66 66
+31 wallH 31 31 67 67
+32 wallH 32 32 68 68
+ 0 block 0
+ 0 block 0
+19 wallO 35 35 71 71
+22 wallO 36 36 72 72
+23 wallO 37 37 73 73
+21 wallO 38 38 74 74
+20 wallO 39 40 75 76
+24 wallO 41 41 77 77
+25 wallO 42 42 78 78
+26 wallO 43 43 79 79
+27 wallO 44 44 80 80
+28 wallO 45 46 81 82
+29 wallO 47 47 83 83
+30 wallO 48 48 84 84
+31 wallO 49 49 85 85
+32 wallO 50 50 86 86
+ 0 block 0
+ 0 block 0
+ 0 wallR 89
+ 0 wallR 90
+ 0 wallR 91
+ 0 wallR 92
+ 0 wallR 93 95
+ 0 wallR 94
+ 0 wallR 93
+ 0 wallR 96
+ 0 wallR 97
+ 0 wallR 98 99
+ 0 wallR 98
+ 0 wallR 100
+ 0 wallR 95
+ 0 wallR 99
+ 0 block 0
+ 0 block 0
+15 rock 156
+16 rock 157
+17 rock 158
+18 rock 160
+19 rock 161
+20 rock 162
+21 rock 163
+15 forest 116
+16 forest 118
+17 forest 117
+18 forest 120
+19 forest 121
+20 forest 122
+21 forest 123
+ 0 forestR 126
+ 0 rockR   166
+ 0 wallCR   88
+ 0 wallR   101

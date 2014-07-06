@@ -1,0 +1,11 @@
+layer:5
+mc:q 2 5
+show:\attack
+uCost:u mana:50
+rCost:u gold:500 time:100
+range:6
+effect:q set $<U = u slow:0 haste:1000 | efx U>
+rule:<U A T = T.building,n>
+nonRMB:√
+anims:u move:«(0 1 32)»
+deps:q haste

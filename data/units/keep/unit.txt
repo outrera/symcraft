@@ -1,0 +1,9 @@
+pud:88
+proto:\town_hall
+cost:u gold:2000 wood:1000 oil:200 time:200
+hp:1400
+boostsHarvest:u gold:10
+morphs:q castle
+deps:q human_barracks
+role:\hq2
+anims:u BuildingAnim “25”:«(1 5)» “0”:«(1 5)»

@@ -1,0 +1,7 @@
+// AI build list
+hq1:1 worker:5
+worker:8 barracks:1
+infantry:2 worker:6
+infantry:3 worker:10 shooter:2 lumber_mill:1
+infantry:10 shooter:6
+attack 0 infantry:7 shooter:4

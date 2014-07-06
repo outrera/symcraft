@@ -1,0 +1,20 @@
+pud:32
+proto:\elven_destroyer
+hp:150
+armor:15
+sight:6
+damage:q 100 0
+range:6
+role:\ship2
+acts:q move_ship    stop_ship    cannon_big
+       patrol_naval stand_ground
+cost:u gold:1000 wood:500 oil:1000 time:140
+rCost:u gold:1000 wood:400 oil:800 time:200
+anims:u still:StillAnim
+        attack:«shipAttack $@(dup 46 q 0 5)»
+        move:«(0 2 2) (0 2 2) (0 1 2) (0 2 2)
+              (0 2 2) (0 1 2) (0 2 2) (0 2 2)
+              (0 1 2) (0 2 2) (0 2 2) (0 1 2)
+              (0 2 2) (0 1 2) (0 2 2) (0 1 2)»
+        death:«(1 50) (2 50)»
+deps:q human_foundry

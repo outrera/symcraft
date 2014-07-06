@@ -1,0 +1,5 @@
+shaded: √
+rCost:u gold:800 time:200
+prodName: “Melee Damage +2”
+upgrade:u damage:«0 2»
+deps:q attack2

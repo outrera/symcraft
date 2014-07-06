@@ -1,0 +1,11 @@
+pud:78
+uiName:“Foundry”
+proto:\building
+mc:q water
+hp:750
+cost:u gold:700 wood:400 oil:400 time:175
+deps:q human_shipyard
+rule:(ruleCoast ?)
+role:\foundry
+researches:q cannon2 ship_armor2 ø
+             cannon3 ship_armor3

@@ -1,0 +1,5 @@
+shaded:√
+rCost:u gold:2000 wood:250 oil:3000 time:250
+prodName:“Ship Damage +5”
+upgrade:u damage:«0 5»
+deps:q cannon2 cannon3

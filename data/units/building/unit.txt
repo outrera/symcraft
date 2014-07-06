@@ -1,0 +1,9 @@
+faces:1
+layer:2
+armor:20
+mc:q plain
+building:√
+explodes:\explosion
+size:q 3 3
+anims:BuildingAnim
+

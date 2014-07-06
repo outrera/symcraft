@@ -1,0 +1,327 @@
+nondep? U = {U,dead?; U.act.type,<\producing> |a U.morphTo,n}
+
+needs O Ds = Ds | k <Xs:xs? = all r Xs;  X = s Units,?,nondep? Owned,O.X | n>
+
+filterDeps U Xs R SH = O:U.owner = Xs
+ | m <I:y = X:UTs.I = Ns:X.negs = Ds:X.deps = {R = s I !Ds =l @!Ns I}
+          = {{Ns |a (needs O Ns),len ≤≥ Ns,len; R |a Owned,O.I} = SH
+            ;√ = {needs O Ds|n |a I; X.shaded |a SH}}>
+ | s \s
+
+icons Pref U As F SH:{ø} R:{ø} CF:{<X={X.uCost;X.cost}>} S:{y} PN:{prettyName}
+ = filterDeps U As R SH | m <I:y = A:UTs.I = {F:A.can = F U A |a I; √=I}>
+ | pass S | m:X:y u icon:X tint:U.color onClick:(F X)
+                    onHover:<= T:UTs.X = C: CF T
+                             = box\v [(text “$Pref$(PN T)”)
+                                      @(m [? C.?] ResNames | k ?,1
+                                       |m:[R N] box\h [(pic::skin “res/$R”) “$N”,text])]>
+
+unitAsBuildUI S N U
+ = u icon:\cancel onClick:<= !unitAsUI:unitAsRootUI = !UIAct:ø> onHover:<=text “Cancel”>
+ | l @(icons “Build ” U (cut S N U.builds)
+        <X = <= T:UTs.X = !UIAct:u UTs.build what:X oCost:T.cost asz:T.size>>)
+
+unitAsBasicUI U = l
+  @(icons “ ” U (s UTs.?.hide U.acts) SH:\s S:<As=!CurActs:As>
+     <X=<=A:UTs.X = {A.targets,<\self> = m (order A ?) VP'sel; !UIAct:A}>>)
+  @(icons “Train ” U U.trains SH:\s <X=<=order (u UTs.train what:X oCost:UTs.X.cost) U>>)
+  @(icons “Upgrade to ” U U.morphs <X=<=order (u UTs.morph into:X oCost:UTs.X.cost) U>>)
+  @(icons “Research ” U U.researches R:√ CF:?.rCost PN:<X={X.prodName; X,prettyName}>
+     <X=<=order (u UTs.train what:X oCost:UTs.X.rCost research:√) U>>)
+  @{U.transport = m Units,? U.kids
+                | m:K u icon:    K.type
+                        tint:    U.color
+                        onClick: <=order \unload_self K>
+                        onHover: <=text “Unload”>}
+  @{U.builds =l (u icon:\build_basic
+                   onClick:<=!unitAsUI:(unitAsBuildUI 0 8 ?)>
+                   onHover:<=text “Basic Buildings”>)
+                (u icon:\build_advanced
+                   onClick:<=!unitAsUI:(unitAsBuildUI 8 8 ?)>
+                   onHover:<=text “Advanced Buildings”>)}
+
+unitAsRootUI U =
+  {K:U.kids,<[Id@_] = K:Units,Id = K.act.type,<\producing> |a K> = unitAsRootUI K
+  ;U.act.type,<\producing> =l (u icon:\cancel
+                                 onClick:<=order (u UTs.cancel what:U.act) U>
+                                 onHover:<=text “Cancel”>)
+  ;√ = unitAsBasicUI U}
+
+
+
+Timers = 
+setSkin “$Data/ui/orc”
+
+minimap = M:gfx 128 128 = put:M.put = R:o
+    render:<=o w:<=128> h:<=128>
+               proxy:<X Y G = G.blit X Y M
+                            = MXY:(Units,ThisPlayer.view%32-WMO)*MMD+[X Y]
+                            = MWH:[VP'w+31 VP'h+31]%32*MMD
+                            = G.rect #A0A0A0 @MXY @MWH>>
+    input:<[\mice_left y XY] = VP.centerAt XY%MMD+WMO>
+    update:<P = C:P,cell
+    = {C.tileId≤≥0 = MMP:(P-WMO)*MMD = G:C.gfx
+                   = UC:C.content | m Units,? | k ?.hp≥?.hits | <[@_ U]=U,unitUiColor>
+                   = xy @MMP @MMWH | e:[X Y] put X Y {UC;G'avg}}>
+ = !mmUpdate:R.update = R
+
+unitIcon D = S:ø = W:46 = H:38 = O:ø = LFG:ø = LT:ø = I:(skin “icon/frame”)'copy = R: o
+   draw:<X Y G
+     = [X Y]:{S,<\pressed>=[X Y]+[1 1]; [X Y]} = G.blit X Y I
+     = G.rect F:√ #101010 X Y+H+4 W+5 2 = G.rect F:√ #101010 X+W+4 Y 2 H+4
+     = {O = G.rect #A0A0A0 X-2 Y-2 W+8 H+8}>
+   render:<= o w:<=I'w+1> h:<=I'h+1> proxy:<X Y G = S,<!\disabled = draw X Y G> >>
+   popup:<={F:D.onHover=F,c}>
+   s_data:<ø = !S:\disabled
+          ;V = !D:V = !S:S,<\disabled=\normal;S=S> = N:D.icon = P:Units,ThisPlayer.side
+             = FG:UTs.N.icon.P = T:Tints.(D.tint)
+             = {ptrEq FG LFG |a ptrEq T LT |n = I.blit 2 2 FG P:T = !LT:T = !LFG:FG}>
+   input:<[\mice_over V P] = !O:V
+         ;[\mice_left y P] = S,<\normal = snd “$Sounds/click.wav” = !S:\pressed>
+         ;[\mice_left n P] = S,<\pressed = {O=D'onClick} = !S:\normal>>
+   _prn:<=“unitIcon \\$(D.icon|v “ø”)”>
+ = R.s_data D = R
+
+hpBar [X Y W H] U G C:{ø} BG:{#000000} T:{ø} = P:U,hp100
+  = BL:W*P%100 = C:{C=C; P≤50=#F00000; P≤75=#F0F000; √=#00A000}
+  = BG |a G.rect F:√ BG X Y W H = G.rect F:√ C X+1 Y+1 BL-2 H-2
+  = {T = F:“tiny”,font.on “$(U.hp-U.hits,int)/$(U.hp)” = G.blit X+(W-F'w)%2 Y+1 F}
+
+viewport W H = Paused:√ = Sel:ø = LC:ø = Ack:ø = A:ø = M:[0 0] = G: gfx W H C:3
+             = Visibles:ø = Notes:ø = Speed:20 = o
+  \clickSnd:<U = [[LId C] LT]:LC = T:time,c = {T-LT≥2 |v LId≤≥U.id
+  = AL:U.sounds.annoyed,len
+  = !C: {LId≥≤U.id = mod C+1 3+AL; 0} = !LC:[[U.id C] T]
+  = {U.act.type,<\producing> = \construction
+    ;U.building |a U,hp100≤50 = \burning
+    ;C≥2 =l \annoyed C-3
+    ;√ = \selected}}>
+  \clearClicks:<=!LC:[[ø 0] 0]>
+  notify:<P Text Life:{6} = {P≥≤ThisPlayer = l @!Notes [time,c+Life Text]}>
+  init:<= !Paused:ø = !Notes:ø = !unitAsUI:unitAsRootUI = !Visibles:ø
+        = !Sel:ø = !UIAct:ø = !A:ø = clearClicks,c>
+  w:<=W> h:<=H>
+  \top:<=Units,ThisPlayer.view>
+  \screenToCell:<P=(P+Units,ThisPlayer.view)%32>
+  //popup:<= CC:M,screenToCell=text “[$CC $(CC,cell.edges|E2I.?) $(CC,cell.tileId)]”>
+  cursor:<={UIAct.type,<\build=\none;y=\ch_red>
+           ;A=\cross
+           ;M,selPoint=\glass}>
+  sel:<= [{A;M} M] | <[[AX AY] [BX BY]]
+       = X: min AX BX = Y: min AY BY = W: max AX BX = H: max AY BY
+       = l X Y W-X H-Y>>
+  centerAt:<P = move 32P-[W H]%2>
+  move:<P = TP:Units,ThisPlayer
+          = !TP.view: clip2D [32WM 32WM (WW-WM)*32-W (WH-WM)*32-H] P
+          = !TP.tile: TP.view%32 = !TP.size:l (W+31)%32 (H+31)%32
+          = aset ThisPlayer TP Units>
+  \ack:<T U C:{ø} = {Ack = clearClicks,c = !Ack:ø = unitSay \ack U
+                        = !UIBlink:l T Cycle+12 Cycle+24
+                        = C |a spawnFx C%32 \cross_green D:C}>
+  \lmbOrder:<Act = S:Sel
+  = m Units,? S | e <U
+    = A:{UTs.(U.acts|any UTs.?,prettyName≥≤Act,prettyName); Act}
+    = D:Act.dst = ack D U = order (u A dst:D asz:Act.asz confirm:√) U>
+  = √>
+  \rmbOrder:<XY = S:Sel
+  = T:XY,selPoint = C:XY,screenToCell,cell = m Units,? S | e <U
+    = As: k y U.acts | m UTs.? | s ?.nonRMB | sort by:?.rmbPrio cmp:?≥??
+    = [T C] | <[T@Ts] = {A: T |a any (canAct U ? T) As = [A T]; r Ts}>
+    | <[A T] = I:T.id = !A.dst:I = order A U
+             = ack I U C:{T.tileId = XY+Units,ThisPlayer.view-[16 16]}>>>
+  \selUnits:<F = V:Units,ThisPlayer.view
+    = Visibles | filter <U = S:U.selSize = F [@(U.disp - V+32U.size/2 - S/2) @S] |a U>
+    | k selectable?>
+  \selPoint:<XY = P:XY = selUnits (inRect ? P) | sort by:[?.layer ?.disp,1] | rhd>
+  \unitsAsOne:<Ids = m Units,? Ids
+    | <[U] = U
+      ;[@Us] = Gs: m <U = m UTs.? U.acts> Us | j
+                 | f ø <A B =l @!A.(B,prettyName) B> | k:[G As] As,len≥≤Us,len
+             = As: m UTs.? Us,lhd.acts | k:U Gs.(prettyName U) | m ?.type
+             = U:Us,0 = UTs.nil|u owner:U.owner acts:As color:U.color>>
+  \prodStats:<U = A:U.act = X:Cycle-A.o = T:A.t
+   =l {U.research  =l “Researching:” U
+      ;U.parent    =l “Training:”    U
+      ;M:U.morphTo =l “Upgrading:”   UTs.M}
+      100X%T>
+  \unitStats:<U =
+    {U.act.type,<\producing> = prodStats U
+    ;K:U.kids,<[Id@_] = K:Units,Id = K.act.type,<\producing> |a K> = prodStats K
+    ;√ =l {V:U.armor,pos? = “Armor: $V”}
+          {[B P]:U.damage = “Damage: $(P%2)-$(B+P)”}
+          {V:U.range = “Range: $V”}
+          {V:U.sight = “Sight: $V”}
+          {V:U.building,n |a U.speed = “Speed: $(144%(max 1 V))”}
+          {V:U.supply = “Supply: $V”}
+          {V:U.mp = “Mana: $(U.mana)/$V”}
+          {R:U.resource = “$(capitalize R): $(U.R)”}
+       | s ø | infix “\n”}>
+  \showStats:<U = XY:U.tile = N:U.type = C:U.color
+    = Stats.icon.s_data::u icon:N tint:C onClick:<=VP.centerAt XY>
+    = Stats.name.s_data “$(U,prettyName)\n$(U.id) $(U.tile)”
+    = Stats.hp.s_data <R G = hpBar R U G T:√>
+    = unitStats U | <[T P] = Stats.bar.s_data P = Stats.barText.s_data T,0
+                           = Stats.barIcon.s_data {T = u icon:T,1.type tint:C onClick:<>}
+                           = Stats.s_tab\produce
+                    ; X = Stats.info.s_data X,sym = Stats.s_tab\normal>>
+  update:<= q (left ~1 0) (right 1 0) (up 0 ~1) (down 0 1)
+          | filter:[N@P] {GUI'keys.N=P} | f [0 0] `+` | ?*32+top,c | VP.move
+          = {GUI'keys.delete = rmXY M,screenToCell}
+          //= {Music'playing?; !Music: sideMusic,c | snd Music:√}
+          = dup Speed updUnits,c = k Units,?,selectable? !Sel
+          = {Sel,n = !UIAct:ø = !unitAsUI:unitAsRootUI}
+          = U:Sel,unitsAsOne = U,unitAsUI | pad ~9 ø |i|e:[D J] ActIcons,J.s_data D
+          = {U.hp,pos?=U,showStats; Stats.s_tab\none}
+          = !Ack:√ = √>
+  pause:<=!Paused:√> unpause:<=!Paused:ø> paused?:<=Paused>
+  \drawUnit:<SO TN B G U
+  = [BId BT1 BT2]:UIBlink = Blink:{Cycle≤BT1; Cycle≥BT2 |a Cycle≤BT2+12}
+  = Id:U.id = Col:Tints.(U.color) = D:{dirN U.dir; 0} = UG:U.gfxes.TN,(U.frame),D
+  = [X Y]:U.disp-SO+32U.size/2 = [SW SH]:U.selSize = RX:X-SW/2 = RY:Y-SH/2
+  = {{bfnd Id Sel; Blink |a Id≥≤BId} = G.rect U,unitUiColor RX RY SW SH
+                                     = hpBar [RX RY+SH SW 5] U G
+    ;U.building |a UIAct.type,<\build> = G.rect #F0F0F0 RX RY SW SH}
+  = B X-UG'w%2 Y-UG'h%2 UG P:Col FX:(D≥4 |a U.building,n)
+  = U.effects | filter:[E V:pos?] E |i|e:[E N] B RX+16N RY-16 (skin “efx/$E”)>
+  \drawShadow:<SO B U = UG:UTs.shadow.gfxes.summer,2,0
+  = [X Y]:U.disp-SO+32U.size/2 = B X-UG'w%2 Y-UG'h%2+U.shadow UG>
+  render:<= B:G.blit = TN:Tileset.name
+  = TP:Units,ThisPlayer = Side:TP.side = SO:TP.view
+  = [IX IY]:~(mod SO 32) = [CX CY]:SO%32
+  = CW: ceil (G'w+31)/32 =  CH: ceil (G'h+31)/32
+  = Vs:[] = EX:clip 0 WW CX+CW = EY:clip 0 WH CY+CH
+  = for (Y:CY      PY:IY           ; Y≤EY; !PY+32 !Y+1)
+    for (X:CX+Y*WW PX:IX EX:EX+Y*WW; X≤EX; !PX+32 !X+1)
+    (= C: aget X Cells = {V:C.content =l @!Vs @V} = B PX PY C.gfx)
+  = !Visibles: filter Units,? Vs,uniq | sort by:[?.layer ?.disp,1]
+  = k ?.building Visibles | e:U drawUnit SO TN B G U
+  = k ?.shadow Visibles | e:U drawShadow SO B U
+  = s ?.building Visibles | e:U drawUnit SO TN B G U
+  // debug layers
+  /*= for (Y:CY      PY:IY           ; Y≤EY; !PY+32 !Y+1)
+    for (X:CX+Y*WW PX:IX EX:EX+Y*WW; X≤EX; !PX+32 !X+1) c <
+    = C: aget X Cells
+    = {and C.mask MCs.2 | nz? = B PX PY :: skin “tile/green”}
+    = {and C.mask MCs.5 | nz? = B PX PY :: skin “tile/red”}>*/
+  // FOW
+  /*= for (Y:CY PY:IY; Y≤EY; !PY+32 !Y+1)
+     for (X:CX+Y*WW EX:EX+Y*WW PX:IX; X≤EX; !PX+32 !X+1)
+     {any Units,?.owner≥≤ThisPlayer (aget X Cells).sensors
+     ;B PX PY :: skin “tile/solid”}*/
+  = UIAct.type,<\build = CC:M,screenToCell = U:Sel,unitsAsOne
+    = !Cur:ø = T:UTs.(UIAct.what) = UG:T.gfxes.TN,0,0 = TPT:Tints.(TP.color)
+    = clip2D [0 0 @([WW WH]-T.size)] !CC = [X Y]:32CC-SO
+    = xy 0 0 @T.size | m [? ??] (buildRect CC U T) | e <[V P:[PX PY]]
+      = B X+32PX Y+32PY (UG.cut 32PX 32PY 32 32) P:TPT
+      = B X+32PX Y+32PY {V=skin “tile/green”; skin “tile/red”}>>
+  = {[X Y W H]:sel,c = [W H],abs≥10 |a G.rect #00ff00 X Y W H}
+  = T:time,c = !Notes | k:[X@_] T≤X | t ~5
+  = Notes|i|e:[[_ T] N] G.blit 4 4+14N (“small”,font.on T)
+  = G>
+  input:
+  <[\mice_move _ P] = !M:P
+  ;[\mice_left y XY] = !A:XY
+  ;[\mice_left ø XY] = CC:XY,screenToCell
+     = S:{A,n = Sel
+         ;(abs M-A) ≥≥ 10 = R:sel,c = selUnits (rectsIsect R ?) | s ?.building | m ?.id | sort
+         ;U:XY,selPoint = [U.id]}
+     = {inRect [0 0 W H] XY = D:{S=S,0; CC,cellIndex} = UIAct.type
+          | <ø = !Sel:S = S,<[Id@_] = unitSay Units,Id,clickSnd Id = S>
+            ;\build = T:UTs.(UIAct.what) = U:Sel,<[Id]=Units,Id>
+                    = buildRect CC U T | all y
+                    | <ø = snd “$Sounds/placement_error.wav”
+                         = notify U.owner “Can't build there” = ø
+                      ;_  = snd “$Sounds/placement_success.wav”
+                          = !UIAct.dst:CC,cellIndex = lmbOrder UIAct>
+            ; _ = !UIAct.dst:D = lmbOrder UIAct>
+          | <y = !unitAsUI:unitAsRootUI = !UIAct:ø>
+       ;√ = {A = !unitAsUI:unitAsRootUI}
+          = !Sel:S}
+     = !A:ø
+  ;[\mice_right y XY] = {UIAct=!UIAct:ø; inRect [0 0 W H] XY = rmbOrder XY}>
+
+game Src = loadPud Src = xy @WR | e mmUpdate = TP:Units,ThisPlayer
+ = setSkin “$Data/ui/$(TP.side)” = !Music:ø = !LastHelp:0 = !UIBlink:[ø 0 0]
+ = GameMenu.s_tab\hide = VP'init = VP.move TP.view = !notify:VP.notify
+ = Stats.s_tab\none = Tabs.s_tab\ingame = notify ThisPlayer “Welcome to LispCraft!”
+
+VP = R:viewport 448 448 = timer 1/24 <={R'paused?,n=R'update}=√> = R
+ActIcons = dup 9 unitIcon ø //action icons
+Stats = Icon:unitIcon ø = Name: text “” = HP:canvas 52 7 ø = Info:text “”
+      = B:0,bar = BText:text “” = BIcon:ø,unitIcon
+      = Base:l [1 0 1 Icon] [62 4 1 Name] [0 43 1 HP] = Normal:l @Base [15 62 1 Info]
+      = Produce:l @Base [3 144 1 B] [3+41 144+4 2 (text “% Complete”)] [10 60 2 (box\h::l BText BIcon)]
+ = T:tabs\none::u none:(spacer 1 1) normal:Normal,dlg produce:Produce,dlg
+ = u icon:Icon name:Name hp:HP info:Info bar:B barText:BText barIcon:BIcon tabs:T s_tab:T.s_tab
+
+GameMenu
+ = D:l [0 0 0 (spacer 640 480)]
+       [270 100 0 (pic “panel/dlg1”)]
+       [270+76 100+10 1 (text Size:\medium “Game Menu”)]
+       [270+15 100+40 1
+         (box\v S:8 ::l
+            (box\h S:12 ::l (button W:\small “Save (F11)” S:{\disabled} <>)
+                            (button W:\small “Load (F12)” S:{\disabled} <>))
+            (button “Options (F5)” S:{\disabled} <>)
+            (button “Help (F1)” S:{\disabled} <>)
+            (button “Scenario Objectives” S:{\disabled} <>)
+            (button “End Scenario” <=Tabs.s_tab\main>)
+            (spacer 1 20)
+            (button “Return to Game (Esc)” <= VP'unpause = GameMenu.s_tab\hide>))]
+ = tabs\hide::u hide:(spacer 0 0) show:D,dlg
+
+Ingame = dlg ::l
+   [0 0 3 GameMenu]
+   [0 0 1 (box\h::l (box\v ::l (pic “panel/buttonbg”)
+                               (dlg::l [0 0 0 (pic “panel/minimap”)] [24 2 1 minimap,c])
+                               (pic “panel/info”)
+                               (pic “panel/filler”))
+                    (box\v ::l (pic “panel/top”) VP (pic “panel/bottom”))
+                    (skin “panel/right”))]
+   [24 2 2 (button W:\large H:\small “Menu (F10)” <= VP'pause = GameMenu.s_tab\show>)]
+   [6 166 2 Stats.tabs]
+   [8 340 2 (box\v S:2 (ActIcons | grp 3 | m (box\h S:2 ?)))]
+   @(q gold wood oil | i | m <[N I]
+      = L:text “0” = timer 1/4 <={VP'paused?,n=L.s_data Units,ThisPlayer.N}=√>
+      = [266+I*90 0 2 (box\h S:4 ::l (skin “res/$N”) L)]>)
+
+pudDesc Path = R: u ownr:ø desc:“” 
+ = get Path | <[M:@4.utf8 L:@4.ul D:@L.y @Xs]=[[M D] @Xs,r]>
+ | <[[\TYPE _]@Xs] = Xs | e:[T D] T,<\DESC = !R.desc: t {pos 0 D;32} D | utf8
+                                    ;\OWNR = !R.ownr: D>
+   ;_ = error “Invalid PUD file: $Path”>
+ = R
+
+ScenarioMenu = D:text “” = M:ø = S: button “Start Game” S:{\disabled} <=game M>
+ = dlg ::l
+   [0 0 0 (img “ui/default/image/menu.png”)]
+   [230 220 1 (text Size:\medium “Custom Game Setup”)]
+   [ 40 256 1 (text “Your Race:”)]
+   [ 40 256+16 1 (droplist ::l “Map Default” “Orc” “Human”)]
+   [220 256 1 (text “Resources:”)]
+   [220 256+16 1 (droplist ::l “Map Default” “Low” “Medium” “High”)]
+   [400 256 1 (text “Units:”)]
+   [400 256+16 1 (droplist W:160 ::l “Map Default” “One Peasant only”)]
+   [ 40 306 1 (text “Game Type:”)]
+   [ 40 306+16 1 (droplist ::l “Map Default”)]
+   [220 306 1 (text “Map Tileset:”)]
+   [220 306+16 1 (droplist ::l “Map Default” “Forest” “Winter” “Wasteland” “Swamp”)]
+   [ 14 400 1 (text “Description:”)]
+   [ 32 400+16 1 D]
+   [320 0 1 (fileList “wc2/data/maps”
+               <P = P,pne,2,<\pud = S.s_state\normal = !M:P = D.s_data P,pudDesc.desc
+                            ; _ = S.s_state\disabled = D.s_data “”>>)]
+   [400 370 1 (box\v S:8 ::l S (button “Cancel Game” <=Tabs.s_tab\main>))]
+
+MainMenu = dlg ::l
+  [0 0 0 (img “ui/default/image/menu.png”)]
+  [60 460 1 (text “SymCraft v0.1 by SNV”)]
+  [208 240 1 (box\v S:8 ::l (button “New Campaign” S:{\disabled} <>)
+                            (button “Custom Scenario” <=Tabs.s_tab\scenario>)
+                            (button “Multi Player” S:{\disabled} <>)
+                            (button “Load Game” S:{\disabled} <>)
+                            (button “Map Editor” S:{\disabled} <>)
+                            (button “Exit Program” <=GUI.exit ø>))]
+
+Tabs = tabs \main :: u main:MainMenu scenario:ScenarioMenu ingame:Ingame
+main N = {N = game N} = gui Tabs

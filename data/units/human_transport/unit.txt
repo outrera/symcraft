@@ -1,0 +1,15 @@
+pud:28
+proto:\elven_destroyer
+uiName:“Transport”
+size:q 1 1
+mc:q water
+selSize:q 64 64
+hp:150
+armor:0
+damage:ø
+transport:6
+role:\transport
+acts:q move_ship stop_ship unload
+cost:u gold:600 wood:200 oil:500 time:70
+upgrades:q ship_armor2 ship_armor3
+deps:q human_foundry

@@ -1,0 +1,64 @@
+unitFrames C S File = G:File,img = W:{S=S,0; G'w/C} = H:{S=S,1; W}
+ = G.frames W H | grp C | m <[X] = dup 5 X; X=X> |m:X [@X @(cut 1 3 X),rev]
+loadUnitHlp Path T = say “loadUnit $T” = Base: pne Path | ?,0,(~2)
+ = U: get “$Path/unit.txt” | utf8 | split “\n” | s <(all “ ” ?);ø>
+    |c:[X@Xs Ys:@!?,0,<[“ ”@_]>] l [X@Xs],j @Ys,r
+    | m ?,sexp,<[[A B X]@Xs]=[A B [X@Xs]];X=error “Invalid field: $X”>
+    | [\u @?] | eval
+ = B:U = {UT:U.type = !T:UT; !U.type:T} = Proto:ø = P:U.proto
+ = {P = !Proto: {UTs.P; loadUnit “$Data/units/$P/”}
+      = ~@!U.proto = ~@!Proto.sprite = u Proto !U}
+ = !U.layer: {L:B.layer=MCs.L; Proto.layer; 0}
+ = Faces:{U.faces;5} = {B.size |a B.size≤≥Proto.size = !U.selSize:B.selSize}
+ = ls “$Path/gfxes” | m (d DataFull,len ?)
+ | m [?,pne,1 ?] | sort by:lhd | m1:X unitFrames Faces U.sprite X
+ | <Gs = {Gs = !U.protoGfx:Gs; !Gs:U.protoGfx}
+       = !Gs.default |v [DummyFrame]
+       = Tilesets | e:[N _] {Gs.N; !Gs.N:Gs.default}
+       = !U.gfxes: ~@Gs.default>
+ = IH:{img “$Base/$T/icon.png”; Proto.icon.human}
+ = IO:{img “$Base/$T/icon_orc.png”; IH; Proto.icon.orc}
+ = !U.icon:u human:IH orc:IO
+ = {S:ls “$Path/sounds” | m:D l D,pne,0,rhd D,ls | sort by:lhd = !U.sounds:S}
+ = !U|u dir:Dirs,0 frame:0 mask:(U.mc | m <X:num?=X+5;X=X> | m MCs.? | f (shl U.layer 5) or)
+ = !U.size |v [1 1] = !U.selSize |v 32U.size = !U.sight |v 0
+ = {U.building
+       = Cs:UTs._construction_site.protoGfx = Ds:UTs._destroyed_site.protoGfx
+       = {U.mc,<[\plain]> = !U.gfxes |m:[T Gs] l T [@(t 2 Gs)
+                                                    @{Cs.T;Cs.default}
+                                                    @(t 2 {Ds.T;Ds.default})
+                                                    @(d 2 Gs)]
+         ;√ = !U.gfxes |m:[T Gs] l T [@(t 4 Gs)
+                                      @(d 2 {Ds.T;Ds.default})
+                                      @(d 4 Gs)]}
+       = !U.sounds|u dead:ls,“$Sounds/wreckage”
+                     burning:ls,“$Sounds/burning”
+                     construction:ls,“$Sounds/construction”
+   ;√  = {U.cost |a U.hp = !U.cost.food:1}
+       = {N:U.corpse
+           = C:UTs._corpse = G:C.protoGfx.default = O:U.gfxes.summer,len
+           = {B.anims.death; d ~C.anims.N,len !U.anims.death}
+           = [@!U.anims.death @(C.anims.N|m:[F W] [F+O W])]
+           = !U.gfxes | m1:Gs [@Gs @G]}}
+ = !U.anims.still |v StillAnim = !U.anims.death |v DeathAnim
+ = {S: animSpeed U.anims.move = !U.speed:S}
+ = {U.hp = !U.hits:0 = !U.sounds.selected |v [“$Sounds/click.wav”]
+   ;√ = !U.hp:0
+      = {U.range = {S:U.splash = [E V]:U.effect = !U.effect:[E V%(S+1)]}
+                 = m MCs.? 10,rng | f !U.mask or
+        ;√ = or !U.mask MCs.invuln}}
+ = {P:U.pud=!PudUnits.P:T} = U.upgrades | m:U [@!Upgrades.U T] = !UTs.T:U = l@!RTs.(U.role) T
+ = U
+
+loadUnit Path = T:Path,pne,0,rhd = {UTs.T; loadUnitHlp Path T}
+
+UTs = //unit types
+RTs = //role types
+Upgrades =
+PudUnits =u 95:\player
+
+ls “$Data/units” | e loadUnit
+m1 <U = ~@!U.protoGfx = ~@!U.faces> !UTs
+m1 uniq !Upgrades
+~@!RTs.ø
+o !UTs

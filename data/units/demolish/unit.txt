@@ -1,0 +1,8 @@
+layer:3
+mc:q land 2 wall forest rock
+impact:\explosion
+effect:q hit (0 800)
+range:0
+splash:1
+nonRMB:√
+anims:u move:«(0 1 64)»

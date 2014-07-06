@@ -1,0 +1,9 @@
+pud:80
+proto:\building
+hp:500
+cost:u gold:1000 wood:200 time:125
+trains:q mage
+deps:q castle
+role:\magery
+researches:q          flame_shield slow
+             blizzard invisibility polymorph

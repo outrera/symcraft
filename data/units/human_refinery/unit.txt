@@ -1,0 +1,11 @@
+pud:84
+uiName:“Refinery”
+proto:\building
+mc:q water
+hp:800
+cost:u gold:600 wood:350 oil:200 time:225
+boostsHarvest:u oil:25
+depot:u oil:√
+rule:ruleOilDepot
+role:\refinery
+deps:q human_shipyard

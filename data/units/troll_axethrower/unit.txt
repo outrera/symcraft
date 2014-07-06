@@ -1,0 +1,12 @@
+pud:9
+proto:\elven_archer
+corpse:\orc
+deps:q troll_lumber_mill
+negs:q berserker
+acts:q board move stop axe
+anims:u still:«$@StillAnim rotate»
+        move:«(0 2 3) (1 1 3) (1 2 3) (2 1 2) (2 1 3) (0 1 2)
+              (0 2 3) (3 1 3) (3 2 3) (4 1 2) (4 1 3) (0 1 2)»
+        attack:«(5 3) (6 3) (7 3) attack (8 12) (0 52)»
+        death:«(9 3) (10 3) (11 100)»
+

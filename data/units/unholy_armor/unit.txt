@@ -1,0 +1,5 @@
+proto:\haste
+uCost:u mana:100
+rCost:u gold:2500 time:200
+effect:q set $<U M = u unholy_armor:500 | efx U>
+deps:q unholy_armor

@@ -1,0 +1,4 @@
+proto: \attack
+layer: 5
+mc:q 2 5 wall
+anims:u move:«(0 2 11) (0 2 10) (0 2 11)»

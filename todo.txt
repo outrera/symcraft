@@ -1,0 +1,99 @@
+TODO:
+- AI
+- accessing viewport coords through Units,ThisPlayer.view is too ugly
+  viewport should manage this itself
+- caches items should have `last_access_time` attrib, which will be used to purge unused items
+- hq2 should also play the role of hq1, same for watch tower
+- `order (u U,attackAct dst:E) U` looks ugly: change it to `order U :: u U,attackAct dst:E`
+- if unit can't attack nearby enemy, ungroup it
+- rename chkCosts to chkActCost
+- if unit wastes to much pathfinding time - disable it
+- 128x128x1024 emission map takes just 16777216 bytes and could update in parallel, with updater in CL. unused bit could be used to determine the cell which itself emits that scent. consider dividing map into square zones, each of which would emit it's own scent
+- each unit should emit two scents: one direct - air, another is simpler land scent
+- `neibs` should have precomputed cell indices
+- instead of special background, draw menu on top of attract map
+- instead of Cell.type, use usual type from units
+- trained/ejected units popup too far from start
+- town hall doesn't work as a wood depot, when lumber mill is close but blocked
+- guardians shouldn't pursue flyers
+- player units shouldn't pursue at all, unless provoked
+- attacked idle unit should counter attack immediately
+- AI units should have pursues range
+- when `act` or `mc` definitions aint present, unit using it crashes
+- (= C:aget I Cells = s Id !C.sensors = aset I C Cells) could be changed to updCell macro
+- morph could be parametrized to read preservable fields from list
+- cursors could be loaded through auto-cache, without Cursors maps
+- cannon tower shouldn't attack flyers
+- add minimum attack range
+- instead of separate `Acts`, `Trains`, `Researches`, do single Acts
+- projectile moving inside cell, temporarily changes it's mask, due to "invuln" attribute
+- fix projectile precission and splash damage
+- move build oil platform on top
+- fix orders: hotkeys; give orders from the closest to farthest unit, relative to target
+- fix minimap for non-power-of-two maps
+- right-clicking on minimap should give unit order
+- move tilesets into separate files, also move critter decls there
+- updUnit should be macro
+- morphUnit should also handle cells
+- increase level with each upgrade and add change icons.
+- moving unit should update its kids xy
+- prerender BG with buildings and redraw it only when it changes, this means
+  that selection rect should go above, like in original, update animations only
+  for on-screen or acting units
+- add rectangular zones, that would also be units. And pathfinding should work
+  on units, not points
+- it would be nice for acts to provide area size for updateAct
+- precentComplete function in both view.sym and doProduce
+- "unload all" for transport
+- merge all tilesets into one
+- harvest boosts
+- save/load
+- ui menus
+- map editor
+- wobbling anim for flyers and naval
+- color cycling
+- unit rescue/capture
+- score should be calculated as: score=(gold+2wood)/10
+- campaign briefings
+- space-bar pause, groups
+- followPath duplicates mark/unmark work
+- follow, patrol, attack ground and other misc acts
+- cells should have precalculated neighbors, this way we could use cells near
+  Dark Portal for teleportation
+- unit should go to layer 0 only after a few second after death, so flying
+  unit's animation wont be shaded by building
+- dead units shouldn't be draw on world map
+- forest cells should be update instantly
+- fix extended rock/forest tiles for winter/swamp/wasteland tile sets
+- implement unload all, invisibility and submarine stealth, holy vision
+- implement patrol, stand ground, attack ground
+- fix unit speeds
+- U.disp should be preset to centerDisp
+- splash weapon shouldn't damage friendly units
+- cannon tower and catapult shouldn't attack nearby units
+
+
+Design ideas:
+ - should weapon be of just two types: land and air?
+ - consider large units moving on special large grid
+ - consider large units as a number of 1x1 units
+ - in multilayered map, Unit.layer can be calculated directly from Unit's cell and action types should restrict movement between layers
+ - pathfinding algorithm, where target produces scent, which could be followed by units
+ - pathfinding can go from both ends
+ - instead of gui, use overlays, which will move away from cursor
+ - melee units should block enemy melee units, so that they could only retreat and can attack archers
+ - add hills and heights bonuses
+ - destroyable bridges and othe map blocks, like fire/stone wall spells
+ - make exorcism a direct damage spell against magic users, for which mana acts
+   as shield
+ - add flying islands
+ - combine all campaign maps into one, use time limit to balance
+ - mud should slow-down movement
+ - mud-to-water, water-to-mud spells, as well as mud-to-rock and rock-to-mud
+   spells
+ - kill land units, which are stuck in water
+ - forest fires
+
+
+/*  When an attack is made, the game randomly decides whether it will deal half or full damage. The target's Armor is then subtracted from the (half or full) Basic value, with a minimum result of zero; the (half or full) Piercing value is then added to the result to get the target's HP loss from the attack. The Low and High attack values shown in a unit's infobox within the game are calculated using the above formula, with the Low value assuming a half damage attack against a target Armor of 15, and the High value a full damage attack against no Armor.
+*/

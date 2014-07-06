@@ -1,0 +1,7 @@
+pud:100
+proto:\building
+layer:1
+mc:q invuln
+size:q 2 2
+hp:25500
+

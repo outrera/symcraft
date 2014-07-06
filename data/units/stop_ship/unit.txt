@@ -1,0 +1,4 @@
+grp:\s
+targets:\self
+nonRMB:√
+do:doCancel

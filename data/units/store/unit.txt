@@ -1,0 +1,4 @@
+targets:\self
+nonRMB:√
+do:(doStore ?)
+can:<U A = resources U>

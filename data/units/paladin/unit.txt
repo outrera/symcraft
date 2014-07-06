@@ -1,0 +1,13 @@
+pud:12
+proto:\knight
+shaded:√
+mana:85
+mp:255
+rCost:u gold:1000 time:250
+acts:q board
+       move        stop          attack
+       patrol      stand_ground  ø
+       holy_vision healing       exorcism
+deps:q human_blacksmith stables paladin
+negs:q nil
+morphAll:\knight
