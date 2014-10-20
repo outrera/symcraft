@@ -1,5 +1,0 @@
-proto:\attack
-layer: 3
-mc:q water
-impact:\explosion
-anims:u move:«(0 2 11) (0 2 10) (0 2 11)»

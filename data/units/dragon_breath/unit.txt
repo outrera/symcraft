@@ -1,3 +1,0 @@
-proto:\gryphon_hammer
-anims:u move:«(0 2 11) (0 2 10) (0 2 11)»
-

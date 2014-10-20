@@ -1,7 +1,0 @@
-pud:70
-proto:\building
-hp:500
-cost:u gold:1000 wood:400 time:150
-role:\aviary
-trains:q gryphon_rider
-deps:q castle

@@ -1,4 +1,0 @@
-pud:75
-proto:\town_hall
-trains:q peon
-morphs:q stronghold

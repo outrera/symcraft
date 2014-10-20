@@ -1,3 +1,0 @@
-proto:\harvest
-uiName:“Haul Oil”
-harvests:q oil

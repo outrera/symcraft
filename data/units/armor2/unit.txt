@@ -1,6 +1,0 @@
-shaded: √
-rCost: u gold:300 wood:300 time:200
-prodName: “Armor +2”
-upgrade:u armor:2
-deps:q armor2
-negs:q armor3

@@ -1,5 +1,0 @@
-shaded:√
-rCost:u gold:300 wood:300 time:200
-prodName:“Ranged Damage +1”
-upgrade:u damage:«0 1»
-deps:q ranged2

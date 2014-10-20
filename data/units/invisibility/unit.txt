@@ -1,5 +1,0 @@
-proto:\haste
-uCost:u mana:125
-rCost:u gold:2500 time:200
-effect:q set $<U M = u invisibility:2000 | efx U>
-deps:q invisibility

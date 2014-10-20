@@ -1,4 +1,0 @@
-pud:69
-proto:\gnomish_inventor
-trains:q goblin_zeppelin goblin_sappers
-deps:q (stronghold fortress)

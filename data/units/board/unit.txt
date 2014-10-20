@@ -1,4 +1,0 @@
-range:1
-hide:√
-rule:(ruleBoard ? ?? ???)
-do:doBoard

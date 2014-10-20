@@ -1,4 +1,0 @@
-uiName:“Move”
-grp:\m
-range:0
-rule:ruleMove

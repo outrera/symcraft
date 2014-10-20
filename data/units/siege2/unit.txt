@@ -1,6 +1,0 @@
-shaded:√
-rCost:u gold:1500 time:200
-prodName:“Siege Damage +15”
-upgrade:u damage:«0 15»
-deps:q siege2
-negs:q nil

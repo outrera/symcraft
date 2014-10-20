@@ -1,9 +1,0 @@
-proto:\haste
-faces:1
-uCost:u mana:6
-rCost:u gold:1000 time:200
-effect:q heal 1
-rule:<U A T = T.organic>
-anims:u move:«(0 1 16) (0 1 16)»
-        death:«(1 3) (2 3) (3 3) (4 3) (5 3) (6 3)»
-deps:q healing paladin

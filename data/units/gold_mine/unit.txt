@@ -1,7 +1,0 @@
-pud:92
-proto:\building
-hp:25500
-resource:\gold
-gold:30000
-rule:ruleGoldMine
-anims:u BuildingAnim working:«(1 5)»

@@ -1,4 +1,0 @@
-proto:\haste
-range:10
-effect:q set $<U M = u slow:1000 haste:0 | efx U>
-deps:q slow

@@ -1,8 +1,0 @@
-pud:94
-layer:0
-faces:1
-gold:0
-wood:0
-oil:0
-food:0
-anims:u still:«(0 24)»

@@ -1,5 +1,0 @@
-shaded:√
-rCost:u gold:1500 wood:900 time:250
-prodName:“Ship Armor +5”
-upgrade:u armor:5
-deps:q ship_armor2 ship_armor3

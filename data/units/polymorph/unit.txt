@@ -1,9 +1,0 @@
-proto:\haste
-impact:\spell
-uCost:u mana:200
-rCost:u gold:2000 time:200
-range:10
-effect:q set $<X M = morph \sheep X>
-rule:<U A T = T.organic>
-deps:q polymorph
-anims:u move:«(0 1 16) (0 1 16)»
