@@ -1,0 +1,34 @@
+MCs = C: q water land plain air forest wall rock dead invuln 0 1 2 3 4 5 6 7 8 9 10
+    = m [? 2^??] C,sort C,len,rng // movement classes bits
+TTypes =u // tile types
+ block:  (u base:ø       mc:ø)
+ plainL: (u base:\block  mc:\(air land plain))
+ plainD: (u base:\plainL mc:\(air land plain)) 
+ forest: (u base:\plainL mc:\(air forest) rm:\forestR hp:1 wood:100 resource:\wood)
+ mudL:   (u base:\plainL mc:\(air land))
+ mudD:   (u base:\mudL   mc:\(air land))
+ waterL: (u base:\mudL   mc:\(air water))
+ waterD: (u base:\waterL mc:\(air water))
+ rock:   (u base:\mudL   mc:\(air rock) rm:\rockR  hp:1)
+ wallH:  (u base:\plainL mc:\(air wall) rm:\wallR  hp:100 armor:20)
+ wallO:  (u base:\plainL mc:\(air wall) rm:\wallR  hp:100 armor:20)
+ wallCH: (u base:\plainL mc:\(air wall) rm:\wallCR hp:100 armor:20)
+ wallCO: (u base:\plainL mc:\(air wall) rm:\wallCR hp:100 armor:20)
+ rockR:  (u base:\plainL mc:\(air land) rm:ø)
+ forestR:(u base:\block  mc:\(air land plain) rm:ø)
+ wallR:  (u base:\block  mc:\(air land) rm:ø)
+ wallCR: (u base:\block  mc:\(air land) rm:ø)
+
+foldEdges X = i X | m:[V I] shl (undigits 2 V) 3I | f 0 or
+calcEdges X = T: transpose X = l X,0 T,2 X,2 T,0 | foldEdges | or (shl X,1,1 12)
+E2I = cfg “$Data/cfg/grid.txt” | grp 3 | m calcEdges | i | sort by:lhd
+I2E = E2I | m rev | sort by:lhd
+
+loadTileset P = N:0 = Tr:ø = F: frames 32 32 “$(d DataFull,len P)gfx.png”
+ = Ts:vec 4096 = cfg “$P/tiles.txt” | e <[K A @Gs] = !Tr.[K A]:N = T:TTypes.A
+   = u !T owner:0 size:[1 1] type:A mask:(m MCs.? T.mc | f {T.hp=0; MCs.dead} or)
+   = i Gs | e:[G I] aset N+I (u T tileId:N+I edges:I2E.K gfxId:G gfx:F,G) Ts
+   = !N+16>
+ = u name:P,pne,lhd,rhd tiles:Ts trns:Tr
+
+Tilesets = ls “$Data/tiles” | m loadTileset | m [?.name ?] | sort by:lhd
