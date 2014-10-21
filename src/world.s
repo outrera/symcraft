@@ -29,6 +29,8 @@ type world{Main}
 | $main.world <= Me
 
 world.cell_id P = $w*P.1 + P.0
+world.get X Y = $units.($w*Y + X)
+world.`.` P = $units.($w*P.1 + P.0)
 
 world.init_minimap =
 | [MW MH] = [$minimap.w $minimap.h]
