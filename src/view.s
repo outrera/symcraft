@@ -110,19 +110,24 @@ view.selection_rect =
 | H = max AY BY
 | [X Y W-X H-Y]
 
+view.pick_cursor =
+| $cursor <= skin_cursor if $anchor then \cross
+                         else if $mice_to_cell{$mice_xy}.content then \glass
+                         else \point
+
 view.input @In = case In
   [mice_move _ XY]
     | $mice_xy.init{XY}
-    | CC = $mice_to_cell{$mice_xy}
-    | less $anchor: $cursor <= skin_cursor if CC.content then \glass else \point
-  [mice left 1 XY] | $anchor <= XY
-                   | $cursor <= skin_cursor cross
+    | $pick_cursor 
+  [mice left 1 XY]
+    | $anchor <= XY
+    | $pick_cursor 
   [mice left 0 XY]
     | $mice_xy.init{XY}
     | CC = $mice_to_cell{$mice_xy}
     | S = $input_select{$anchor $mice_xy}
     | $anchor <= 0
-    | $cursor <= skin_cursor point
+    | $pick_cursor 
   [key up    1] | !$player_view.1 - 64
   [key down  1] | !$player_view.1 + 64
   [key right 1] | !$player_view.0 + 64
