@@ -1,4 +1,4 @@
-// each tile has 16 variations; unused tiles and variations are set to ø.
+// each tile has 16 variations
 // tiles take following forms:
 1 1 1
 1 1 1 // 0

@@ -37,6 +37,10 @@ cell.as_text = "#cell{[$type] [$tileId]}"
 
 type tileset{Name Tiles Trns} name/Name tiles/Tiles trns/Trns
 
+avg_tile P G = 
+| N = 8
+| @u4 dup{N P.(G.get{31.rand 31.rand})}.fold{[0 0 0 0] ?+??.u4}/N
+
 loadTileset P =
 | TilesetGfx = "[P]gfx.png"^gfx
 | Palette = TilesetGfx.cmap
@@ -65,7 +69,7 @@ loadTileset P =
     | C.resource <= T.resource
     | C.gold <= T.gold
     | C.wood <= T.wood
-    | C.mm_color <= Palette.(C.gfx.get{15 15})
+    | C.mm_color <= avg_tile Palette C.gfx //Palette.(C.gfx.get{14 14})
     | Ts.(N+I) <= C
   | !N+16
 | tileset P.lead.url.1 Ts Tr
