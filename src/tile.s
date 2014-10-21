@@ -37,9 +37,10 @@ cell.as_text = "#cell{[$type] [$tileId]}"
 
 type tileset{Name Tiles Trns} name/Name tiles/Tiles trns/Trns
 
+AvgSamples = [[23 11] [26 2] [19 15] [8 20] [21 16] [27 15] [27 5] [16 12]]
+
 avg_tile P G = 
-| N = 8
-| @u4 dup{N P.(G.get{31.rand 31.rand})}.fold{[0 0 0 0] ?+??.u4}/N
+| @u4 AvgSamples{[X Y]=>P.(G.get{X Y})}.fold{[0 0 0 0] ?+??.u4}/AvgSamples.size
 
 loadTileset P =
 | TilesetGfx = "[P]gfx.png"^gfx

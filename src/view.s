@@ -11,13 +11,14 @@ view.notify Player Text life/6.0 =
   | $notes <= [@$notes [(clock)+Life Text]]
 
 view.draw_unit U =
-| Cycle = $world.cycle
-| when U.last_drawn >< Cycle: leave 0
-| U.last_drawn <= Cycle
+| Fr = $frame
+| when U.last_drawn >< Fr: leave 0
+| U.last_drawn <= Fr
 | G = $g
 | TN = $world.tileset_name
 | SO = $world.this_player.view
 | [BId BT1 BT2] = $sel_blink
+| Cycle = $world.cycle
 | Blink = Cycle < BT1 or (Cycle > BT2 and Cycle < BT2 + 12)
 | Id = U.id
 | Col = $world.tints.(U.color)
@@ -80,7 +81,8 @@ view.render =
 | Vs = Vs.sort{[?layer ?disp.1] < [??layer ??disp.1]}
 | for X Vs.keep{?building}: $draw_unit{X}
 | for X Vs.skip{?building}: $draw_unit{X}
-| !$world.cycle + 1
+| !$frame + 1
+| get_gui{}.focus_widget <= Me //ensure we always have keyboard focus
 | G
 
 view.input @In = case In
@@ -90,7 +92,7 @@ view.input @In = case In
   [key left 1 _] | !$player_view.0 - 32
   [key Name S XY] | $keys.Name <= S
 
-view.pause =
-view.unpause =
+view.pause = $paused <= 1
+view.unpause = $paused <= 0
 
 export view
