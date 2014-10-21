@@ -1,11 +1,14 @@
 use gui util
 
-type view.widget{W H M} w/W h/H main/M paused/1 sel/[] last_click/[]
-                        ack a m/[0 0] g visible notes speed/20 frame
-                        sel_blink/[0 0 0] keys/(t)
+type view.widget{W H M} g w/W h/H main/M paused/1 sel/[] last_click/[]
+                        ack a visible notes speed/20 frame
+                        sel_blink/[0 0 0] keys/(t) mice_xy/[0 0] anchor
 | $g <= gfx W H
+
 view.world = $main.world
+
 view.clear_clicks = $last_click <= [[Void 0] 0]
+
 view.notify Player Text life/6.0 =
 | when Player >< $world.this_player
   | $notes <= [@$notes [(clock)+Life Text]]
@@ -81,16 +84,45 @@ view.render =
 | Vs = Vs.sort{[?layer ?disp.1] < [??layer ??disp.1]}
 | for X Vs.keep{?building}: $draw_unit{X}
 | for X Vs.skip{?building}: $draw_unit{X}
+| when $anchor
+  | [X Y W H] = $selection_rect
+  | when [W H].abs >> 10.0: G.rect{#00ff00 0 X Y W H}
 | !$frame + 1
 | get_gui{}.focus_widget <= Me //ensure we always have keyboard focus
 | G
 
+view.mice_to_cell XY =
+| [X Y] = ($player_view+XY)/32
+| [X.clip{0 $world.w} Y.clip{0 $world.h}]
+
+view.input_select A B =
+| Void /*if not $anchor then //$sel
+          else if (A-B).abs >> 10.0
+            then | R = //select
+                 | selUnits*/
+
+view.selection_rect =
+| [AX AY] = if $anchor then $anchor else $mice_xy
+| [BX BY] = $mice_xy
+| X = min AX BX
+| Y = min AY BY
+| W = max AX BX
+| H = max AY BY
+| [X Y W-X H-Y]
+
 view.input @In = case In
-  [key up 1 _] | !$player_view.1 - 32
-  [key down 1 _] | !$player_view.1 + 32
-  [key right 1 _] | !$player_view.0 + 32
-  [key left 1 _] | !$player_view.0 - 32
-  [key Name S XY] | $keys.Name <= S
+  [mice_move _ XY] | $mice_xy.init{XY}
+  [mice left 1 XY] | $anchor <= XY
+  [mice left 0 XY]
+    | $mice_xy.init{XY}
+    | CC = $mice_to_cell{$mice_xy}
+    | S = $input_select{$anchor $mice_xy}
+    | $anchor <= 0
+  [key up    1] | !$player_view.1 - 64
+  [key down  1] | !$player_view.1 + 64
+  [key right 1] | !$player_view.0 + 64
+  [key left  1] | !$player_view.0 - 64
+  [key Name  S] | $keys.Name <= S
 
 view.pause = $paused <= 1
 view.unpause = $paused <= 0
