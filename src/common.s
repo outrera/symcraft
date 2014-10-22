@@ -92,6 +92,7 @@ main.load_type_hlp Path T =
 | have U: utype
 | U.id <= T
 | Corpse = 0
+| TypeName = Void
 | for X Xs: case X
   [anims @Xs] | U.anims <= Xs.group{2}{[?0 ?1.1]}.table
   [cost @V] | U.cost <= cost_from_list V^normalize_cost
@@ -102,13 +103,15 @@ main.load_type_hlp Path T =
   [corpse V] | Corpse <= V
   [layer O] | U.layer <= MCs.O
   [proto PT] |
+  [typename N] | TypeName <= N
   [K @As] | S = $unitSetters.K
           | when no S: bad "load_type{[T]}: uknown field [K] for [Path]"
           | if got ListFields.K then S U As
             else | when As.size <> 1: "load_type{[T]}: bad field [K] for [Path]"
                  | S U As.0
   Else | bad "load_type{[T]}: bad entry [X] for [Path]"
-| have U.typename T.split{_}{?title}.text{' '}
+| have TypeName T.split{_}{?title}.text{' '}
+| U.typename <= TypeName
 | less U.anims: U.anims <= t
 | less U.cost: U.cost <= cost
 | SpriteOverride = 0
@@ -121,7 +124,8 @@ main.load_type_hlp Path T =
 | have U.sprite: DummySprite
 | MC = U.move_class{}{|X<1.is_int=>X+5; X=>X}{MCs.?}
 | U.mask <= MC.fold{U.layer.shl{5} (@ior ? ??)}
-| have U.selection: U.size*2
+| when U.building: U.selection <= U.size*32
+| have U.selection: U.size*32
 | when@exists!it "[Path]icon.png": U.icon.human <= gfx it
 | U.icon.orc <= U.icon.human
 | when@exists!it "[Path]icon_orc.png": U.icon.orc <= gfx it

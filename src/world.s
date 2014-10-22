@@ -1,12 +1,4 @@
-use util gfx
-
-type unit
-    id type xy disp owner color team name side hits mana
-    frame dir/Dirs.0 resources/(t size/6)
-    enemies nobody playable rescueable passive view
-    world content_next sensor_next last_drawn/-1 mm_color
-heir unit $type
-unit.as_text = "#unit{[$type.id]}"
+use util gfx unit
 
 type world{Main}
    main/Main w h rect owned/(dup 32 []) units cycle scheds vs vs_i
@@ -81,20 +73,6 @@ world.new O T delay/6.rand =
 world.upd_area Rect F =
 | for [X Y] Rect.xy: when [X Y].in{$rect}: F $units.(Y*$w + X)
 
-unit.mark =
-| S = $sight
-| $world.upd_area{[@$xy @$size]
-  | C => | $content_next <= C.content
-         | C.content <= Me
-         | @xor !C.mask $layer}
-| $world.upd_area{[@($xy-[S S]) @($size+[2*S 2*S])]
-  | C => | $sensor_next <= C.sensors
-         | C.sensors <= Me}
-
-unit.deploy P =
-| $xy <= P
-| $disp <= P*32
-| $mark
 
 PudTilesets = [summer winter wasteland swamp]
 PudTeams = t nobody(0) neutral(0) capturable(0) computer(1) person(2) rescueable(2)

@@ -1,8 +1,9 @@
 use gui util widgets
 
 type view.widget{W H M} g w/W h/H main/M paused/1 sel/[] last_click/[]
-                        ack a visible notes speed/20 frame cursor
+                        ack a visible notes speed/20 frame cursor selection
                         sel_blink/[0 0 0] keys/(t) mice_xy/[0 0] anchor
+                        units/0
 | $g <= gfx W H
 
 view.world = $main.world
@@ -31,7 +32,9 @@ view.draw_unit U =
 | [SW SH] = U.selection
 | RX = X - SW/2
 | RY = Y - SH/2
+| when not U.building and U.last_selected >< Fr: G.rect{#00ff00 0 RX RY SW SH}
 | G.blit{[X-UG.w/2 Y-UG.h/2] UG map(Col) flipX(D > 4 and not U.building)}
+| when U.building and U.last_selected >< Fr: G.rect{#00ff00 0 RX RY SW SH}
 
 view.normalize_view =
 | SO = $world.this_player.view
@@ -80,12 +83,14 @@ view.render =
     | !X + 1
   | !PY + 32
   | !Y + 1
-| Vs = Vs{@r$[] V<-&0 => [V @V.content_next^r]}.join
+| for U $selection: U.last_selected <= $frame
+| Vs = Vs{@r$[] V<-&0 => [V @V.content_next^r]}.join.uniq
 | Vs = Vs.sort{[?layer ?disp.1] < [??layer ??disp.1]}
 | for X Vs.keep{?building}: $draw_unit{X}
 | for X Vs.skip{?building}: $draw_unit{X}
+| $units <= Vs.cons{(?.seen <= ??)}
 | when $anchor
-  | [X Y W H] = $selection_rect
+  | [X Y W H] = $mice_rect
   | when [W H].abs >> 10.0: G.rect{#00ff00 0 X Y W H}
 | !$frame + 1
 | get_gui{}.focus_widget <= Me //ensure we always have keyboard focus
@@ -93,22 +98,29 @@ view.render =
 
 view.mice_to_cell XY =
 | [X Y] = ($player_view+XY)/32
-| $world.get{X.clip{0 $world.w} Y.clip{0 $world.h}}
+| $world.get{X.clip{0 $world.w-1} Y.clip{0 $world.h-1}}
 
-view.input_select A B =
-| Void /*if not $anchor then //$sel
-          else if (A-B).abs >> 10.0
-            then | R = //select
-                 | selUnits*/
+gather_content U = if U then [U @U.content_next^gather_content] else []
 
-view.selection_rect =
+view.unit_rect U = [@(U.disp-$player_view+U.size*16-U.selection/2) @U.selection]
+
+view.input_select =
+| MR = $mice_rect
+| if not $anchor or [MR.2 MR.3].abs < 10.0
+  then | Us = $units.uncons{?seen}
+       | Us = Us.keep{U => $mice_xy.in{$unit_rect{U}}}
+       | Us.sort{?layer>??layer}^|$[] [U@_] => [U]
+  else | Us = $units.uncons{?seen}.skip{?building}
+       | Us.keep{U=>$unit_rect{U}.overlaps{MR}}
+
+view.mice_rect =
 | [AX AY] = if $anchor then $anchor else $mice_xy
 | [BX BY] = $mice_xy
 | X = min AX BX
 | Y = min AY BY
-| W = max AX BX
-| H = max AY BY
-| [X Y W-X H-Y]
+| U = max AX BX
+| V = max AY BY
+| [X Y U-X V-Y]
 
 view.pick_cursor =
 | $cursor <= skin_cursor if $anchor then \cross
@@ -125,13 +137,13 @@ view.input @In = case In
   [mice left 0 XY]
     | $mice_xy.init{XY}
     | CC = $mice_to_cell{$mice_xy}
-    | S = $input_select{$anchor $mice_xy}
+    | $selection <= $input_select
     | $anchor <= 0
     | $pick_cursor 
-  [key up    1] | !$player_view.1 - 64
-  [key down  1] | !$player_view.1 + 64
-  [key right 1] | !$player_view.0 + 64
-  [key left  1] | !$player_view.0 - 64
+  [key up    1] | !$player_view.1 - 64; $normalize_view
+  [key down  1] | !$player_view.1 + 64; $normalize_view
+  [key right 1] | !$player_view.0 + 64; $normalize_view
+  [key left  1] | !$player_view.0 - 64; $normalize_view
   [key Name  S] | $keys.Name <= S
 
 view.pause = $paused <= 1
