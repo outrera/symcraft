@@ -1,10 +1,62 @@
 use gui util widgets
 
+type panel unit unit_icon unit_name unit_hp unit_stats
+           prod_bar prod_txt prod_icon act_icons tabs
+| $unit_icon <= icon
+| $unit_name <= txt ''
+| $unit_hp <= spacer 1 1
+| $unit_stats <= txt ''
+| $prod_bar <= spacer 1 1
+| $prod_txt <= spacer 1 1
+| $prod_icon <= spacer 1 1
+| Base = mtx |  1  0 | $unit_icon
+             | 62  4 | $unit_name
+             |  0 43 | $unit_hp
+| Normal = mtx | 15 62 | $unit_stats
+| Produce = mtx |   3 144 | $prod_bar
+                |  44 148 | txt '% Complete'
+                |  10  60 | lay h 0 [$prod_txt $prod_icon]
+| $tabs <= tabs none: t
+  none    | spacer 1 1
+  normal  | dlg [@Base @Normal]
+  produce | dlg [@Base @Produce]
+
+heir panel $tabs
+
+panel.render =
+| less $unit: $tabs.pick{none}
+| when $unit
+  | $unit_icon.unit <= $unit
+  | $unit_name.value <= $unit.typename
+  | $unit_stats.value <= $extract_stats{$unit}
+  | $tabs.pick{normal}
+| $tabs.render
+
+panel.draw G P =
+| $tabs.draw{G P}
+| $unit_stats.value <= 0
+
+panel.extract_stats U =
+| Xs = ["Armor: [U.armor]"
+        "Damager: [U.damage]"
+        "Range: [U.range]"
+        "Sight: [U.sight]"
+        (when U.speed "Speed: [U.speed]")
+        (when U.supply "Supply: [U.supply]")
+        (when U.mp "Mana: [U.mana]/[U.mp]")]
+| Xs.skip{Void}.text{'\n'}
+
+
 type view.widget{W H M} g w/W h/H main/M paused/1 sel/[] last_click/[]
                         ack a visible notes speed/20 frame cursor selection
                         sel_blink/[0 0 0] keys/(t) mice_xy/[0 0] anchor
-                        units/0
+                        units/0 panel/panel{} act_icons icon_spacer/spacer{1 1}
 | $g <= gfx W H
+| $act_icons <= dup 9 $icon_spacer
+| $panel.unit_icon.on_click <= (=> $center_on_selection)
+
+view.center_on_selection =
+| $selection^|$0 [U@_] => $center_at{U.xy+U.size/2}
 
 view.world = $main.world
 
@@ -88,10 +140,11 @@ view.render =
 | Vs = Vs.sort{[?layer ?disp.1] < [??layer ??disp.1]}
 | for X Vs.keep{?building}: $draw_unit{X}
 | for X Vs.skip{?building}: $draw_unit{X}
-| $units <= Vs.cons{(?.seen <= ??)}
+| $units <= Vs^cons{(?.seen <= ??)}
 | when $anchor
   | [X Y W H] = $mice_rect
   | when [W H].abs >> 10.0: G.rect{#00ff00 0 X Y W H}
+| less $frame: (get_gui).add_timer{1.0/24.0 (=>$update)}
 | !$frame + 1
 | get_gui{}.focus_widget <= Me //ensure we always have keyboard focus
 | G
@@ -107,11 +160,12 @@ view.unit_rect U = [@(U.disp-$player_view+U.size*16-U.selection/2) @U.selection]
 view.input_select =
 | MR = $mice_rect
 | if not $anchor or [MR.2 MR.3].abs < 10.0
-  then | Us = $units.uncons{?seen}
+  then | Us = $units^uncons{?seen}
        | Us = Us.keep{U => $mice_xy.in{$unit_rect{U}}}
        | Us.sort{?layer>??layer}^|$[] [U@_] => [U]
-  else | Us = $units.uncons{?seen}.skip{?building}
-       | Us.keep{U=>$unit_rect{U}.overlaps{MR}}
+  else | Us = $units^uncons{?seen}.skip{?building}
+       | Player = $world.this_player
+       | Us.keep{U=>$unit_rect{U}.overlaps{MR} and U.owner >< Player}
 
 view.mice_rect =
 | [AX AY] = if $anchor then $anchor else $mice_xy
@@ -148,5 +202,13 @@ view.input @In = case In
 
 view.pause = $paused <= 1
 view.unpause = $paused <= 0
+
+view.units_aggregate Xs = case Xs [U]: U
+
+view.update =
+| when $paused: leave 1
+| $world.update
+| $panel.unit <= $units_aggregate{$selection}
+| 1
 
 export view

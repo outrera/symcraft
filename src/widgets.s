@@ -57,27 +57,17 @@ font.draw G X Y Tint Text =
   | !CY + H
 
 type txt.widget{Value size/small tint/white}
-     g value_/Value size/Size tint/Tint font
-txt.render =
-| less $font
-  | $font <= font $size
-  | $value <= $value_
-| $g
+     w h value_ size/Size tint/Tint font
+| $font <= font $size
+| $value <= Value
+txt.draw G P = $font.draw{G P.0 P.1 $tint $value_}
 txt.as_text = "#txt{[$value]}"
 txt.value = $value_
 txt.`!value` Text =
-| Text <= "[Text]"
-| $value_ <= Text
+| $value_ <= "[Text]"
 | F = $font
-| W = Text.lines{}{L => F.width{L}}.max
-| H = F.height
-| G = gfx{W H}
-| G.clear{#FFFFFFFF}
-| F.draw{G 0 0 $tint Text}
-| OldG = $g
-| when OldG: OldG.free
-| $g <= G
-
+| $w <= $value_.lines{}{L => F.width{L}}.max
+| $h <= F.height
 
 type bar.widget{V} value_/V.clip{0 100} bg/Void
 bar.render =
@@ -335,4 +325,27 @@ minimap.input @In = case In
 type img.widget{Path} path/Path
 img.render = skin $path
 
-export set_skin skin_cursor font txt button droplist slider folder_widget minimap img
+type icon.widget w/46 h/38 pressed over unit g/skin{'icon/frame'}.copy
+                 on_click/(=>) last_type last_owner
+icon.draw G P =
+| less $unit: leave 0
+| Type = $unit.type.id
+| World = $unit.world
+| Owner = $unit.owner or World.this_player
+| Tint = World.tints.($unit.color)
+| when $last_type <> Type or $last_owner^address <> Owner^address:
+  | when got!it $unit.icon.(Owner.side):
+    | $g.blit{[2 2] it map/Tint}
+| when $pressed: !P + [1 1]
+| G.blit{P $g}
+| $last_type <= Type
+| $last_owner <= Owner
+
+icon.input @In = case In
+  [mice over S P] | $over <= S
+  [mice left 1 P] | less $pressed: $pressed <= 1
+  [mice left 0 P] | when $pressed:
+                    | when $over: $on_click{}{}
+                    | $pressed <= 0
+
+export set_skin skin_cursor skin font txt button droplist slider folder_widget minimap img icon

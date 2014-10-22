@@ -1,5 +1,6 @@
 pud: 76
 proto: building
+typename: `   Elven\nLumber Mill`
 hp: 600
 cost: gold{600} wood{450} time{150}
 boostsHarvest: wood{25}

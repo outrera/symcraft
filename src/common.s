@@ -126,8 +126,10 @@ main.load_type_hlp Path T =
 | U.mask <= MC.fold{U.layer.shl{5} (@ior ? ??)}
 | when U.building: U.selection <= U.size*32
 | have U.selection: U.size*32
-| when@exists!it "[Path]icon.png": U.icon.human <= gfx it
-| U.icon.orc <= U.icon.human
+| U.icon <= t
+| when@exists!it "[Path]icon.png": U.icon.neutral <= gfx it
+| U.icon.human <= U.icon.neutral
+| U.icon.orc <= U.icon.neutral
 | when@exists!it "[Path]icon_orc.png": U.icon.orc <= gfx it
 | less got U.sounds: U.sounds <= t
 | when@exists!it "[Path]sounds": U.sounds <= it.paths{}{[?.lead.url.1 ?.paths]}.table

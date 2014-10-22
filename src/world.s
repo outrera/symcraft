@@ -73,6 +73,8 @@ world.new O T delay/6.rand =
 world.upd_area Rect F =
 | for [X Y] Rect.xy: when [X Y].in{$rect}: F $units.(Y*$w + X)
 
+world.update =
+| !$cycle+1
 
 PudTilesets = [summer winter wasteland swamp]
 PudTeams = t nobody(0) neutral(0) capturable(0) computer(1) person(2) rescueable(2)

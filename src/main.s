@@ -63,10 +63,10 @@ Ingame = dlg: mtx
                                img{'panel/bottom'})
                 img{'panel/right'}
   |  24   2 | button 'Menu (F10)' w_size/large h_size/small: =>
-              //| View.pause
+              | View.pause
               | GameMenu.pick{show}
-  //|   0   0 | Stats.tabs
-  //|   8 340 | lay v 2: ActIcons.group{3}{(box h w ?)}
+  |   6 166 | View.panel
+  |   8 340 | lay v 2: View.act_icons.group{3}{(lay h 2 ?)}
   |   0   0 | GameMenu
 
 ScenarioMenu =
@@ -78,6 +78,7 @@ ScenarioMenu =
           | set_skin "[M.data]ui/[World.this_player.side]"
           | (get_gui).cursor <= skin_cursor{point}
           | Tabs.pick{ingame}
+          | View.unpause
 | dlg: mtx
   |   0   0 | MenuBG
   | 230 220 | txt size/medium 'Custom Game Setup'
