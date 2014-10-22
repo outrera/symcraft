@@ -38,7 +38,7 @@ panel.draw G P =
 
 panel.extract_stats U =
 | Xs = ["Armor: [U.armor]"
-        "Damager: [U.damage]"
+        U.damage^| $Void [B P] => when B or P: "Damage: [P/2]-[B+P]"
         "Range: [U.range]"
         "Sight: [U.sight]"
         (when U.speed "Speed: [U.speed]")
