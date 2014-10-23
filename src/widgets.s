@@ -333,8 +333,9 @@ icon_popup.render =
 | for X $info.items: X.pick{$enabled}
 | $info.render
 
-type icon.widget w/50 h/42 pressed over fg tint g/skin{'icon/frame'}.copy
-                 on_click/(=>) popup/icon_popup{} last_fg last_tint
+type icon.widget{data/0 click/(Icon=>)}
+   w/50 h/42 pressed over fg tint g/skin{'icon/frame'}.copy
+   data/Data on_click/Click popup/icon_popup{} last_fg last_tint
 icon.draw G P =
 | less $tint: leave 0
 | when $fg^address <> $last_fg^address or $tint^address <> $last_tint^address:
@@ -349,7 +350,7 @@ icon.input @In = case In
   [mice over S P] | $over <= S
   [mice left 1 P] | less $pressed: $pressed <= 1
   [mice left 0 P] | when $pressed:
-                    | when $over: $on_click{}{}
+                    | when $over: $on_click{}{Me}
                     | $pressed <= 0
 
 type icon_hp.widget unit w/52 h/7 font/font{tiny}

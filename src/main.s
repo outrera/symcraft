@@ -78,7 +78,7 @@ ScenarioMenu =
           | set_skin "[M.data]ui/[World.this_player.side]"
           | (get_gui).cursor <= skin_cursor{point}
           | Tabs.pick{ingame}
-          | View.unpause
+          | View.init
 | dlg: mtx
   |   0   0 | MenuBG
   | 230 220 | txt size/medium 'Custom Game Setup'

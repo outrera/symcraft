@@ -1,8 +1,8 @@
 use gui util widgets
 
 
-type panel unit unit_icon unit_name unit_hp unit_stats
-           prod_bar prod_txt prod_icon act_icons tabs
+type panel{View} view/View unit unit_icon unit_name unit_hp unit_stats
+                 prod_bar prod_txt prod_icon act_icons tabs
 | $unit_icon <= icon
 | $unit_name <= txt ''
 | $unit_hp <= icon_hp
@@ -22,12 +22,13 @@ type panel unit unit_icon unit_name unit_hp unit_stats
   normal  | dlg [@Base @Normal]
   produce | dlg [@Base @Produce]
 | Spacer = spacer 50 42
-| $act_icons <= dup 9: tabs 0: t 1(icon) 0(Spacer)
+| Click = Icon => View.pick_target{Icon.data}
+| $act_icons <= dup 9: tabs 0: t 1(icon data/[0 0 0] click/Click) 0(Spacer)
 
 heir panel $tabs
 
-act_types Types Pref As =
-| As{Types.?}.replace{Void 0}.skip{(? and ?hide)}{[Pref ?]}
+act_types Types What Pref As =
+| As{Types.?}.replace{Void 0}.skip{(? and ?hide)}{[What Pref ?]}
 
 panel.render =
 | less $unit
@@ -44,25 +45,26 @@ panel.render =
   | $unit_stats.value <= $extract_stats{$unit}
   | $unit_hp.unit <= $unit
   | Ts = World.main.types
-  | As = [@$unit.acts^act_types{Ts 0}
-          @$unit.trains^act_types{Ts 'Train'}
-          @$unit.morphs^act_types{Ts 'Upgrade to'}
-          @$unit.researches^act_types{Ts 'Research'}]
-  | when $unit.builds.size: [@!As [0 Ts.build_basic]]
-  | when $unit.builds.size > 8: [@!As [0 Ts.build_advanced]]
-  | for [I [Pref A]] As.pad{9 [0 0]}.i
-    | T = $act_icons.I
-    | FG = A and A.icon.Side^supply{0}
+  | As = [@$unit.acts^act_types{Ts do 0}
+          @$unit.trains^act_types{Ts train 'Train'}
+          @$unit.morphs^act_types{Ts morph 'Upgrade to'}
+          @$unit.researches^act_types{Ts 'research' 'Research'}]
+  | when $unit.builds.size: [@!As [do 0 Ts.build_basic]]
+  | when $unit.builds.size > 8: [@!As [do 0 Ts.build_advanced]]
+  | for [I [What Pref Type]] As.pad{9 [0 0 0]}.i
+    | Tabs = $act_icons.I
+    | FG = Type and Type.icon.Side^supply{0}
     | if FG
-      then | Icon = T.all.1
+      then | Icon = Tabs.all.1
            | Icon.fg <= FG
            | Icon.tint <= Tint
-           | ProdName = A.prodName or A.typename
+           | ProdName = Type.prodName or Type.typename
            | Name = if Pref then "[Pref] [ProdName]" else ProdName
+           | Icon.data.init{[$unit What Type]}
            | Icon.popup.text.value <= Name
            | Icon.popup.enabled <= 1
-           | T.pick{1}
-      else | T.pick{0}
+           | Tabs.pick{1}
+      else | Tabs.pick{0}
   | $tabs.pick{normal}
 | $tabs.render
 
@@ -81,12 +83,33 @@ panel.extract_stats U =
 | Xs.skip{Void}.text{'\n'}
 
 
-type view.widget{W H M} g w/W h/H main/M paused/1 sel/[] last_click/[]
-                        ack a visible notes speed/20 frame cursor selection
-                        sel_blink/[0 0 0] keys/(t) mice_xy/[0 0] anchor
-                        units/0 panel/panel{}
+type view.widget{W H M} g w/W h/H main/M player paused/1 last_click
+                        a units notes speed/20 frame cursor selection
+                        target_blink keys/(t) mice_xy/[0 0] anchor
+                        panel act
 | $g <= gfx W H
-| $panel.unit_icon.on_click <= (=> $center_on_selection)
+| $panel <= panel{Me}
+| $panel.unit_icon.on_click <= (Icon => $center_on_selection)
+
+view.init =
+| $paused <= 0
+| $player <= $world.this_player
+| $selection <= []
+| $target_blink <= [0 0 0]
+| $act <= [0 0 0]
+| $units <= 0
+| $notes <= []
+| $clear_clicks
+| $move{$xy} //normalize view
+
+view.pick_target As<[Actor What Type] =
+| Target = Actor
+| case What
+  do | case Type.targets
+       self | Actor.order{What Type Target}
+       Else | $act.init{As}
+  train+research+morph | Actor.order{What Type Target}
+  Else | bad "cant [What]"
 
 view.center_on_selection =
 | $selection^|$0 [U@_] => $center_at{U.xy+U.size/2}
@@ -96,7 +119,7 @@ view.world = $main.world
 view.clear_clicks = $last_click <= [[Void 0] 0]
 
 view.notify Player Text life/6.0 =
-| when Player >< $world.this_player
+| when Player >< $player
   | $notes <= [@$notes [(clock)+Life Text]]
 
 view.draw_unit U =
@@ -105,8 +128,8 @@ view.draw_unit U =
 | U.last_drawn <= Fr
 | G = $g
 | TN = $world.tileset_name
-| SO = $world.this_player.view
-| [BId BT1 BT2] = $sel_blink
+| SO = $xy
+| [BId BT1 BT2] = $target_blink
 | Cycle = $world.cycle
 | Blink = Cycle < BT1 or (Cycle > BT2 and Cycle < BT2 + 12)
 | Id = U.id
@@ -121,29 +144,25 @@ view.draw_unit U =
 | G.blit{[X-UG.w/2 Y-UG.h/2] UG map(Col) flipX(D > 4 and not U.building)}
 | when U.building and U.last_selected >< Fr: G.rect{#00ff00 0 RX RY SW SH}
 
-view.normalize_view =
-| SO = $world.this_player.view
-| [X Y] = SO
+view.xy = $player.view
+
+view.move NewXY =
+| XY = $xy
+| XY.init{NewXY}
+| [X Y] = XY
 | WW = $world.w*32
 | WH = $world.h*32
-| VXY = $world.this_player.view
-| VXY.0 <= X.clip{0 WW-$g.w}
-| VXY.1 <= Y.clip{0 WH-$g.h}
+| XY.init{[X.clip{0 WW-$g.w} Y.clip{0 WH-$g.h}]}
 
-view.player_view = $world.this_player.view
-
-view.center_at XY =
-| $world.this_player.view <= XY*32-[$w $h]/2
-| $normalize_view
+view.center_at XY = $move{XY*32-[$w $h]/2}
 
 view.render =
-| $normalize_view
 | G = $g
 | W = $world.w
 | H = $world.h
 | Cs = $world.units
 | TN = $world.tileset_name
-| TP = $world.this_player
+| TP = $player
 | Cycle = $world.cycle
 //| Side = TP.side
 | SO = TP.view
@@ -183,12 +202,12 @@ view.render =
 | G
 
 view.mice_to_cell XY =
-| [X Y] = ($player_view+XY)/32
+| [X Y] = ($xy+XY)/32
 | $world.get{X.clip{0 $world.w-1} Y.clip{0 $world.h-1}}
 
 gather_content U = if U then [U @U.content_next^gather_content] else []
 
-view.unit_rect U = [@(U.disp-$player_view+U.size*16-U.selection/2) @U.selection]
+view.unit_rect U = [@(U.disp-$xy+U.size*16-U.selection/2) @U.selection]
 
 view.input_select =
 | MR = $mice_rect
@@ -197,8 +216,7 @@ view.input_select =
        | Us = Us.keep{U => $mice_xy.in{$unit_rect{U}}}
        | Us.sort{?layer>??layer}^|$[] [U@_] => [U]
   else | Us = $units^uncons{?seen}.skip{?building}
-       | Player = $world.this_player
-       | Us.keep{U=>$unit_rect{U}.overlaps{MR} and U.owner >< Player}
+       | Us.keep{U=>$unit_rect{U}.overlaps{MR} and U.owner >< $player}
 
 view.mice_rect =
 | [AX AY] = if $anchor then $anchor else $mice_xy
@@ -210,27 +228,43 @@ view.mice_rect =
 | [X Y U-X V-Y]
 
 view.pick_cursor =
-| $cursor <= skin_cursor if $anchor then \cross
+| $cursor <= skin_cursor if $act.0 then \ch_red
+                         else if $anchor then \cross
                          else if $mice_to_cell{$mice_xy}.content then \glass
                          else \point
+
+view.ack Actor Target CrossCell =
+| $clear_clicks
 
 view.input @In = case In
   [mice_move _ XY]
     | $mice_xy.init{XY}
     | $pick_cursor 
   [mice left 1 XY]
+    | when $act.0: leave 0
     | $anchor <= XY
     | $pick_cursor 
   [mice left 0 XY]
     | $mice_xy.init{XY}
-    | CC = $mice_to_cell{$mice_xy}
-    | $selection <= $input_select
+    | C = $mice_to_cell{$mice_xy}
+    | if $act.0
+      then | [Actor What Type] = $act
+           | $anchor <= $mice_xy
+           | Target = $input_select^($Void [U@_]=>U)^supply{C}
+           | Actor.order{What Type Target}
+           | $act.init{[0 0 0]}
+      else | $selection <= $input_select
     | $anchor <= 0
     | $pick_cursor 
-  [key up    1] | !$player_view.1 - 64; $normalize_view
-  [key down  1] | !$player_view.1 + 64; $normalize_view
-  [key right 1] | !$player_view.0 + 64; $normalize_view
-  [key left  1] | !$player_view.0 - 64; $normalize_view
+  [mice right 1 XY]
+    | if $act.0
+      then | $act.init{[0 0 0]}
+           | $pick_cursor
+      else
+  [key up    1] | $move{$xy-[0 64]}
+  [key down  1] | $move{$xy+[0 64]}
+  [key left  1] | $move{$xy-[64 0]}
+  [key right 1] | $move{$xy+[64 0]}
   [key Name  S] | $keys.Name <= S
 
 view.pause = $paused <= 1

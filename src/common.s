@@ -40,7 +40,7 @@ type utype
     hp mp mana armor sight damage range speed effect
     cost/(cost) use_cost/(cost) use_cost_player/(cost) research_cost/(cost)
     acts/[] upgrades/[] upgrade researches/[] deps/[] negs/[] anims layer selection/Void shaded
-    trains/[] builds/[] proto_gfx faces/5 explodes show say shadow
+    trains/[] builds/[] proto_gfx faces/5 explodes show sound shadow
     frame mask resource resources/(t size/6)
     area shards bounces offset/[0 0] splash impact extends foundation transport
     move inc cycles ignoresDst nonRMB hotkey targets do forced prio enabled_if

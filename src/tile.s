@@ -33,7 +33,7 @@ calcEdges X =
 
 type cell.entity type base rm mask tileId gfxId gfx edges mc hp armor resource gold wood
                  id xy disp neibs content sensors real_xy mm_color 
-cell.as_text = "#cell{[$type] [$tileId]}"
+cell.as_text = "#cell{[$type] [$xy]}"
 
 type tileset{Name Tiles Trns} name/Name tiles/Tiles trns/Trns
 

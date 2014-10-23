@@ -5,7 +5,7 @@ type unit
     frame dir/Dirs.0 resources/(t size/6)
     enemies nobody playable rescueable passive view
     world content_next sensor_next last_drawn/-1 mm_color seen
-    last_selected
+    act last_selected
 heir unit $type
 unit.as_text = "#unit{[$type.id]}"
 
@@ -27,8 +27,13 @@ unit.deploy P =
 | $disp <= P*32
 | $mark
 
+unit.make_sound Sound =
+
 unit.hp_percent = max 0 ($hp-$hits)*100/$hp
 
 unit.alive = $hp-$hits > 0
+
+unit.order What Type Target =
+| say "ordering [Me] to [What] [Type] [Target]"
 
 export unit

@@ -1,6 +1,6 @@
 range: 8
 show: death
-say: dead
+sound: dead
 forced: 1
 prio: 950
 do: die
