@@ -1,10 +1,11 @@
 use gui util widgets
 
+
 type panel unit unit_icon unit_name unit_hp unit_stats
            prod_bar prod_txt prod_icon act_icons tabs
 | $unit_icon <= icon
 | $unit_name <= txt ''
-| $unit_hp <= spacer 1 1
+| $unit_hp <= icon_hp
 | $unit_stats <= txt ''
 | $prod_bar <= spacer 1 1
 | $prod_txt <= spacer 1 1
@@ -20,15 +21,40 @@ type panel unit unit_icon unit_name unit_hp unit_stats
   none    | spacer 1 1
   normal  | dlg [@Base @Normal]
   produce | dlg [@Base @Produce]
+| Spacer = spacer 50 42
+| $act_icons <= dup 9: tabs 0: t 1(icon) 0(Spacer)
 
 heir panel $tabs
 
 panel.render =
-| less $unit: $tabs.pick{none}
+| less $unit
+  | for T $act_icons
+    | T.pick{0}
+  | $tabs.pick{none}
 | when $unit
-  | $unit_icon.unit <= $unit
+  | World = $unit.world
+  | Side = $unit.owner.side
+  | Tint = World.tints.($unit.color)
+  | $unit_icon.fg <= $unit.icon.Side
+  | $unit_icon.tint <= Tint
   | $unit_name.value <= $unit.typename
   | $unit_stats.value <= $extract_stats{$unit}
+  | $unit_hp.unit <= $unit
+  | Ts = World.main.types
+  | As = [@$unit.acts @$unit.trains @$unit.morphs @$unit.researches]
+  | when $unit.builds.size: [@!As build_basic]
+  | when $unit.builds.size > 8: [@!As build_advanced]
+  | for [I A] As{Ts.?}.replace{Void 0}.skip{(? and ?hide)}.pad{9 0}.i
+    | T = $act_icons.I
+    | FG = A and A.icon.Side^supply{0}
+    | if FG
+      then | Icon = T.all.1
+           | Icon.fg <= FG
+           | Icon.tint <= Tint
+           | Icon.popup.text.value <= A.typename
+           | Icon.popup.enabled <= 1
+           | T.pick{1}
+      else | T.pick{0}
   | $tabs.pick{normal}
 | $tabs.render
 
@@ -50,9 +76,8 @@ panel.extract_stats U =
 type view.widget{W H M} g w/W h/H main/M paused/1 sel/[] last_click/[]
                         ack a visible notes speed/20 frame cursor selection
                         sel_blink/[0 0 0] keys/(t) mice_xy/[0 0] anchor
-                        units/0 panel/panel{} act_icons icon_spacer/spacer{1 1}
+                        units/0 panel/panel{}
 | $g <= gfx W H
-| $act_icons <= dup 9 $icon_spacer
 | $panel.unit_icon.on_click <= (=> $center_on_selection)
 
 view.center_on_selection =
@@ -208,7 +233,8 @@ view.units_aggregate Xs = case Xs [U]: U
 view.update =
 | when $paused: leave 1
 | $world.update
-| $panel.unit <= $units_aggregate{$selection}
+| when $selection
+  | $panel.unit <= $units_aggregate{$selection.keep{?alive}}
 | 1
 
 export view

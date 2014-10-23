@@ -39,13 +39,15 @@ type utype
     size/[1 1] sprite/Void sounds/Void icon/DummyIcon prodName
     hp mp mana armor sight damage range speed effect
     cost/(cost) use_cost/(cost) use_cost_player/(cost) research_cost/(cost)
-    acts upgrades upgrade researches deps negs anims layer selection/Void shaded
-    trains builds proto_gfx faces/5 explodes show say shadow
+    acts/[] upgrades/[] upgrade researches/[] deps/[] negs/[] anims layer selection/Void shaded
+    trains/[] builds/[] proto_gfx faces/5 explodes show say shadow
     frame mask resource resources/(t size/6)
     area shards bounces offset/[0 0] splash impact extends foundation transport
     move inc cycles ignoresDst nonRMB hotkey targets do forced prio enabled_if
-    fix rmbPrio morphAll morphs hide supply boostsHarvest depot harvests/[] ttl
+    fix rmbPrio morphAll morphs/[] hide supply boostsHarvest depot harvests/[] ttl
+    panel_type
 utype.as_text = "#type{[$id]}"
+utype.type = Me
 
 type main{Data} world data/Data sounds/"[Data]sounds"
                 tilesets/0 types/(t) roles/(t) upgrades/(t) cache/(t)

@@ -66,7 +66,7 @@ Ingame = dlg: mtx
               | View.pause
               | GameMenu.pick{show}
   |   6 166 | View.panel
-  |   8 340 | lay v 2: View.act_icons.group{3}{(lay h 2 ?)}
+  |   8 340 | lay v 2: View.panel.act_icons.group{3}{(lay h 2 ?)}
   |   0   0 | GameMenu
 
 ScenarioMenu =

@@ -27,4 +27,8 @@ unit.deploy P =
 | $disp <= P*32
 | $mark
 
+unit.hp_percent = max 0 ($hp-$hits)*100/$hp
+
+unit.alive = $hp-$hits > 0
+
 export unit

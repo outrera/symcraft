@@ -325,21 +325,23 @@ minimap.input @In = case In
 type img.widget{Path} path/Path
 img.render = skin $path
 
-type icon.widget w/46 h/38 pressed over unit g/skin{'icon/frame'}.copy
-                 on_click/(=>) last_type last_owner
+type icon_popup.widget info enabled resources text/txt{''}
+| $info <= lay v 0: map X [$text]: tabs 0: t 1(X) 0(spacer 0 0)
+icon_popup.render =
+| for X $info.items: X.pick{$enabled}
+| $info.render
+
+type icon.widget w/50 h/42 pressed over fg tint g/skin{'icon/frame'}.copy
+                 on_click/(=>) popup/icon_popup{} last_fg last_tint
 icon.draw G P =
-| less $unit: leave 0
-| Type = $unit.type.id
-| World = $unit.world
-| Owner = $unit.owner or World.this_player
-| Tint = World.tints.($unit.color)
-| when $last_type <> Type or $last_owner^address <> Owner^address:
-  | when got!it $unit.icon.(Owner.side):
-    | $g.blit{[2 2] it map/Tint}
+| less $tint: leave 0
+| when $fg^address <> $last_fg^address or $tint^address <> $last_tint^address:
+  | $g.blit{[2 2] $fg map/$tint}
 | when $pressed: !P + [1 1]
 | G.blit{P $g}
-| $last_type <= Type
-| $last_owner <= Owner
+| when $over: G.rect{#A0A0A0 0 P.0-2 P.1-2 54 46}
+| $last_fg <= $fg
+| $last_tint <= $tint
 
 icon.input @In = case In
   [mice over S P] | $over <= S
@@ -348,4 +350,19 @@ icon.input @In = case In
                     | when $over: $on_click{}{}
                     | $pressed <= 0
 
-export set_skin skin_cursor skin font txt button droplist slider folder_widget minimap img icon
+type icon_hp.widget unit w/52 h/7 font/font{tiny}
+icon_hp.draw G P =
+| less $unit: leave 0
+| G.rect{#000000 1 P.0 P.1 $w $h}
+| N = $unit.hp_percent
+| C = if N < 50 then #F00000
+      else if N < 75 then #F0F000
+      else #00A000
+| G.rect{C 1 P.0 P.1 N*$w/100 $h}
+| HP = "[$unit.hp-$unit.hits]/[$unit.hp]"
+| FW = $font.width{HP}
+| $font.draw{G P.0+($w-FW)/2+1 P.1 white HP}
+
+
+export set_skin skin_cursor skin font txt button droplist slider folder_widget
+       minimap img icon icon_hp
