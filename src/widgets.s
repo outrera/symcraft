@@ -64,7 +64,9 @@ txt.draw G P = $font.draw{G P.0 P.1 $tint $value_}
 txt.as_text = "#txt{[$value]}"
 txt.value = $value_
 txt.`!value` Text =
-| $value_ <= "[Text]"
+| Text <= "[Text]"
+| when $value_ >< Text: leave 0
+| $value_ <= Text
 | F = $font
 | $w <= $value_.lines{}{L => F.width{L}}.max
 | $h <= F.height

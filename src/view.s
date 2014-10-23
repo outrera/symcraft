@@ -26,6 +26,9 @@ type panel unit unit_icon unit_name unit_hp unit_stats
 
 heir panel $tabs
 
+act_types Types Pref As =
+| As{Types.?}.replace{Void 0}.skip{(? and ?hide)}{[Pref ?]}
+
 panel.render =
 | less $unit
   | for T $act_icons
@@ -41,17 +44,22 @@ panel.render =
   | $unit_stats.value <= $extract_stats{$unit}
   | $unit_hp.unit <= $unit
   | Ts = World.main.types
-  | As = [@$unit.acts @$unit.trains @$unit.morphs @$unit.researches]
-  | when $unit.builds.size: [@!As build_basic]
-  | when $unit.builds.size > 8: [@!As build_advanced]
-  | for [I A] As{Ts.?}.replace{Void 0}.skip{(? and ?hide)}.pad{9 0}.i
+  | As = [@$unit.acts^act_types{Ts 0}
+          @$unit.trains^act_types{Ts 'Train'}
+          @$unit.morphs^act_types{Ts 'Upgrade to'}
+          @$unit.researches^act_types{Ts 'Research'}]
+  | when $unit.builds.size: [@!As [0 Ts.build_basic]]
+  | when $unit.builds.size > 8: [@!As [0 Ts.build_advanced]]
+  | for [I [Pref A]] As.pad{9 [0 0]}.i
     | T = $act_icons.I
     | FG = A and A.icon.Side^supply{0}
     | if FG
       then | Icon = T.all.1
            | Icon.fg <= FG
            | Icon.tint <= Tint
-           | Icon.popup.text.value <= A.typename
+           | ProdName = A.prodName or A.typename
+           | Name = if Pref then "[Pref] [ProdName]" else ProdName
+           | Icon.popup.text.value <= Name
            | Icon.popup.enabled <= 1
            | T.pick{1}
       else | T.pick{0}
