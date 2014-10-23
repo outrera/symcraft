@@ -129,20 +129,27 @@ view.draw_unit U =
 | G = $g
 | TN = $world.tileset_name
 | SO = $xy
-| [BId BT1 BT2] = $target_blink
-| Cycle = $world.cycle
-| Blink = Cycle < BT1 or (Cycle > BT2 and Cycle < BT2 + 12)
 | Id = U.id
 | Col = $world.tints.(U.color)
 | D = dirN U.dir
 | UG = U.sprite.TN.(U.frame).D
 | [X Y] = U.disp - SO + U.size*16
-| [SW SH] = U.selection
-| RX = X - SW/2
-| RY = Y - SH/2
-| when not U.building and U.last_selected >< Fr: G.rect{#00ff00 0 RX RY SW SH}
+| Rect = 0
+| RC = 0
+| Blink = 0
+| [Target BT1 BT2] = $target_blink
+| when U >< Target
+  | Cycle = $world.cycle
+  | Blink <= Cycle < BT1 or (Cycle > BT2 and Cycle < BT2 + 12)
+| when U.last_selected >< Fr or Blink:
+  | [SW SH] = U.selection
+  | RX = X - SW/2
+  | RY = Y - SH/2
+  | Rect <= [RX RY SW SH]
+  | RC <= U.mm_color
+| when Rect and not U.building: G.rect{RC 0 @Rect}
 | G.blit{[X-UG.w/2 Y-UG.h/2] UG map(Col) flipX(D > 4 and not U.building)}
-| when U.building and U.last_selected >< Fr: G.rect{#00ff00 0 RX RY SW SH}
+| when Rect and U.building: G.rect{RC 0 @Rect}
 
 view.xy = $player.view
 
@@ -251,6 +258,8 @@ view.input @In = case In
       then | [Actor What Type] = $act
            | $anchor <= $mice_xy
            | Target = $input_select^($Void [U@_]=>U)^supply{C}
+           | when Target.is_unit
+             | $target_blink.init{[Target $world.cycle+12 $world.cycle+24]}
            | Actor.order{What Type Target}
            | $act.init{[0 0 0]}
       else | $selection <= $input_select

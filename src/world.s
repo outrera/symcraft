@@ -64,10 +64,10 @@ world.new O T delay/6.rand =
 | U.type <= T
 | U.mana <= T.mana
 | U.owner <= O
-| U.color <= if O then O.color else \yellow
-| U.mm_color <= $main.ui_colors.(U.color).0
 | U.resources <= T.resources.copy
 | U.frame <= 0
+| U.color <= if O then O.color else \yellow
+| U.init_mm_color
 | U
 
 world.upd_area Rect F =

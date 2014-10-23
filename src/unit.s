@@ -9,6 +9,10 @@ type unit
 heir unit $type
 unit.as_text = "#unit{[$type.id]}"
 
+unit.init_mm_color =
+| $mm_color <= if $owner >< $world.this_player then #00FF00
+               else $world.main.ui_colors.($color).0
+
 unit.hash = $id
 unit.`><` B = B.is_unit and $id >< B.id
 
