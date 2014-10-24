@@ -3,7 +3,7 @@ use common tile macros world gui widgets view
 //when (main_args).size
 
 M = main: main_root
-World = Void
+World = No
 
 set_skin "[M.data]ui/orc"
 
@@ -11,8 +11,8 @@ set_skin "[M.data]ui/orc"
 //World.load_pud{'/Users/nikita/Documents/git/symta/build/symcraft/maps/king.pud'}
 //View = view 640 480 M
 
-Tabs = Void
-GameMenu = Void
+Tabs = No
+GameMenu = No
 View = view M.view_w M.view_h M
 
 GameMenu <=
@@ -46,7 +46,7 @@ MenuBG = gfx "[M.data]/ui/default/image/menu.png"
 pud_desc Path =
 | Cs = Path.get^(@r$[] [4/M.utf8 4/L.u4 L/D @Xs] => [[M D] @Xs^r])
 | less Cs^is{[[\TYPE _]@_]}: bad "Invalid PUD file: [Path]"
-| for [T D] Cs: when T >< 'DESC': leave D.take{D.locate{0}^~{Void 32}}.utf8
+| for [T D] Cs: when T >< 'DESC': leave D.take{D.locate{0}^~{No 32}}.utf8
 | ''
 
 Ingame = dlg: mtx
@@ -71,7 +71,7 @@ Ingame = dlg: mtx
 
 ScenarioMenu =
 | Desc = txt ''
-| File = Void
+| File = No
 | Start = button 'Start Game' state/disabled: =>
           | World <= world M
           | World.load_pud{File}

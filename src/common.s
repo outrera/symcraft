@@ -8,8 +8,8 @@ entity.size = [1 1]
 entity.owner = 0
 entity.hp = 0
 entity.armor = 0
-entity.rm = Void
-entity.resource = Void
+entity.rm = No
+entity.resource = No
 
 type cost gold wood oil mana time food
 cost_from_list Xs =
@@ -27,19 +27,19 @@ cost.list = [[gold $gold] [wood $wood] [oil $oil] [mana $mana] [time $time]]
 
 DummyGfx = gfx 1 1
 DummyIcon = t human DummyGfx orc DummyGfx
-DummySprite = Void
+DummySprite = No
 StillAnim = [[0 6]]
 DeathAnim = [[0 0]]
 
 animSpeed $0 [[_ W _]@Xs] = W+Xs^animSpeed
 
 type utype
-    id pud/Void typename/Void move_class/[] role
+    id pud/No typename/No move_class/[] role
     organic undead building detector
-    size/[1 1] sprite/Void sounds/Void icon/DummyIcon prodName
+    size/[1 1] sprite/No sounds/No icon/DummyIcon prodName
     hp mp mana armor sight damage range speed effect
     cost/(cost) use_cost/(cost) use_cost_player/(cost) research_cost/(cost)
-    acts/[] upgrades/[] upgrade researches/[] deps/[] negs/[] anims layer selection/Void shaded
+    acts/[] upgrades/[] upgrade researches/[] deps/[] negs/[] anims layer selection/No shaded
     trains/[] builds/[] proto_gfx faces/5 explodes show sound shadow
     frame mask resource resources/(t size/6)
     area shards bounces offset/[0 0] splash impact extends foundation transport
@@ -85,7 +85,7 @@ ListFields =
 
 main.load_type_hlp Path T =
 //| say "load_type [T]"
-| U = Void
+| U = No
 | Base = Path.lead.url.0
 | UnitTxt = "[Path]unit.txt"
 | less UnitTxt.exists: bad "no [UnitTxt]"
@@ -94,7 +94,7 @@ main.load_type_hlp Path T =
 | have U: utype
 | U.id <= T
 | Corpse = 0
-| TypeName = Void
+| TypeName = No
 | for X Xs: case X
   [anims @Xs] | U.anims <= Xs.group{2}{[?0 ?1.1]}.table
   [cost @V] | U.cost <= cost_from_list V^normalize_cost
@@ -185,7 +185,7 @@ main.init_types =
 | for E "[$data]types".paths: $load_type{E}
 | $pud.95 <= $pud.94 // start location
 | for [T E] $types
-  | E.proto_gfx <= Void
-  | E.faces <= Void
+  | E.proto_gfx <= No
+  | E.faces <= No
 
 export main utype

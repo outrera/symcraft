@@ -1,10 +1,10 @@
 use util gui
 
-Skin = Void
+Skin = No
 Skins = t
-SkinCache = Void
-FontCache = Void
-FontTints = Void
+SkinCache = No
+FontCache = No
+FontTints = No
 
 set_skin Path =
 | Skins.Skin <= [SkinCache FontCache FontTints]
@@ -71,7 +71,7 @@ txt.`!value` Text =
 | $w <= $value_.lines{}{L => F.width{L}}.max
 | $h <= F.height
 
-type bar.widget{V} value_/V.clip{0 100} bg/Void
+type bar.widget{V} value_/V.clip{0 100} bg/No
 bar.render =
 | have $bg: skin."bar/bg"
 | Me
@@ -82,7 +82,7 @@ bar.draw G P =
 | G.rect{#347004 1 P+[3 3] [152*$value_/100 14]}
 
 type button.widget{Text Fn state/normal w_size/large h_size/medium}
-  value/Text on_click/Fn state/State over w_size/W_size h_size/H_size skin/Void cache/(t)
+  value/Text on_click/Fn state/State over w_size/W_size h_size/H_size skin/No cache/(t)
 button.reskin =
 | Cache = $cache
 | $skin <= Skin
@@ -167,7 +167,7 @@ droplist.draw G P =
   | A = skin "arrow/down-normal"
   | G.blit{P+[$w-A.w 0] A}
 | $rs <= 0
-| Void
+| No
 droplist.input @In = case In
   [mice over S P] | $over <= S
                   | $xs.($p).state <= case S 1(\picked) 0(\normal)
@@ -183,7 +183,7 @@ droplist.input @In = case In
                   | $xs.($p).state <= \normal
                   | $picked <= $p
 
-type litems.~{Xs w/300 lines/5 f/(V=>)} f/F ih/Void lines/Lines xs/Xs box picked o/Void
+type litems.~{Xs w/300 lines/5 f/(V=>)} f/F ih/No lines/Lines xs/Xs box picked o/No
 | $box <= lay v 0: dup $lines: litem '' w/W
 | $offset <= 0
 heir litems $box
@@ -204,7 +204,7 @@ litems.data = $xs
 litems.`!data` Ys =
 | $xs <= Ys
 | $picked <= 0
-| $o <= Void
+| $o <= No
 | $offset <= 0
 litems.input @In = case In
   [mice left 1 P] | have $ih: $box.items.0.render.h
@@ -225,8 +225,8 @@ folder_nomalized Path =
 | Parent = if Path >< '/' or Path.last >< ':' then [] else ['../']
 | [@Parent @Folders @Files]
 
-type slider_.widget{D f/(N=>) size/124 value/0.0 state/normal delta/Void}
-     dir/D f/F size/Size pos/0.0 state/State skin/Void w/1 h/1 delta/Delta
+type slider_.widget{D f/(N=>) size/124 value/0.0 state/normal delta/No}
+     dir/D f/F size/Size pos/0.0 state/State skin/No w/1 h/1 delta/Delta
 | have $delta (10.0/$size.float)
 | $value <= Value
 slider_.value = $pos/$size.float

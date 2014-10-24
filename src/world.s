@@ -5,7 +5,7 @@ type world{Main}
    nqs trans orders free_ids used_ids new_units del_units
    max_units/1200 max_w/300 max_h/300 max_cells
    tileset tileset_name tiles gfxes palette tints
-   players/16^dup this_player/Void minimap_dim minimap/Main.minimap
+   players/16^dup this_player/No minimap_dim minimap/Main.minimap
    minimap_cells
 | WxH = $max_w*$max_h
 | $max_cells <= WxH
@@ -96,7 +96,7 @@ world.load_pud Path =
 | sres N Xs = for [I A] Xs.group{2}{?u2}.i
   | $players.I.resources.N <= A
 | Handlers = t
-  'DESC' | Xs => //$description <= Xs.take{Xs.locate{0}^~{Void 32}}.utf8
+  'DESC' | Xs => //$description <= Xs.take{Xs.locate{0}^~{No 32}}.utf8
   'OWNR' | Xs => for [I P] Xs{PudPlayers.?}.i
                  | U = $new{0 player}
                  | less P: U.nobody <= 1
@@ -122,7 +122,7 @@ world.load_pud Path =
            | XY = [X Y]
            | T = case I 57 Critters.($tileset_name) _ $main.pud.I
            | case T
-             Void | bad "Invalid unit slot: [I]"
+             No | bad "Invalid unit slot: [I]"
              player | $players.O.xy <= XY
                     | $players.O.view <= XY*32 - [224 224]
              _ | [[XY O T D] @!Units]
@@ -151,6 +151,6 @@ world.load_pud Path =
 | $palette <= $tileset.tiles.0.gfx.cmap
 | $tints <= @table: map [K C] $main.ui_colors [K (recolor 208 $palette C)]
 | $init_minimap
-| Void
+| No
 
 export world

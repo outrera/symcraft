@@ -28,7 +28,7 @@ type panel{View} view/View unit unit_icon unit_name unit_hp unit_stats
 heir panel $tabs
 
 act_types Types What Pref As =
-| As{Types.?}.replace{Void 0}.skip{(? and ?hide)}{[What Pref ?]}
+| As{Types.?}.replace{No 0}.skip{(? and ?hide)}{[What Pref ?]}
 
 panel.render =
 | less $unit
@@ -53,7 +53,7 @@ panel.render =
   | when $unit.builds.size > 8: [@!As [do 0 Ts.build_advanced]]
   | for [I [What Pref Type]] As.pad{9 [0 0 0]}.i
     | Tabs = $act_icons.I
-    | FG = Type and Type.icon.Side^~{Void 0}
+    | FG = Type and Type.icon.Side^~{No 0}
     | if FG
       then | Icon = Tabs.all.1
            | Icon.fg <= FG
@@ -74,13 +74,13 @@ panel.draw G P =
 
 panel.extract_stats U =
 | Xs = ["Armor: [U.armor]"
-        U.damage^| $Void [B P] => when B or P: "Damage: [P/2]-[B+P]"
+        U.damage^| $No [B P] => when B or P: "Damage: [P/2]-[B+P]"
         "Range: [U.range]"
         "Sight: [U.sight]"
         (when U.speed "Speed: [U.speed]")
         (when U.supply "Supply: [U.supply]")
         (when U.mp "Mana: [U.mana]/[U.mp]")]
-| Xs.skip{Void}.text{'\n'}
+| Xs.skip{No}.text{'\n'}
 
 
 type view.widget{W H M} g w/W h/H main/M player paused/1 last_click
@@ -116,7 +116,7 @@ view.center_on_selection =
 
 view.world = $main.world
 
-view.clear_clicks = $last_click <= [[Void 0] 0]
+view.clear_clicks = $last_click <= [[No 0] 0]
 
 view.notify Player Text life/6.0 =
 | when Player >< $player
@@ -257,7 +257,7 @@ view.input @In = case In
     | if $act.0
       then | [Actor What Type] = $act
            | $anchor <= $mice_xy
-           | Target = $input_select^($Void [U@_]=>U)^~{Void C}
+           | Target = $input_select^($No [U@_]=>U)^~{No C}
            | when Target.is_unit
              | $target_blink.init{[Target $world.cycle+12 $world.cycle+24]}
            | Actor.order{What Type Target}

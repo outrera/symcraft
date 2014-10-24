@@ -1,9 +1,9 @@
 use util gfx reader
 
-Data = Void
-I2E = Void //index to edge
-E2I = Void //edge to index
-Tilesets = Void
+Data = No
+I2E = No //index to edge
+E2I = No //edge to index
+Tilesets = No
 
 TTypes = t // tile types
   block   | t base 0       mc 0
