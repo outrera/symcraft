@@ -53,7 +53,7 @@ panel.render =
   | when $unit.builds.size > 8: [@!As [do 0 Ts.build_advanced]]
   | for [I [What Pref Type]] As.pad{9 [0 0 0]}.i
     | Tabs = $act_icons.I
-    | FG = Type and Type.icon.Side^supply{0}
+    | FG = Type and Type.icon.Side^~{Void 0}
     | if FG
       then | Icon = Tabs.all.1
            | Icon.fg <= FG
@@ -257,7 +257,7 @@ view.input @In = case In
     | if $act.0
       then | [Actor What Type] = $act
            | $anchor <= $mice_xy
-           | Target = $input_select^($Void [U@_]=>U)^supply{C}
+           | Target = $input_select^($Void [U@_]=>U)^~{Void C}
            | when Target.is_unit
              | $target_blink.init{[Target $world.cycle+12 $world.cycle+24]}
            | Actor.order{What Type Target}

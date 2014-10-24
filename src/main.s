@@ -46,7 +46,7 @@ MenuBG = gfx "[M.data]/ui/default/image/menu.png"
 pud_desc Path =
 | Cs = Path.get^(@r$[] [4/M.utf8 4/L.u4 L/D @Xs] => [[M D] @Xs^r])
 | less Cs^is{[[\TYPE _]@_]}: bad "Invalid PUD file: [Path]"
-| for [T D] Cs: when T >< 'DESC': leave D.take{D.locate{0}^supply{32}}.utf8
+| for [T D] Cs: when T >< 'DESC': leave D.take{D.locate{0}^~{Void 32}}.utf8
 | ''
 
 Ingame = dlg: mtx
