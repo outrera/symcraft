@@ -118,9 +118,6 @@ Tabs <= tabs scenario: t main(MainMenu) scenario(ScenarioMenu) ingame(Ingame)
 
 gui Tabs cursor/skin_cursor{point}
 
-\done
-
-
 /*
 Effects = t
   bloodlust | U Amount => U.effects.bloodlust <= Amount
