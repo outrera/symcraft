@@ -109,7 +109,7 @@ button.render =
 | State = $state
 | when State >< normal and $over: State <= \over
 | $cache.Skin.State
-button.input @In = case In
+button.input In = case In
   [mice over S P] | $over <= S
   [mice left 1 P] | case $state normal: Me.state <= \pressed
   [mice left 0 P] | case $state pressed
@@ -138,7 +138,7 @@ litem.draw G P =
 | X = 2
 | Y = BG.h/2-$fh/2
 | $font.draw{G P.0+X P.1+Y Tint $text_}
-litem.input @In = case In
+litem.input In = case In
   [mice left 1 P] | $state <= case $state normal(\picked) picked(\normal) X(X)
 
 type droplist.widget{Xs w/140} w/W h/1 y ih xs/[] drop rs picked over above_all p
@@ -168,7 +168,7 @@ droplist.draw G P =
   | G.blit{P+[$w-A.w 0] A}
 | $rs <= 0
 | No
-droplist.input @In = case In
+droplist.input In = case In
   [mice over S P] | $over <= S
                   | $xs.$p.state <= case S 1(\picked) 0(\normal)
   [mice_move _ P] | when $drop
@@ -206,7 +206,7 @@ litems.`!data` Ys =
 | $picked <= 0
 | $o <= No
 | $offset <= 0
-litems.input @In = case In
+litems.input In = case In
   [mice left 1 P] | have $ih: $box.items.0.render.h
                   | NP = @clip 0 $xs.size-1 P.1/$ih+$o
                   | when NP <> $picked
@@ -256,7 +256,7 @@ slider_.draw G P =
     | G.blit{P+[I 0] BG rect/[0 0 (min BG.w $size-I) BG.h]}
     | !I + BG.w
   | G.blit{P+[$pos.int*($size-K.w)/$size+1 1] K}
-slider_.input @In = case In
+slider_.input In = case In
   [mice_move _ P] | when $state >< pressed
                     | NP = @clip 0 $size: if $dir >< v then P.1 else P.0
                     | when NP <> $pos.int
@@ -269,7 +269,7 @@ slider_.input @In = case In
 
 type arrow.widget{D Fn state/normal} direction/D on_click/Fn state/State
 arrow.render = skin "arrow/[$direction]-[$state]"
-arrow.input @In = case In
+arrow.input In = case In
   [mice left 1 P] | when $state >< normal
                     | $state <= \pressed
                     | Repeat = => when $state >< pressed
@@ -291,14 +291,14 @@ type folder_litems.~{Root f/(V=>)} root/Root f/F litems
 | when $root.last <> '/': $root <= "[$root]/"
 | $litems <= litems lines/9 f/(N => F "[$root][N]") $root^folder_nomalized
 heir folder_litems $litems
-folder_litems.input @In = case In
+folder_litems.input In = case In
   [mice double_left 1 P] | R = if $litems.value >< '../'
                                then "[$root.lead.url.0]"
                                else "[$root][$litems.value]"
                          | when R.folder
                            | $root <= R
                            | $litems.data <= $root^folder_nomalized
-  Else | $litems.input{@In}
+  Else | $litems.input{In}
 folder_litems.itemAt Point XY WH = [Me XY WH]
 
 folder_widget Root F =
@@ -319,7 +319,7 @@ minimap.draw G P =
 
 minimap.center_at P = ($center){[P.0*$main.world.w/$w P.1*$main.world.h/$h]}
 
-minimap.input @In = case In
+minimap.input In = case In
   [mice_move _ XY] | when $pressed: $center_at{XY}
   [mice left 1 XY] | $pressed <= 1; $center_at{XY}
   [mice left 0 XY] | $pressed <= 0
@@ -346,7 +346,7 @@ icon.draw G P =
 | $last_fg <= $fg
 | $last_tint <= $tint
 
-icon.input @In = case In
+icon.input In = case In
   [mice over S P] | $over <= S
   [mice left 1 P] | less $pressed: $pressed <= 1
   [mice left 0 P] | when $pressed:

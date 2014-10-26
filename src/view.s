@@ -243,7 +243,7 @@ view.pick_cursor =
 view.ack Actor Target CrossCell =
 | $clear_clicks
 
-view.input @In = case In
+view.input In = case In
   [mice_move _ XY]
     | $mice_xy.init{XY}
     | $pick_cursor 
