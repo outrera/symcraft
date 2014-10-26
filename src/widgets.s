@@ -144,8 +144,8 @@ litem.input @In = case In
 type droplist.widget{Xs w/140} w/W h/1 y ih xs/[] drop rs picked over above_all p
 | less Xs.size: Xs <= [' ']
 | $xs <= Xs{(litem ? w/$w)}
-droplist.text = $xs.($picked).text
-droplist.`!text` T = $xs.($picked).text <= T
+droplist.text = $xs.$picked.text
+droplist.`!text` T = $xs.$picked.text <= T
 droplist.render =
 | $rs <= map X $xs X.render
 | case $rs [R@_]: $ih <= R.h
@@ -163,24 +163,24 @@ droplist.draw G P =
     | G.blit{P+[0 Y] R}
     | !Y + R.h
 | less $drop
-  | G.blit{P $rs.($picked)}
+  | G.blit{P $rs.$picked}
   | A = skin "arrow/down-normal"
   | G.blit{P+[$w-A.w 0] A}
 | $rs <= 0
 | No
 droplist.input @In = case In
   [mice over S P] | $over <= S
-                  | $xs.($p).state <= case S 1(\picked) 0(\normal)
+                  | $xs.$p.state <= case S 1(\picked) 0(\normal)
   [mice_move _ P] | when $drop
-                    | $xs.($p).state <= \normal
-                    | $p <= (P.1/$ih).clip{0 $xs.size-1}
-                    | $xs.($p).state <= \picked
+                    | $xs.$p.state <= \normal
+                    | $p <= ((P.1+$picked*$ih)/$ih).clip{0 $xs.size-1}
+                    | $xs.$p.state <= \picked
   [mice left 1 P] | $drop <= 1
                   | $p <= $picked
                   | $above_all <= 1
-                  | $xs.($p).state <= \picked
+                  | $xs.$p.state <= \picked
   [mice left 0 P] | $drop <= 0
-                  | $xs.($p).state <= \normal
+                  | $xs.$p.state <= \normal
                   | $picked <= $p
 
 type litems.~{Xs w/300 lines/5 f/(V=>)} f/F ih/No lines/Lines xs/Xs box picked o/No
@@ -199,7 +199,7 @@ litems.`!offset` NO =
          | Item.state <= if I >< $picked then \picked else \normal
     else | Item.text <= ''
          | Item.state <= \disabled
-litems.value = $xs.($picked)
+litems.value = $xs.$picked
 litems.data = $xs
 litems.`!data` Ys =
 | $xs <= Ys
