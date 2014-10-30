@@ -49,6 +49,13 @@ pud_desc Path =
 | for [T D] Cs: when T >< 'DESC': leave D.take{D.locate{0}^~{No 32}}.utf8
 | ''
 
+type res_indicator.widget{Res View} w/1 h/1 view/View res/Res icon/skin{"res/[Res]"}
+
+res_indicator.draw G P =
+| G.blit{P $icon}
+| F = font small
+| F.draw{G P.0+$icon.w+4 P.1 white $view.player.resources.$res.as_text}
+
 Ingame = dlg: mtx
   |   0   0 | spacer 640 480
   |   0   0 | lay h 0: list
@@ -67,6 +74,9 @@ Ingame = dlg: mtx
               | GameMenu.pick{show}
   |   6 166 | View.panel
   |   8 340 | lay v 2: View.panel.act_icons.group{3}{(lay h 2 ?)}
+  | 266   0 | res_indicator gold View
+  | 356   0 | res_indicator wood View
+  | 446   0 | res_indicator oil View
   |   0   0 | GameMenu
 
 ScenarioMenu =
