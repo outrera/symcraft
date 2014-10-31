@@ -5,4 +5,4 @@ range: 1
 effect: heal{3}
 use_cost_player: gold{1} wood{1}
 targets: building damaged
-do: repeat
+repeat: 1

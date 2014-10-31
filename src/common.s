@@ -40,12 +40,12 @@ type utype
     hp mp mana armor sight damage range speed effect
     cost/(cost) use_cost/(cost) use_cost_player/(cost) research_cost/(cost)
     acts/[] upgrades/[] upgrade researches/[] deps/[] negs/[] anims layer selection/No shaded
-    trains/[] builds/[] proto_gfx faces/5 explodes show sound shadow
+    trains/[] builds/[] proto_gfx faces/5 explodes show/still sound shadow
     frame mask resource resources/(t size/6)
     area shards bounces offset/[0 0] splash impact extends foundation transport
     move inc cycles ignoresDst nonRMB hotkey targets do forced prio enabled_if
     fix rmbPrio morphAll morphs/[] hide supply boostsHarvest depot harvests/[] ttl
-    panel_type
+    panel_type repeat
 utype.as_text = "#type{[$id]}"
 utype.type = Me
 

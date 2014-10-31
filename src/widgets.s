@@ -309,7 +309,7 @@ folder_widget Root F =
 type minimap.widget{Main CenterAt} main/Main w/128 h/128 pressed center/CenterAt
 minimap.draw G P =
 | MM = $main.world.minimap
-| [X Y] = $main.world.this_player.view/32
+| [X Y] = $main.world.player.view/32
 | X = X*$w/$main.world.w
 | Y = Y*$h/$main.world.h
 | W = $main.view_w/32*$w/$main.world.w

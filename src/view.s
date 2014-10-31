@@ -93,7 +93,7 @@ type view.widget{W H M} g w/W h/H main/M player paused/1 last_click
 
 view.init =
 | $paused <= 0
-| $player <= $world.this_player
+| $player <= $world.player
 | $selection <= []
 | $target_blink <= [0 0 0]
 | $act <= [0 0 0]
@@ -195,7 +195,7 @@ view.render =
   | !PY + 32
   | !Y + 1
 | for U $selection: U.last_selected <= $frame
-| Vs = Vs{@r$[] V<-&0 => [V @V.content_next^r]}.join.uniq
+| Vs = Vs{?^uncons{?content_next}}.join.uniq
 | Vs = Vs.sort{[?layer ?disp.1] < [??layer ??disp.1]}
 | for X Vs.keep{?building}: $draw_unit{X}
 | for X Vs.skip{?building}: $draw_unit{X}
@@ -211,8 +211,6 @@ view.render =
 view.mice_to_cell XY =
 | [X Y] = ($xy+XY)/32
 | $world.get{X.clip{0 $world.w-1} Y.clip{0 $world.h-1}}
-
-gather_content U = if U then [U @U.content_next^gather_content] else []
 
 view.unit_rect U = [@(U.disp-$xy+U.size*16-U.selection/2) @U.selection]
 

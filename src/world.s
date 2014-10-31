@@ -1,11 +1,11 @@
 use util gfx unit
 
 type world{Main}
-   main/Main w h rect owned/(dup 32 []) units cycle scheds vs vs_i
-   nqs trans orders free_ids used_ids new_units del_units
+   main/Main w h rect owned/(dup 32 []) units cycle vs vs_i
+   nqs trans orders free_ids used_ids active_units
    max_units/1200 max_w/300 max_h/300 max_cells
    tileset tileset_name tiles gfxes palette tints
-   players/16^dup this_player/No minimap_dim minimap/Main.minimap
+   players/16^dup player/No minimap_dim minimap/Main.minimap
    minimap_cells
 | WxH = $max_w*$max_h
 | $max_cells <= WxH
@@ -68,12 +68,15 @@ world.new O T delay/6.rand =
 | U.frame <= 0
 | U.color <= if O then O.color else \yellow
 | U.init_mm_color
+| U.active_next <= $active_units
+| $active_units <= U
 | U
 
 world.upd_area Rect F =
 | for [X Y] Rect.xy: when [X Y].in{$rect}: F $units.(Y*$w + X)
 
 world.update =
+| for U $active_units^uncons{?active_next}: U.update
 | !$cycle+1
 
 PudTilesets = [summer winter wasteland swamp]
@@ -136,7 +139,7 @@ world.load_pud Path =
     | (P.team <> U.team and P.team <> 0 and U.team <> 0)
       or (P.playable and U.playable)}
   | $units.(U.id) <= U
-  | if no $this_player and U.playable then $this_player <= U
+  | if no $player and U.playable then $player <= U
     else if U.nobody then
     else //U.order{plan}
 | for [XY O T D] Units

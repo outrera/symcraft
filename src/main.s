@@ -85,7 +85,7 @@ ScenarioMenu =
 | Start = button 'Start Game' state/disabled: =>
           | World <= world M
           | World.load_pud{File}
-          | set_skin "[M.data]ui/[World.this_player.side]"
+          | set_skin "[M.data]ui/[World.player.side]"
           | (get_gui).cursor <= skin_cursor{point}
           | Tabs.pick{ingame}
           | View.init

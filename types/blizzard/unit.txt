@@ -11,7 +11,7 @@ shards: 10
 offset: (-128 -128) // -4*32
 splash: 1
 nonRMB: 1
-do: repeat
+repeat: 1
 deps: blizzard
 anims: move |(1 2 11) (1 2 10) (1 2 11)
         death |(2 6) (3 6)

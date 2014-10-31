@@ -5,7 +5,7 @@ move_class: 2 wall
 show: attack
 effect: hit
 targets: can_attack
-do: repeat
+repeat: 1
 rmbPrio: 50
 anims: move |(0 1 64)
 
