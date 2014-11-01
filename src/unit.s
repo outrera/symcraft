@@ -6,15 +6,18 @@ type unit
     enemies nobody playable rescueable passive view
     world active_next content_next sensor_next last_drawn/-1 mm_color seen
     last_selected parent content anim/[] anim_wait anim_index
-    force_goal new_goal/[0 0 0] goal/[0 0 0] path/dup{PATH_CACHE_SIZE}
+    new_goal/[0 0 0] goal/[0 0 0] path/dup{PATH_CACHE_SIZE}
 heir unit $type
-unit.as_text = "#unit{[$type.id]}"
+unit.as_text = "#unit{[$type.id] [$id] [$xy]}"
 
 unit.center = $xy + $size/2
 
 unit.center_disp = $disp + $size*16
 
-unit.distance_to Target = @abs Target.xy - $center
+unit.distance_to Target =
+| As = [@$xy @$size].xy
+| Bs = [@Target.xy @Target.size].xy
+| @int: @round: @min: map A As: @min: map B Bs: @abs B-A
 
 unit.init_mm_color =
 | $mm_color <= if $owner >< $world.player then #00FF00
@@ -50,7 +53,7 @@ unit.hp_percent = max 0 ($hp-$hits)*100/$hp
 unit.alive = $hp-$hits > 0
 
 unit.order What Type Target =
-| less $new_goal.1.force
+| less $new_goal.1.forced
   | say "ordering [Me] to [What] [Type] [Target]"
   | $new_goal.init{[What Type Target]}
 
@@ -90,9 +93,13 @@ unit.update =
 | $goal.init{$new_goal}
 | [What Type Target] = $goal
 | less Type.repeat: $stop
-/*| when $distance_to{Target}.round.int > Type.range:
+| when Type.id >< move
+  | say "[$distance_to{Target}]/[Type.range]"
+  | say Me
+  | halt
+| when $distance_to{Target} > Type.range:
   | $move_to{Target.xy}
-  | leave 0*/
+  | leave 0
 | $anim <= $anims.(Type.show)
 | $anim_index <= 0
 | leave 0

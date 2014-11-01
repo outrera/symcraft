@@ -1,5 +1,5 @@
 pud: 78
-typename: `Foundry`
+ui_name: `Foundry`
 proto: building
 move_class: water
 hp: 750

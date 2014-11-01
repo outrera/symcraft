@@ -1,6 +1,6 @@
 pud: 28
 proto: elven_destroyer
-typename: `Transport`
+ui_name: `Transport`
 size: (1 1)
 move_class: water
 selection: (64 64)

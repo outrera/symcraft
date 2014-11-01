@@ -34,7 +34,7 @@ DeathAnim = [[0 0]]
 animSpeed $0 [[_ W _]@Xs] = W+Xs^animSpeed
 
 type utype
-    id pud/No typename/No move_class/[] role
+    id pud/No ui_name/No move_class/[] role
     organic undead building detector
     size/[1 1] sprite/No sounds/No icon/DummyIcon prodName
     hp mp mana armor sight damage range speed effect
@@ -94,7 +94,7 @@ main.load_type_hlp Path T =
 | have U: utype
 | U.id <= T
 | Corpse = 0
-| TypeName = No
+| UIName = No
 | for X Xs: case X
   [anims @Xs] | U.anims <= Xs.group{2}{[?0 ?1.1]}.table
   [cost @V] | U.cost <= cost_from_list V^normalize_cost
@@ -105,15 +105,15 @@ main.load_type_hlp Path T =
   [corpse V] | Corpse <= V
   [layer O] | U.layer <= MCs.O
   [proto PT] |
-  [typename N] | TypeName <= N
+  [ui_name N] | UIName <= N
   [K @As] | S = $unitSetters.K
           | when no S: bad "load_type{[T]}: uknown field [K] for [Path]"
           | if got ListFields.K then S U As
             else | when As.size <> 1: "load_type{[T]}: bad field [K] for [Path]"
                  | S U As.0
   Else | bad "load_type{[T]}: bad entry [X] for [Path]"
-| have TypeName T.split{_}{?title}.text{' '}
-| U.typename <= TypeName
+| have UIName T.split{_}{?title}.text{' '}
+| U.ui_name <= UIName
 | less U.anims: U.anims <= t
 | less U.cost: U.cost <= cost
 | SpriteOverride = 0

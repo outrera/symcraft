@@ -1,5 +1,5 @@
 pud: 86
-typename: `Oil Platform`
+ui_name: `Oil Platform`
 proto: building
 move_class: water
 hp: 650

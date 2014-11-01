@@ -1,2 +1,2 @@
 proto: attack
-typename: `Attack Ground`
+ui_name: `Attack Ground`

@@ -1,4 +1,4 @@
-typename: `Eye of Kilrogg`
+ui_name: `Eye of Kilrogg`
 layer: 6
 move_class: air
 show: attack

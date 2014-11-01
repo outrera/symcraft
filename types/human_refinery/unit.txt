@@ -1,5 +1,5 @@
 pud: 84
-typename: `Refinery`
+ui_name: `Refinery`
 proto: building
 move_class: water
 hp: 800

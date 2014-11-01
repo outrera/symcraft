@@ -1,3 +1,3 @@
 pud: 41
 proto: gnomish_flying_machine
-typename: `Goblin Zeppelin`
+ui_name: `Goblin Zeppelin`

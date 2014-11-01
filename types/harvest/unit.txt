@@ -1,5 +1,5 @@
 proto: attack
-typename: `Harvest`
+ui_name: `Harvest`
 move_class: 2 5 forest
 hotkey: h
 range: 1

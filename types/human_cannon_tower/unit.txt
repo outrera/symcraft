@@ -1,5 +1,5 @@
 pud: 98
-typename: `Cannon Tower`
+ui_name: `Cannon Tower`
 proto: building
 size: (2 2)
 hp: 160

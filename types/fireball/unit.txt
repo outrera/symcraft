@@ -1,5 +1,5 @@
 proto: dragon_breath
-typename: `Fireball`
+ui_name: `Fireball`
 use_cost: mana{100}
 effect: hit{0 15}
 range: 8

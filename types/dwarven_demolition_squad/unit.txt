@@ -1,7 +1,7 @@
 pud: 14
 proto: footman
 corpse: 0
-typename: `   DwarvennDemolition Squad`
+ui_name: `   DwarvennDemolition Squad`
 hp: 40
 damage: (4 2)
 cost: gold{700} wood{250} time{200}

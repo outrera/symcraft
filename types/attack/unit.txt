@@ -1,4 +1,4 @@
-typename: `Attack`
+ui_name: `Attack`
 hotkey: a
 layer: 4
 move_class: 2 wall

@@ -1,2 +1,2 @@
 proto: move
-typename: `Patrol`
+ui_name: `Patrol`

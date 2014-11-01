@@ -41,7 +41,7 @@ panel.render =
   | Tint = World.tints.($unit.color)
   | $unit_icon.fg <= $unit.icon.Side
   | $unit_icon.tint <= Tint
-  | $unit_name.value <= $unit.typename
+  | $unit_name.value <= $unit.ui_name
   | $unit_stats.value <= $extract_stats{$unit}
   | $unit_hp.unit <= $unit
   | Ts = World.main.types
@@ -58,7 +58,7 @@ panel.render =
       then | Icon = Tabs.all.1
            | Icon.fg <= FG
            | Icon.tint <= Tint
-           | ProdName = Type.prodName or Type.typename
+           | ProdName = Type.prodName or Type.ui_name
            | Name = if Pref then "[Pref] [ProdName]" else ProdName
            | Icon.data.init{[$unit What Type]}
            | Icon.popup.text.value <= Name

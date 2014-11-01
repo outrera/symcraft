@@ -1,2 +1,2 @@
 proto: stop
-typename: `Stand Ground`
+ui_name: `Stand Ground`

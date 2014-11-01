@@ -1,5 +1,5 @@
 pud: 72
-typename: `Shipyard`
+ui_name: `Shipyard`
 proto: building
 move_class: water
 hp: 800
