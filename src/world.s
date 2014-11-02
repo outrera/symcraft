@@ -3,7 +3,7 @@ use util gfx unit
 type world{Main}
    main/Main w h rect owned/(dup 32 []) units cycle vs vs_i
    nqs trans orders free_ids used_ids active_units
-   max_units/1200 max_w/300 max_h/300 max_cells
+   max_units/1200 max_w/256 max_h/256 max_cells
    tileset tileset_name tiles gfxes palette tints
    players/16^dup player/No minimap_dim minimap/Main.minimap
    minimap_cells
@@ -27,7 +27,7 @@ world.`.` P = $units.($w*P.1 + P.0)
 world.init_minimap =
 | [MW MH] = [$minimap.w $minimap.h]
 | [W H] = [$w $h]
-| for [MX MY] [0 0 MW MH].xy
+| for [MX MY] [0 0 MW MH].points
   | X = MX*W/MW
   | Y = MY*H/MH
   | $minimap_cells.(MW*MY+MX) <= $units.(Y*W+X)
@@ -41,7 +41,7 @@ world.init_dimensions W H =
 
 world.upd_minimap =
 | [MW MH] = [$minimap.w $minimap.h]
-| for [MX MY] [0 0 MW MH].xy
+| for [MX MY] [0 0 MW MH].points
   | C = $minimap_cells.(MY*MW + MX)
   | U = C.content
   | if U then $minimap.set{MX MY U.mm_color}
@@ -53,7 +53,6 @@ world.init_cell XY Tile =
 | C.id <= Id
 | C.xy <= XY
 | C.disp <= XY*32
-| C.neibs <= Dirs{?+XY}.keep{?.in{$rect}}
 | $units.Id <= C
 
 world.new O T delay/6.rand =
@@ -73,7 +72,7 @@ world.new O T delay/6.rand =
 | U
 
 world.upd_area Rect F =
-| for [X Y] Rect.xy: when [X Y].in{$rect}: F $units.(Y*$w + X)
+| for [X Y] Rect.points: when [X Y].in{$rect}: F $units.(Y*$w + X)
 
 world.update =
 | for U $active_units^uncons{?active_next}: U.update
@@ -120,7 +119,7 @@ world.load_pud Path =
   'AIPL' | Xs => Xs.i{}{$0[I 1]=>$players.I.passive<=1}
   'MTXM' | Xs => | M = Xs.group{2}{?u2}
                  | I = -1
-                 | for P $rect.xy: $init_cell{P M.(!I+1)}
+                 | for P $rect.points: $init_cell{P M.(!I+1)}
   'UNIT' | @r$0 [2/X.u2 2/Y.u2 I O 2/D.u2 @Xs] =>
            | XY = [X Y]
            | T = case I 57 Critters.($tileset_name) _ $main.pud.I
@@ -154,6 +153,9 @@ world.load_pud Path =
 | $palette <= $tileset.tiles.0.gfx.cmap
 | $tints <= @table: map [K C] $main.ui_colors [K (recolor 208 $palette C)]
 | $init_minimap
+| for XY $rect.points
+  | C = $XY
+  | C.neibs <= Dirs{?+XY}.keep{?.in{$rect}}{$?}
 | No
 
 export world

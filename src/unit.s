@@ -1,4 +1,4 @@
-use util macros
+use util macros rmheap
 
 type unit
     id type xy/[0 0] disp/[0 0] owner color team name side hits mana
@@ -15,8 +15,8 @@ unit.center = $xy + $size/2
 unit.center_disp = $disp + $size*16
 
 unit.distance_to Target =
-| As = [@$xy @$size].xy
-| Bs = [@Target.xy @Target.size].xy
+| As = [@$xy @$size].points
+| Bs = [@Target.xy @Target.size].points
 | @int: @round: @min: map A As: @min: map B Bs: @abs B-A
 
 unit.init_mm_color =
@@ -60,13 +60,41 @@ unit.order What Type Target =
 unit.can_move_to P =
 | M = $mask
 | L = $layer
-| for XY [@P $size].xy:
+| for XY [@P @$size].points:
   | CM = $world.get{@XY}.mask
   | less @mask M CM and (@mask CM L) >< 0: leave 0
 | leave 1
 
 
+Visited = dup 256*256
+VisitCycle = 0
+
+aStar Limit StartCell Found Heuristic CanMoveTo =
+| !VisitCycle+1
+| Q = rmheap //priority queue
+| Q.add{0 [StartCell 0 0]} //initial
+| while Q.size
+  | O = Q.pop_lowest.value
+  | C = O.0
+  | G = O.2
+  | when Found C // found?
+    | leave O^(@r [C Prev @_] => if Prev then [C @Prev^r] else []).flip
+  | when G < Limit
+    | NG = G+1
+    | for N C.neibs.keep{CanMoveTo}
+      | I = N.id
+      | when Visited.I <> VisitCycle
+        | Q.add{NG+Heuristic{N} [N O NG]}
+        | Visited.I <= VisitCycle
+| 0
+
 unit.move_to P =
+| H = C =>
+  | [X Y] = C.xy
+  | X*X + Y*Y
+| Path = aStar 1024 $world.$xy (C => C.xy >< P) H (C => 1)//$can_move_to{C.xy})
+| say Path
+| halt
 //$anim <= $anims.move
 
 unit.rotate_facing =
@@ -102,10 +130,6 @@ unit.update =
 | $goal.init{$new_goal}
 | [What Type Target] = $goal
 | less Type.repeat: $stop
-| when Type.tid >< move
-  | say "[$distance_to{Target}]/[Type.range]"
-  | say Me
-  | halt
 | when Type.range < $distance_to{Target}:
   | $move_to{Target.xy}
   | leave 0

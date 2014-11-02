@@ -10,4 +10,8 @@ cfg File =
 | less File.exists: bad "cant open [File]"
 | File.get.utf8.lines{}{?parse}.skip{is.[]}
 
+list.points =
+| [X Y W H] = Me
+| dup I W*H [X+I%W Y+I/W]
+
 export cfg Dirs dirN MCs
