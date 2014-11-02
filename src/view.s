@@ -203,7 +203,7 @@ view.render =
 | when $anchor
   | [X Y W H] = $mice_rect
   | when [W H].abs >> 10.0: G.rect{#00ff00 0 X Y W H}
-| less $frame: (get_gui).add_timer{1.0/24.0 (=>$update)}
+| less $frame: (get_gui).add_timer{1.0/120.0 (=>$update)}
 | !$frame + 1
 | get_gui{}.focus_widget <= Me //ensure we always have keyboard focus
 | G
@@ -214,12 +214,16 @@ view.mice_to_cell XY =
 
 view.unit_rect U = [@(U.disp-$xy+U.size*16-U.selection/2) @U.selection]
 
+
+view.input_select_single MiceXY =
+| Us = $units^uncons{?seen}
+| Us = Us.keep{U => MiceXY.in{$unit_rect{U}}}
+| Us.sort{?layer>??layer}^|$[] [U@_] => [U]
+
 view.input_select =
 | MR = $mice_rect
 | if not $anchor or [MR.2 MR.3].abs < 10.0
-  then | Us = $units^uncons{?seen}
-       | Us = Us.keep{U => $mice_xy.in{$unit_rect{U}}}
-       | Us.sort{?layer>??layer}^|$[] [U@_] => [U]
+  then $input_select_single{$mice_xy}
   else | Us = $units^uncons{?seen}.skip{?building}
        | Us.keep{U=>$unit_rect{U}.overlaps{MR} and U.owner >< $player}
 
@@ -235,7 +239,7 @@ view.mice_rect =
 view.pick_cursor =
 | $cursor <= skin_cursor if $act.0 then \ch_red
                          else if $anchor then \cross
-                         else if $mice_to_cell{$mice_xy}.content then \glass
+                         else if $input_select_single{$mice_xy}.size then \glass
                          else \point
 
 view.ack Actor Target CrossCell =

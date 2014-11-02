@@ -34,7 +34,7 @@ DeathAnim = [[0 0]]
 animSpeed $0 [[_ W _]@Xs] = W+Xs^animSpeed
 
 type utype
-    id pud/No ui_name/No move_class/[] role
+    tid pud/No ui_name/No move_class/[] role
     organic undead building detector
     size/[1 1] sprite/No sounds/No icon/DummyIcon prodName
     hp mp mana armor sight damage range speed effect
@@ -46,7 +46,7 @@ type utype
     move inc cycles ignoresDst nonRMB hotkey targets do forced prio enabled_if
     fix rmbPrio morphAll morphs/[] hide supply boostsHarvest depot harvests/[] ttl
     panel_type repeat
-utype.as_text = "#type{[$id]}"
+utype.as_text = "#type{[$tid]}"
 utype.type = Me
 
 type main{Data} world data/Data sounds/"[Data]sounds"
@@ -92,7 +92,7 @@ main.load_type_hlp Path T =
 | Xs = UnitTxt.get.utf8.parse{Path}^(|[`|`@Xs]=>Xs; X=>[X]){}{[?1.0 @?2]}
 | for X Xs: case X [proto PT]: U <= $load_type{"[Base][PT]/"}.copy
 | have U: utype
-| U.id <= T
+| U.tid <= T
 | Corpse = 0
 | UIName = No
 | for X Xs: case X

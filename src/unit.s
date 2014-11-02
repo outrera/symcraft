@@ -8,7 +8,7 @@ type unit
     last_selected parent content anim/[] anim_wait anim_index
     new_goal/[0 0 0] goal/[0 0 0] path/dup{PATH_CACHE_SIZE}
 heir unit $type
-unit.as_text = "#unit{[$type.id] [$id] [$xy]}"
+unit.as_text = "#unit{[$tid] [$id] [$xy]}"
 
 unit.center = $xy + $size/2
 
@@ -57,7 +57,17 @@ unit.order What Type Target =
   | say "ordering [Me] to [What] [Type] [Target]"
   | $new_goal.init{[What Type Target]}
 
-unit.move_to Target = //$anim <= $anims.move
+unit.can_move_to P =
+| M = $mask
+| L = $layer
+| for XY [@P $size].xy:
+  | CM = $world.get{@XY}.mask
+  | less @mask M CM and (@mask CM L) >< 0: leave 0
+| leave 1
+
+
+unit.move_to P =
+//$anim <= $anims.move
 
 unit.rotate_facing =
 | when $building: leave 0
@@ -70,13 +80,12 @@ unit.update_anim =
 | A = $anim.$anim_index
 | !$anim_index + 1
 | case A
-  [Frame Wait]
+  [Frame Wait @Move]
+    | $frame <= Frame
     | $anim_wait <= Wait
-  [Frame Wait Move]
-    | $anim_wait <= Wait
-    | !$disp + |$dir*Move.0
+    | case Move [V]: !$disp + |$dir*V
   rotate
-    | $rotate_facing
+    | less 100.rand: $rotate_facing
     | $update
   attack
     | No
@@ -93,11 +102,11 @@ unit.update =
 | $goal.init{$new_goal}
 | [What Type Target] = $goal
 | less Type.repeat: $stop
-| when Type.id >< move
+| when Type.tid >< move
   | say "[$distance_to{Target}]/[Type.range]"
   | say Me
   | halt
-| when $distance_to{Target} > Type.range:
+| when Type.range < $distance_to{Target}:
   | $move_to{Target.xy}
   | leave 0
 | $anim <= $anims.(Type.show)
