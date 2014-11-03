@@ -72,9 +72,9 @@ VisitCycle = 0
 aStar Limit StartCell Found Heuristic CanMoveTo =
 | !VisitCycle+1
 | Q = rmheap //priority queue
-| Q.add{0 [StartCell 0 0]} //initial
+| Q.push{0 [StartCell 0 0]}
 | while Q.size
-  | O = Q.pop_lowest.value
+  | O = Q.pop.value
   | C = O.0
   | G = O.2
   | when Found C // found?
@@ -84,7 +84,7 @@ aStar Limit StartCell Found Heuristic CanMoveTo =
     | for N C.neibs.keep{CanMoveTo}
       | I = N.id
       | when Visited.I <> VisitCycle
-        | Q.add{NG+Heuristic{N} [N O NG]}
+        | Q.push{NG+Heuristic{N} [N O NG]}
         | Visited.I <= VisitCycle
 | 0
 
