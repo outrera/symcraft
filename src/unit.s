@@ -1,4 +1,4 @@
-use util macros rmheap
+use util macros heap
 
 type unit
     id type xy/[0 0] disp/[0 0] owner color team name side hits mana
@@ -66,15 +66,14 @@ unit.can_move_to P =
 | leave 1
 
 
-Visited = dup 256*256
 VisitCycle = 0
 
 aStar Limit StartCell Found Heuristic CanMoveTo =
 | !VisitCycle+1
-| Q = rmheap //priority queue
+| Q = heap //priority queue
 | Q.push{0 [StartCell 0 0]}
-| while Q.size
-  | O = Q.pop.value
+| while !it Q.pop:
+  | O = it.value
   | C = O.0
   | G = O.2
   | when Found C // found?
@@ -82,17 +81,16 @@ aStar Limit StartCell Found Heuristic CanMoveTo =
   | when G < Limit
     | NG = G+1
     | for N C.neibs.keep{CanMoveTo}
-      | I = N.id
-      | when Visited.I <> VisitCycle
+      | when N.visited <> VisitCycle
         | Q.push{NG+Heuristic{N} [N O NG]}
-        | Visited.I <= VisitCycle
+        | N.visited <= VisitCycle
 | 0
 
 unit.move_to P =
 | H = C =>
   | [X Y] = C.xy
   | X*X + Y*Y
-| Path = aStar 1024 $world.$xy (C => C.xy >< P) H (C => 1)//$can_move_to{C.xy})
+| Path = aStar 1024 $world.$xy (C => C.xy >< P) H (C => $can_move_to{C.xy})
 | say Path
 | halt
 //$anim <= $anims.move
