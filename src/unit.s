@@ -76,7 +76,7 @@ aStar Limit StartCell Found Heuristic CanMoveTo =
   | O = it.value
   | C = O.0
   | G = O.2
-  | when Found C // found?
+  | when Found C
     | leave O^(@r [C Prev @_] => if Prev then [C @Prev^r] else []).flip
   | when G < Limit
     | NG = G+1
