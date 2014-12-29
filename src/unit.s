@@ -31,7 +31,7 @@ unit.mark =
 | $world.upd_area{[@$xy @$size]
   | C => | $content_next <= C.content
          | C.content <= Me
-         | @xor !C.mask $layer}
+         | !C.mask--$layer
 | $world.upd_area{[@($xy-[S S]) @($size+[2*S 2*S])]
   | C => | $sensor_next <= C.sensors
          | C.sensors <= Me}

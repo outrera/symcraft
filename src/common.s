@@ -125,7 +125,7 @@ main.load_type_hlp Path T =
   | U.sprite <= Gs
 | have U.sprite: DummySprite
 | MC = U.move_class{}{|X<1.is_int=>X+5; X=>X}{MCs.?}
-| U.mask <= MC.fold{U.layer.shl{5} (@ior ? ??)}
+| U.mask <= MC.fold{U.layer</5 ?++??}
 | when U.building: U.selection <= U.size*32
 | have U.selection: U.size*32
 | U.icon <= t
@@ -159,8 +159,8 @@ main.load_type_hlp Path T =
 | less U.hp
   | if U.range
     then | //when!it U.splash: case !U.effect [E V] [E V/(it+1)] // FIXME
-         | @fold !U.mask (A B=>@ior A B) 10{MCs.?}
-    else @ior MCs.invuln !U.mask
+         | @fold !U.mask (A B=>A++B) 10{MCs.?}
+    else !U.mask++MCs.invuln
 | when got!it U.pud: $pud.it <= T
 | when!it U.upgrades: map U it
   | have $upgrades.U []

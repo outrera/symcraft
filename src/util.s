@@ -14,4 +14,8 @@ list.points =
 | [X Y W H] = Me
 | dup I W*H [X+I%W Y+I/W]
 
+list.overlaps [BX BY BW BH] =
+| [AX AY AW AH] = Me
+| AX<BX+BW and AY<BY+BH and BX<AX+AW and BY<AY+AH
+
 export cfg Dirs dirN MCs

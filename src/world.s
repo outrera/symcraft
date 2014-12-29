@@ -98,7 +98,7 @@ world.load_pud Path =
 | sres N Xs = for [I A] Xs.group{2}{?u2}.i
   | $players.I.resources.N <= A
 | Handlers = t
-  'DESC' | Xs => //$description <= Xs.take{Xs.locate{0}^~{No 32}}.utf8
+  'DESC' | Xs => //$description <= Xs.take{Xs.locate{0}^~{32}}.utf8
   'OWNR' | Xs => for [I P] Xs{PudPlayers.?}.i
                  | U = $new{0 player}
                  | less P: U.nobody <= 1
