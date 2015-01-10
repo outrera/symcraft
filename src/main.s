@@ -22,8 +22,8 @@ GameMenu <=
   |   0   0 | spacer 640 480
   | 270 100 | img 'panel/dlg1'
   | 346 110 | txt size/medium 'Game Menu'
-  | 285 140 | lay v 8: list
-              lay{h 12 [Save Load]}
+  | 285 140 | layV s/8: list
+              layH{s/12 [Save Load]}
               button{'Options (F5)' state/disabled (=>)}
               button{'Help (F1)' state/disabled (=>)}
               button{'Scenario Objectives' state/disabled (=>)}
@@ -58,22 +58,22 @@ res_indicator.draw G P =
 
 Ingame = dlg: mtx
   |   0   0 | spacer 640 480
-  |   0   0 | lay h 0: list
-                (lay v 0: list img{'panel/buttonbg'}
-                               (dlg: mtx |  0 0 | img{'panel/minimap'}
-                                         | 24 2 | minimap M: XY => View.center_at{XY}
-                                      )
-                               img{'panel/info'}
-                               img{'panel/filler'})
-                (lay v 0: list img{'panel/top'}
-                               View
-                               img{'panel/bottom'})
+  |   0   0 | layH: list
+                (layV: list img{'panel/buttonbg'}
+                            (dlg: mtx |  0 0 | img{'panel/minimap'}
+                                      | 24 2 | minimap M: XY => View.center_at{XY}
+                                   )
+                            img{'panel/info'}
+                            img{'panel/filler'})
+                (layV: list img{'panel/top'}
+                            View
+                            img{'panel/bottom'})
                 img{'panel/right'}
   |  24   2 | button 'Menu (F10)' w_size/large h_size/small: =>
               | View.pause
               | GameMenu.pick{show}
   |   6 166 | View.panel
-  |   8 340 | lay v 2: View.panel.act_icons.group{3}{(lay h 2 ?)}
+  |   8 340 | layV s/2: View.panel.act_icons.group{3}{(layH s/2 ?)}
   | 266   0 | res_indicator gold View
   | 356   0 | res_indicator wood View
   | 446   0 | res_indicator oil View
@@ -111,12 +111,12 @@ ScenarioMenu =
                      | Desc.value <= pud_desc P
                 else | Start.state <= \disabled
                      | Desc.value <= ''
-  | 400 370 | lay v 8 [Start (button 'Cancel Game': => Tabs.pick{main})]
+  | 400 370 | layV s/8 [Start (button 'Cancel Game': => Tabs.pick{main})]
 
 MainMenu = dlg: mtx
   |   0   0 | MenuBG
   |  60 460 | txt 'SymCraft v0.1 by Nikita Sadkov'
-  | 208 240 | lay v 8: list
+  | 208 240 | layV s/8: list
               button{'New Campaign'    state/disabled (=>)}
               button{'Custom Scenario' (=>Tabs.pick{scenario})}
               button{'Multi Player'    state/disabled (=>)}

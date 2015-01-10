@@ -24,7 +24,7 @@ skin_cursor F =
 | F = "cursor/[F]"
 | have SkinCache.F: leave
   | Gfx = skin F
-  | Gfx.hotspot <= "[Skin]/[F].txt".get.utf8.parse
+  | Gfx.hotspot <= "[Skin]/[F].txt".get.utf8.parse.1
   | Gfx
 
 type font{new_font Gs W H} glyphs/Gs widths/W height/H
@@ -32,7 +32,7 @@ font.as_text = "#font{}"
 font N = have FontCache.N:
 | Path = "[Skin]/font/[N]"
 | G = gfx "[Path].png"
-| [W H] = "[Path].txt".get.utf8.parse
+| [W H] = "[Path].txt".get.utf8.parse.1
 | Glyphs = G.frames{W H}
 | Ws = Glyphs{[X Y W H].margins=>X+W}
 | Ws.0 <= W/2
@@ -184,7 +184,7 @@ droplist.input In = case In
                   | $picked <= $p
 
 type litems.~{Xs w/300 lines/5 f/(V=>)} f/F ih/No lines/Lines xs/Xs box picked o/No
-| $box <= lay v 0: dup $lines: litem '' w/W
+| $box <= layV: dup $lines: litem '' w/W
 | $offset <= 0
 heir litems $box
 litems.offset = $o
@@ -284,8 +284,8 @@ arrow.as_text = "#arrow{[$direction] state([$state])}"
 slider D @Rest =
 | S = slider_ D @Rest
 | if D >< v
-  then lay D 0 [(arrow up (=>S.dec)) S (arrow down (=>S.inc))]
-  else lay D 0 [(arrow left (=>!S.dec)) S (arrow right (=>S.inc))]
+  then layV [(arrow up (=>S.dec)) S (arrow down (=>S.inc))]
+  else layH [(arrow left (=>!S.dec)) S (arrow right (=>S.inc))]
 
 type folder_litems.~{Root f/(V=>)} root/Root f/F litems
 | when $root.last <> '/': $root <= "[$root]/"
@@ -304,7 +304,7 @@ folder_litems.itemAt Point XY WH = [Me XY WH]
 folder_widget Root F =
 | FL = folder_litems Root f/F
 | S = slider size/124 v f/(N => FL.offset <= @int N*FL.data.size.float)
-| lay h 0 [FL S]
+| layH [FL S]
 
 type minimap.widget{Main CenterAt} main/Main w/128 h/128 pressed center/CenterAt
 minimap.draw G P =
@@ -328,7 +328,7 @@ type img.widget{Path} path/Path
 img.render = skin $path
 
 type icon_popup.widget info enabled resources text/txt{''}
-| $info <= lay v 0: map X [$text]: tabs 0: t 1(X) 0(spacer 0 0)
+| $info <= layV: map X [$text]: tabs 0: t 1(X) 0(spacer 0 0)
 icon_popup.render =
 | for X $info.items: X.pick{$enabled}
 | $info.render

@@ -16,7 +16,7 @@ type panel{View} view/View unit unit_icon unit_name unit_hp unit_stats
 | Normal = mtx | 15 62 | $unit_stats
 | Produce = mtx |   3 144 | $prod_bar
                 |  44 148 | txt '% Complete'
-                |  10  60 | lay h 0 [$prod_txt $prod_icon]
+                |  10  60 | layH [$prod_txt $prod_icon]
 | $tabs <= tabs none: t
   none    | spacer 1 1
   normal  | dlg [@Base @Normal]
