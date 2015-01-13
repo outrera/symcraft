@@ -1,13 +1,12 @@
 use util macros heap
 
-type unit
+type unit.$type
     id type xy/[0 0] disp/[0 0] owner color team name side hits mana
     on_map frame dir/Dirs.0 resources/(t size/6)
     enemies nobody playable rescueable passive view
     world active_next content_next sensor_next last_drawn/-1 mm_color seen
     last_selected parent content anim/[] anim_wait anim_index
     new_goal/[0 0 0] goal/[0 0 0] path/dup{PATH_CACHE_SIZE}
-heir unit $type
 unit.as_text = "#unit{[$tid] [$id] [$xy]}"
 
 unit.center = $xy + $size/2

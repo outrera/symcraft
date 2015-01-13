@@ -27,7 +27,7 @@ skin_cursor F =
   | Gfx.hotspot <= "[Skin]/[F].txt".get.utf8.parse.1
   | Gfx
 
-type font{new_font Gs W H} glyphs/Gs widths/W height/H
+type font{@new_font Gs W H} glyphs/Gs widths/W height/H
 font.as_text = "#font{}"
 font N = have FontCache.N:
 | Path = "[Skin]/font/[N]"
@@ -183,10 +183,9 @@ droplist.input In = case In
                   | $xs.$p.state <= \normal
                   | $picked <= $p
 
-type litems.~{Xs w/300 lines/5 f/(V=>)} f/F ih/No lines/Lines xs/Xs box picked o/No
+type litems.$box{Xs w/300 lines/5 f/(V=>)} f/F ih/No lines/Lines xs/Xs box picked o/No
 | $box <= layV: dup $lines: litem '' w/W
 | $offset <= 0
-heir litems $box
 litems.offset = $o
 litems.`!offset` NO =
 | when NO >< $o: leave 0
@@ -287,10 +286,9 @@ slider D @Rest =
   then layV [(arrow up (=>S.dec)) S (arrow down (=>S.inc))]
   else layH [(arrow left (=>!S.dec)) S (arrow right (=>S.inc))]
 
-type folder_litems.~{Root f/(V=>)} root/Root f/F litems
+type folder_litems.$litems{Root f/(V=>)} root/Root f/F litems
 | when $root.last <> '/': $root <= "[$root]/"
 | $litems <= litems lines/9 f/(N => F "[$root][N]") $root^folder_nomalized
-heir folder_litems $litems
 folder_litems.input In = case In
   [mice double_left 1 P] | R = if $litems.value >< '../'
                                then "[$root.lead.url.0]"

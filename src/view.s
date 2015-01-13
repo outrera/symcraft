@@ -1,7 +1,7 @@
 use gui util widgets
 
 
-type panel{View} view/View unit unit_icon unit_name unit_hp unit_stats
+type panel.$tabs{View} view/View unit unit_icon unit_name unit_hp unit_stats
                  prod_bar prod_txt prod_icon act_icons tabs
 | $unit_icon <= icon
 | $unit_name <= txt ''
@@ -24,8 +24,6 @@ type panel{View} view/View unit unit_icon unit_name unit_hp unit_stats
 | Spacer = spacer 50 42
 | Click = Icon => View.pick_target{Icon.data}
 | $act_icons <= dup 9: tabs 0: t 1(icon data/[0 0 0] click/Click) 0(Spacer)
-
-heir panel $tabs
 
 act_types Types What Pref As =
 | As{Types.?}.replace{No 0}.skip{(? and ?hide)}{[What Pref ?]}
