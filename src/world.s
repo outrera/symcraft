@@ -75,7 +75,7 @@ world.upd_area Rect F =
 | for [X Y] Rect.points: when [X Y].in{$rect}: F $units.(Y*$w + X)
 
 world.update =
-| for U $active_units^uncons{?active_next}: U.update
+| for U $active_units^uncons{active_next}: U.update
 | !$cycle+1
 
 PudTilesets = [summer winter wasteland swamp]

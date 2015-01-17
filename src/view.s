@@ -193,11 +193,11 @@ view.render =
   | !PY + 32
   | !Y + 1
 | for U $selection: U.last_selected <= $frame
-| Vs = Vs{?^uncons{?content_next}}.join.uniq
+| Vs = Vs{?^uncons{content_next}}.join.uniq
 | Vs = Vs.sort{[?layer ?disp.1] < [??layer ??disp.1]}
 | for X Vs.keep{?building}: $draw_unit{X}
 | for X Vs.skip{?building}: $draw_unit{X}
-| $units <= Vs^cons{(?.seen <= ??)}
+| $units <= Vs^cons{seen}
 | when $anchor
   | [X Y W H] = $mice_rect
   | when [W H].abs >> 10.0: G.rect{#00ff00 0 X Y W H}
@@ -214,7 +214,7 @@ view.unit_rect U = [@(U.disp-$xy+U.size*16-U.selection/2) @U.selection]
 
 
 view.input_select_single MiceXY =
-| Us = $units^uncons{?seen}
+| Us = $units^uncons{seen}
 | Us = Us.keep{U => MiceXY.in{$unit_rect{U}}}
 | Us.sort{?layer>??layer}^|$[] [U@_] => [U]
 
@@ -222,7 +222,7 @@ view.input_select =
 | MR = $mice_rect
 | if not $anchor or [MR.2 MR.3].abs < 10.0
   then $input_select_single{$mice_xy}
-  else | Us = $units^uncons{?seen}.skip{?building}
+  else | Us = $units^uncons{seen}.skip{?building}
        | Us.keep{U=>$unit_rect{U}.overlaps{MR} and U.owner >< $player}
 
 view.mice_rect =
