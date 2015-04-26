@@ -89,7 +89,7 @@ main.load_type_hlp Path T =
 | Base = Path.lead.url.0
 | UnitTxt = "[Path]unit.txt"
 | less UnitTxt.exists: bad "no [UnitTxt]"
-| Xs = UnitTxt.get.utf8.parse{Path}^(|[`|`@Xs]=>Xs; X=>[X]){}{[?1.0 @?2]}
+| Xs = UnitTxt.get.utf8.parse{src Path}{[?1.0 @?2]}
 | for X Xs: case X [proto PT]: U <= $load_type{"[Base][PT]/"}.copy
 | have U: utype
 | U.tid <= T

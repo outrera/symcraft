@@ -24,7 +24,7 @@ skin_cursor F =
 | F = "cursor/[F]"
 | have SkinCache.F: leave
   | Gfx = skin F
-  | Gfx.hotspot <= "[Skin]/[F].txt".get.utf8.parse.1
+  | Gfx.xy <= "[Skin]/[F].txt".get.utf8.parse.0
   | Gfx
 
 type font{@new_font Gs W H} glyphs/Gs widths/W height/H
@@ -32,7 +32,7 @@ font.as_text = "#font{}"
 font N = have FontCache.N:
 | Path = "[Skin]/font/[N]"
 | G = gfx "[Path].png"
-| [W H] = "[Path].txt".get.utf8.parse.1
+| [W H] = "[Path].txt".get.utf8.parse.0
 | Glyphs = G.frames{W H}
 | Ws = Glyphs{[X Y W H].margins=>X+W}
 | Ws.0 <= W/2

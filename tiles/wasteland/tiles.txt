@@ -1,133 +1,133 @@
 //Class PatternIndex From To @GfxIndices
 //legend: H=human, O=orc, R=removed, C=closed, L=ligth, D=dark
- 0 block 0
- 0 waterL 324 325 325 326   0 324 325 325
- 0 waterD 327 328 328 329   0 327 328 328
- 0 mudL   330 331 332   0 333 334 335 336 337 338 334 336
- 0 mudD   339 340 341   0 342 343 344 345 342 343 340 341
- 0 plainL 346 347 348   0 349 350 351 352 353 354 355 356 357 358 359 360
- 0 plainD 261 262 263   0 361 362 363 364 365 366 367 368 369 370 371 372
- 0 forest 125 137 138
- 0 rock   162 174 175 176
+00 block 0
+00 waterL 324 325 325 326   0 324 325 325
+00 waterD 327 328 328 329   0 327 328 328
+00 mudL   330 331 332   0 333 334 335 336 337 338 334 336
+00 mudD   339 340 341   0 342 343 344 345 342 343 340 341
+00 plainL 346 347 348   0 349 350 351 352 353 354 355 356 357 358 359 360
+00 plainD 261 262 263   0 361 362 363 364 365 366 367 368 369 370 371 372
+00 forest 125 137 138
+00 rock   162 174 175 176
 33 wallH  16   0  52   0  88
 33 wallO  34   0  70   0  88
 34 wallH  33   0  69   0 101
 34 wallO  51   0  87   0 101
- 0 block 0
- 0 block 0
- 0 block 0
- 1 waterD 296 296
- 2 waterD 297 297
- 3 waterD 298 299 300
- 4 waterD 301 301
- 5 waterD 302 303 304
- 6 waterD 305 306
- 7 waterD 307 308
- 8 waterD 309 309
- 9 waterD 310 311
+00 block 0
+00 block 0
+00 block 0
+01 waterD 296 296
+02 waterD 297 297
+03 waterD 298 299 300
+04 waterD 301 301
+05 waterD 302 303 304
+06 waterD 305 306
+07 waterD 307 308
+08 waterD 309 309
+09 waterD 310 311
 10 waterD 312 313 314
 11 waterD 315 316
 12 waterD 317 318 319
 13 waterD 320 321
 14 waterD 322 323
- 0 block 0
- 0 block 0
- 1 waterL 201 202
- 2 waterL 203 204
- 3 waterL 205 206 207
- 4 waterL 208 209
- 5 waterL 210 211 212
- 6 waterL 213 213
- 7 waterL 214 215
- 8 waterL 216 217
- 9 waterL 218 218
+00 block 0
+00 block 0
+01 waterL 201 202
+02 waterL 203 204
+03 waterL 205 206 207
+04 waterL 208 209
+05 waterL 210 211 212
+06 waterL 213 213
+07 waterL 214 215
+08 waterL 216 217
+09 waterL 218 218
 10 waterL 219 220 221
 11 waterL 222 223
 12 waterL 224 225 226
 13 waterL 227 228
 14 waterL 229 230
- 0 block 0
- 0 block 0
- 1 mudD 177 177
- 2 mudD 178 178
- 3 mudD 179 180 181
- 4 mudD 182 182
- 5 mudD 183 184 185
- 6 mudD 186 187
- 7 mudD 188 188
- 8 mudD 189 189
- 9 mudD 190 191
+00 block 0
+00 block 0
+01 mudD 177 177
+02 mudD 178 178
+03 mudD 179 180 181
+04 mudD 182 182
+05 mudD 183 184 185
+06 mudD 186 187
+07 mudD 188 188
+08 mudD 189 189
+09 mudD 190 191
 10 mudD 192 193 194
 11 mudD 195 195
 12 mudD 196 197 198
 13 mudD 199 199
 14 mudD 200 200
- 0 block 0
- 0 block 0
- 1 rock 147 170
- 2 rock 139 164
- 3 rock 161 173
- 4 rock 144 168
- 5 rock 146 169
- 6 rock 151 172
- 7 rock 148
- 8 rock 141 166
- 9 rock 150 171
+00 block 0
+00 block 0
+01 rock 147 170
+02 rock 139 164
+03 rock 161 173
+04 rock 144 168
+05 rock 146 169
+06 rock 151 172
+07 rock 148
+08 rock 141 166
+09 rock 150 171
 10 rock 140 165
 11 rock 149
 12 rock 143 167
 13 rock 145
 14 rock 142
- 0 block 0
- 0 block 0
- 1 mudL 264 265
- 2 mudL 266 267
- 3 mudL 268 269 270
- 4 mudL 271 272
- 5 mudL 273 274 275
- 6 mudL 276 277
- 7 mudL 278 279
- 8 mudL 280 281
- 9 mudL 282 283
+00 block 0
+00 block 0
+01 mudL 264 265
+02 mudL 266 267
+03 mudL 268 269 270
+04 mudL 271 272
+05 mudL 273 274 275
+06 mudL 276 277
+07 mudL 278 279
+08 mudL 280 281
+09 mudL 282 283
 10 mudL 284 285 286
 11 mudL 287 288
 12 mudL 289 290 291
 13 mudL 292 293
 14 mudL 294 295
- 0 block 0
- 0 block 0
- 1 plainD 233 234
- 2 plainD 235 236
- 3 plainD 237 238 239
- 4 plainD 240 241
- 5 plainD 242 243 244
- 6 plainD 245 246
- 7 plainD 247 247
- 8 plainD 248 249
- 9 plainD 250 251
+00 block 0
+00 block 0
+01 plainD 233 234
+02 plainD 235 236
+03 plainD 237 238 239
+04 plainD 240 241
+05 plainD 242 243 244
+06 plainD 245 246
+07 plainD 247 247
+08 plainD 248 249
+09 plainD 250 251
 10 plainD 252 253 254
 11 plainD 255 255
 12 plainD 256 257 258
 13 plainD 259 259
 14 plainD 260 260
- 0 block 0
- 0 block 0
- 1 forest 110 134
- 2 forest 102 127
- 3 forest 124 136
- 4 forest 107 131
- 5 forest 109 133
- 6 forest 114 114
- 7 forest 111 111
- 8 forest 104 129
- 9 forest 113 113
+00 block 0
+00 block 0
+01 forest 110 134
+02 forest 102 127
+03 forest 124 136
+04 forest 107 131
+05 forest 109 133
+06 forest 114 114
+07 forest 111 111
+08 forest 104 129
+09 forest 113 113
 10 forest 103 128
 11 forest 112 135
 12 forest 106 130
 13 forest 108 132
 14 forest 105 105
- 0 block 0
- 0 block 0
+00 block 0
+00 block 0
 19 wallH 17 17 53 53
 22 wallH 18 18 54 54
 23 wallH 19 19 55 55
@@ -142,8 +142,8 @@
 30 wallH 30 30 66 66
 31 wallH 31 31 67 67
 32 wallH 32 32 68 68
- 0 block 0
- 0 block 0
+00 block 0
+00 block 0
 19 wallO 35 35 71 71
 22 wallO 36 36 72 72
 23 wallO 37 37 73 73
@@ -158,8 +158,8 @@
 30 wallO 48 48 84 84
 31 wallO 49 49 85 85
 32 wallO 50 50 86 86
- 0 block 0
- 0 block 0
+00 block 0
+00 block 0
 0 wallR 89
 0 wallR 90
 0 wallR 91
@@ -174,8 +174,8 @@
 0 wallR 100
 0 wallR 95
 0 wallR 99
- 0 block 0
- 0 block 0
+00 block 0
+00 block 0
 15 rock 156
 16 rock 157
 17 rock 158
@@ -190,7 +190,7 @@
 19 forest 121
 20 forest 122
 21 forest 123
- 0 forestR 126
- 0 rockR   163
- 0 wallCR   88
- 0 wallR   101
+00 forestR 126
+00 rockR   163
+00 wallCR   88
+00 wallR   101

@@ -8,7 +8,7 @@ dirN V = Dirs.locate{V.sign}
 
 cfg File =
 | less File.exists: bad "cant open [File]"
-| File.get.utf8.lines{}{?parse.1}.skip{is.[]}
+| File.get.utf8.parse{src File}.skip{is.[]}
 
 list.points =
 | [X Y W H] = Me
