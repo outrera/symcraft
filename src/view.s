@@ -82,7 +82,7 @@ panel.extract_stats U =
 
 
 type view.widget{W H M} g w/W h/H main/M player paused/1 last_click
-                        a units notes speed/20 frame cursor selection
+                        a units notes speed/20 frame pointer selection
                         target_blink keys/(t) mice_xy/[0 0] anchor
                         panel act
 | $g <= gfx W H
@@ -235,10 +235,10 @@ view.mice_rect =
 | [X Y U-X V-Y]
 
 view.pick_cursor =
-| $cursor <= skin_cursor if $act.0 then \ch_red
-                         else if $anchor then \cross
-                         else if $input_select_single{$mice_xy}.size then \glass
-                         else \point
+| $pointer <= skin_cursor if $act.0 then \ch_red
+                          else if $anchor then \cross
+                          else if $input_select_single{$mice_xy}.size then \glass
+                          else \point
 
 view.ack Actor Target CrossCell =
 | $clear_clicks
