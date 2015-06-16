@@ -1,4 +1,0 @@
-pud: 17
-proto: peon
-ui_name: `Peon`
-role: rebel

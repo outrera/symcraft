@@ -1,4 +1,0 @@
-pud: 16
-proto: peasant
-ui_name: `Peasant`
-role: rebel

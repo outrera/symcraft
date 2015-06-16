@@ -1,2 +1,0 @@
-proto: attack
-ui_name: `Attack Ground`

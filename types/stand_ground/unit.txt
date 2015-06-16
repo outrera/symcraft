@@ -1,2 +1,0 @@
-proto: stop
-ui_name: `Stand Ground`

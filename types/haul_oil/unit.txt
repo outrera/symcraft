@@ -1,3 +1,0 @@
-proto: harvest
-ui_name: `Haul Oil`
-harvests: oil
