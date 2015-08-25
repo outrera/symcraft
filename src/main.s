@@ -52,7 +52,7 @@ pud_desc Path =
 type res_indicator.widget{Res View} w/1 h/1 view/View res/Res icon/skin{"res/[Res]"}
 
 res_indicator.draw G P =
-| G.blit{P $icon}
+| G.blit{P.0 P.1 $icon}
 | F = font small
 | F.draw{G P.0+$icon.w+4 P.1 white $view.player.resources.$res.as_text}
 

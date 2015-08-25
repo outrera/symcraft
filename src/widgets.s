@@ -52,7 +52,7 @@ font.draw G X Y Tint Text =
   | for C L
     | I = C.code-CodePoint
     | W = Ws.I
-    | G.blit{[CX CY] Gs.I map(Palette)}
+    | G.blit{CX CY Gs.I.recolor{Palette}}
     | W+1+!CX
   | !CY + H
 
@@ -78,8 +78,8 @@ bar.render =
 bar.value = $value_
 bar.set_value New = $value_ <= New.clip{0 100}
 bar.draw G P =
-| G.blit{P $bg}
-| G.rect{#347004 1 P+[3 3] [152*$value_/100 14]}
+| G.blit{P.0 P.1 $bg}
+| G.rectangle{#347004 1 P+[3 3] [152*$value_/100 14]}
 
 type button.widget{Text Fn state/normal w_size/large h_size/medium}
   value/Text on_click/Fn state/State over w_size/W_size h_size/H_size skin/No cache/(t)
@@ -133,7 +133,7 @@ litem.`!text` Text =
 | $text_ <= Text
 litem.draw G P =
 | BG = "litem/[$state]"^skin
-| G.blit{P BG rect/[0 0 $w BG.h]}
+| G.blit{P.0 P.1 BG.rect{0 0 $w BG.h}}
 | Tint = case $state picked(\white) disabled(\gray) _(\yellow)
 | X = 2
 | Y = BG.h/2-$fh/2
@@ -160,12 +160,12 @@ droplist.draw G P =
 | when $drop
   | Y = 0
   | for R $rs
-    | G.blit{P+[0 Y] R}
+    | G.blit{P.0 P.1+Y R}
     | !Y + R.h
 | less $drop
-  | G.blit{P $rs.$picked}
+  | G.blit{P.0 P.1 $rs.$picked}
   | A = skin "arrow/down-normal"
-  | G.blit{P+[$w-A.w 0] A}
+  | G.blit{P.0+$w-A.w P.1 A}
 | $rs <= 0
 | No
 droplist.input In = case In
@@ -247,14 +247,14 @@ slider_.draw G P =
 | I = 0
 | when $dir >< v
   | while I < $size
-    | G.blit{P+[0 I] BG rect/[0 0 BG.w (min BG.h $size-I)]}
+    | G.blit{P.0 P.1+I BG.rect{0 0 BG.w (min BG.h $size-I)}}
     | !I + BG.h
-  | G.blit{P+[1 $pos.int*($size-K.h)/$size+1] K}
+  | G.blit{P.0+1 P.1+$pos.int*($size-K.h)/$size+1 K}
 | when $dir >< h
   | while I < $size
-    | G.blit{P+[I 0] BG rect/[0 0 (min BG.w $size-I) BG.h]}
+    | G.blit{P.0+I P.1 BG.rect{0 0 (min BG.w $size-I) BG.h}}
     | !I + BG.w
-  | G.blit{P+[$pos.int*($size-K.w)/$size+1 1] K}
+  | G.blit{P.0+$pos.int*($size-K.w)/$size+1 P.1+1 K}
 slider_.input In = case In
   [mice_move _ P] | when $state >< pressed
                     | NP = @clip 0 $size: if $dir >< v then P.1 else P.0
@@ -312,8 +312,8 @@ minimap.draw G P =
 | Y = Y*$h/$main.world.h
 | W = $main.view_w/32*$w/$main.world.w
 | H = $main.view_h/32*$h/$main.world.h
-| G.blit{P MM}
-| G.rect{#A0A0A0 0 P.0+X P.1+Y W H}
+| G.blit{P.0 P.1 MM}
+| G.rectangle{#A0A0A0 0 P.0+X P.1+Y W H}
 
 minimap.center_at P = ($center){[P.0*$main.world.w/$w P.1*$main.world.h/$h]}
 
@@ -337,10 +337,10 @@ type icon.widget{data/0 click/(Icon=>)}
 icon.draw G P =
 | less $tint: leave 0
 | when $fg^address <> $last_fg^address or $tint^address <> $last_tint^address:
-  | $g.blit{[2 2] $fg map/$tint}
+  | $g.blit{2 2 $fg.recolor{$tint}}
 | when $pressed: !P + [1 1]
-| G.blit{P $g}
-| when $over: G.rect{#A0A0A0 0 P.0-2 P.1-2 54 46}
+| G.blit{P.0 P.1 $g}
+| when $over: G.rectangle{#A0A0A0 0 P.0-2 P.1-2 54 46}
 | $last_fg <= $fg
 | $last_tint <= $tint
 
@@ -354,12 +354,12 @@ icon.input In = case In
 type icon_hp.widget unit w/52 h/7 font/font{tiny}
 icon_hp.draw G P =
 | less $unit: leave 0
-| G.rect{#000000 1 P.0 P.1 $w $h}
+| G.rectangle{#000000 1 P.0 P.1 $w $h}
 | N = $unit.hp_percent
 | C = if N < 50 then #F00000
       else if N < 75 then #F0F000
       else #00A000
-| G.rect{C 1 P.0 P.1 N*$w/100 $h}
+| G.rectangle{C 1 P.0 P.1 N*$w/100 $h}
 | HP = "[$unit.hp-$unit.hits]/[$unit.hp]"
 | FW = $font.width{HP}
 | $font.draw{G P.0+($w-FW)/2+1 P.1 white HP}

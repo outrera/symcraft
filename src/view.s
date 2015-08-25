@@ -145,9 +145,10 @@ view.draw_unit U =
   | RY = Y - SH/2
   | Rect <= [RX RY SW SH]
   | RC <= U.mm_color
-| when Rect and not U.building: G.rect{RC 0 @Rect}
-| G.blit{[X-UG.w/2 Y-UG.h/2] UG map(Col) flipX(D > 4 and not U.building)}
-| when Rect and U.building: G.rect{RC 0 @Rect}
+| when Rect and not U.building: G.rectangle{RC 0 @Rect}
+| when D > 4 and not U.building: UG.flop
+| G.blit{X-UG.w/2 Y-UG.h/2 UG.recolor{Col}}
+| when Rect and U.building: G.rectangle{RC 0 @Rect}
 
 view.xy = $player.view
 
@@ -187,7 +188,7 @@ view.render =
   | while X < EX
     | C = Cs.X
     | when!it C.content: [it@!Vs]
-    | G.blit{[PX PY] C.gfx}
+    | G.blit{PX PY C.gfx}
     | !PX + 32
     | !X + 1
   | !PY + 32
@@ -200,7 +201,7 @@ view.render =
 | $units <= Vs^cons{seen}
 | when $anchor
   | [X Y W H] = $mice_rect
-  | when [W H].abs >> 10.0: G.rect{#00ff00 0 X Y W H}
+  | when [W H].abs >> 10.0: G.rectangle{#00ff00 0 X Y W H}
 | less $frame: (get_gui).add_timer{1.0/120.0 (=>$update)}
 | !$frame + 1
 | get_gui{}.focus_widget <= Me //ensure we always have keyboard focus
