@@ -66,8 +66,8 @@ panel.render =
   | $tabs.pick{normal}
 | $tabs.render
 
-panel.draw G P =
-| $tabs.draw{G P}
+panel.draw G X Y =
+| $tabs.draw{G X Y}
 | $unit_stats.value <= 0
 
 panel.extract_stats U =
