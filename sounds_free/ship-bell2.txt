@@ -1,0 +1,3 @@
+author: `Mana World Team`
+license: `GPL2`
+origin: `http://manasource.org/`

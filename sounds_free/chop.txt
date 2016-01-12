@@ -1,0 +1,3 @@
+author: Ehazure
+licenseL CC-BY
+origin: legend-of-edgar/sound/common/chop

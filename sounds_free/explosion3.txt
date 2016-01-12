@@ -1,0 +1,3 @@
+author: Wesnoth Team
+licenseL GPL2
+origin: Battle for Wesnoth

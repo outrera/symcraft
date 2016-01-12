@@ -1,0 +1,3 @@
+Author: Jasper Van der Jeugt
+License: GPL2
+Origin: https://sourceforge.net/projects/annchienta/

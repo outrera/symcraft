@@ -1,0 +1,5 @@
+author: Enlight
+licenseL GPL2
+origin: seven kingdoms
+
+explosion.wav mixed with public domain sound from monster rpg2

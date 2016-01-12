@@ -1,0 +1,3 @@
+Author: Jeff Vogel (http://www.spiderwebsoftware.com)
+License: GPL2
+Origin: http://www.spiderwebsoftware.com

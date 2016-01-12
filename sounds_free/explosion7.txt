@@ -1,0 +1,5 @@
+Author: Enlight Software, Jeff Vogel (http://www.spiderwebsoftware.com)
+License: GPL2
+Origin: Seven Kingdoms, http://www.spiderwebsoftware.com
+
+mixed from two sound files
