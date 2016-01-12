@@ -1,0 +1,5 @@
+author: dobroide
+licenseL CC-BY
+origin: legend-of-edgar/sound/enemy/chicken/cluck
+
+20110503_clucking.05

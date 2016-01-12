@@ -1,0 +1,5 @@
+author: timgormly
+licenseL CC-BY
+origin: legend-of-edgar/as sound/boss/armour_boss/clang
+
+Metal Clang1

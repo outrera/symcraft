@@ -1,3 +1,3 @@
-author: Ehazure
+author: hazure
 licenseL CC-BY
 origin: legend-of-edgar/sound/common/chop
