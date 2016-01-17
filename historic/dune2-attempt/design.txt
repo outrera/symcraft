@@ -1,0 +1,576 @@
+// downscale
+#define DS_C(x) ((x)*256/1000)
+#define DS_S(x) ((x) == 2000 ? 255 : ((x)*256/2000))
+
+typedef struct UnitType {
+  char *name;
+  u1 cost;
+  u1 arms;
+  u1 shield;
+  u1 speed;
+  u1 range;
+  u1 preq;
+} UnitType;
+
+// A harvester can hold about 700 credits' worth of spice.
+UnitType utypes[] = {
+  {"Carryall"    ,DS_C(800),  0, DS_S(100), 200, 0, PREQ_REFINERY|PREQ_HITECH},
+  {"Combat tank" ,DS_C(300), 38, DS_S(200),  25, 4, PREQ_STARPORT|PREQ_FACTORY|PREQ_OUTPOST},
+  {"Death Hand"  ,DS_C(  0),150, DS_S( 70), 250, 0, PREQ_NONE /*PREQ_PALACE*/},
+  {"Devastator"  ,DS_C(800), 60, DS_S(400),  10, 5, PREQ_FACTORY|PREQ_HITECH},
+  {"Deviator"    ,DS_C(750),  0, DS_S(120),  30, 7, PREQ_FACTORY|PREQ_HITECH},
+  {"1-Fremen"    ,DS_C(  0),  8, DS_S( 90),  15, 3, PREQ_NONE /*PREQ_PALACE*/},
+  {"3-Fremen"    ,DS_C(  0),  8, DS_S(220),  10, 3, PREQ_NONE /*PREQ_PALACE*/},
+  {"Harvester"   ,DS_C(300),  0, DS_S(150),  30, 0, PREQ_STARPORT|PREQ_FACTORY|PREQ_REFINERY},
+  {"Infantry"    ,DS_C(100),  4, DS_S( 50),   5, 2, PREQ_BARACKS},
+  {"MCV"         ,DS_C(900),  0, DS_S(150),  20, 0, PREQ_STARPORT|PREQ_FACTORY|PREQ_OUTPOST},
+  {"Missile tank",DS_C(450),112, DS_S(100),  30, 9, PREQ_STARPORT|PREQ_FACTORY|PREQ_OUTPOST},
+  {"Ornithopter" ,DS_C(600), 75, DS_S(  5), 150, 5, PREQ_STARPORT|PREQ_HITECH},
+  {"Quad"        ,DS_C(200), 10, DS_S(130),  50, 3, PREQ_FACTORY},
+  {"Raider trike",DS_C(150),  8, DS_S( 80),  75, 3, PREQ_FACTORY},
+  {"Saboteur"    ,DS_C(  0),150, DS_S( 40),  40, 2, PREQ_NONE /*PREQ_PALACE*/},
+  {"Siege tank"  ,DS_C(600), 45, DS_S(300),  20, 5, PREQ_FACTORY|PREQ_OUTPOST},
+  {"Soldier"     ,DS_C( 60),  4, DS_S( 20),   8, 2, PREQ_BARACKS},
+  {"Sonic tank"  ,DS_C(600), 90, DS_S(110),  30, 8, PREQ_FACTORY|PREQ_HITECH},
+  {"Trike"       ,DS_C(150),  8, DS_S(100),  60, 3, PREQ_FACTORY},
+  {"Trooper"     ,DS_C(100),  8, DS_S( 45),  15, 3, PREQ_BARACKS},
+  {"Troopers"    ,DS_C(200),  8, DS_S(110),  10, 3, PREQ_BARACKS}
+};
+
+
+// Sctructure Type
+typedef struct StrcType {
+  char *name;
+  u1 level;
+  u1 cost;
+  u1 power;
+  u1 shield;
+  u1 size;
+  u1 preq;
+} StrcType;
+
+
+StrcType stypes[] = {
+  {"Concrete slab"     , 1, DS_C( 15),   0, DS_S(  40), SZ_2x2, PREQ_CONSTR_YARD},
+  {"Construction yard" , 1, DS_C(  0),   0, DS_S( 800), SZ_2x2, PREQ_NONE},
+  {"Refinery"          , 1, DS_C(400), -30, DS_S( 900), SZ_3x2, PREQ_WINDTRAP},
+  {"Windtrap"          , 1, DS_C(300), 100, DS_S( 400), SZ_2x2, PREQ_CONSTR_YARD},
+  {"Barracks (soldier)", 2, DS_C(300), -10, DS_S( 600), SZ_2x2, PREQ_OUTPOST},
+  {"Barracks (trooper)", 2, DS_C(400), -20, DS_S( 800), SZ_2x2, PREQ_OUTPOST},
+  {"Outpost"           , 2, DS_C(400), -30, DS_S(1000), SZ_2x2, PREQ_WINDTRAP},
+  {"Spice silo"        , 2, DS_C(150),  -5, DS_S( 300), SZ_2x2, PREQ_REFINERY},
+  {"Vehicle Atreides"  , 2, DS_C(400), -20, DS_S( 800), SZ_3x2, PREQ_REFINERY},
+  {"Vehicle Ordos"     , 2, DS_C(400), -20, DS_S( 800), SZ_3x2, PREQ_REFINERY},
+  {"Vehicle Harkonnen" , 3, DS_C(400), -20, DS_S( 800), SZ_3x2, PREQ_REFINERY},
+  {"Wall section"      , 4, DS_C( 50),   0, DS_S( 140), SZ_1x1, PREQ_OUTPOST},
+  {"Hi-Tech"           , 5, DS_C(500), -35, DS_S(1000), SZ_2x2, PREQ_OUTPOST|PREQ_FACTORY},
+  {"Repair facility"   , 5, DS_C(700), -20, DS_S(1800), SZ_3x2, PREQ_OUTPOST|PREQ_FACTORY},
+  {"Turret"            , 5, DS_C(125), -10, DS_S( 250), SZ_1x1, PREQ_OUTPOST},
+  {"Rocket turret"     , 6, DS_C(250), -20, DS_S( 500), SZ_1x1, PREQ_OUTPOST},
+  {"Starport"          , 6, DS_C(500), -50, DS_S(1000), SZ_3x3, PREQ_REFINERY},
+  {"Palace"            , 8, DS_C(999), -80, DS_S(2000), SZ_3x3, PREQ_STARPORT},
+};
+
+
+/*
+
+The programmer has to alternate between displaying one set of sprites and another. This is handled through a good algorithm of "OAM Cycling". Depending on the OAM algorithm used, the sprites might either flicker (as in many Konami games), or blank out with a rippling effect (seen in some games).
+
+
+- Early NES games used only a few sprites, and they patrolled specific areas on screen.
+
+- Capcom games alternate the order of sprite drawing from 0-63 to 63-0 between frames, making flicker present but constant, so it offends less.
+
+- Konami and Pin Eight games start at a random location in the sprite table and increment the sprite address by 17 (instead of 1) every time a sprite is drawn, making flicker pseudo-random and much less noticeable (you can really only see it when huge crowds of sprites are together).
+
+*/
+
+
+/*The standard display resolution of the NES is 256 horizontal pixels by 240 vertical pixels. Typically, games designed for NTSC-based systems had an effective resolution of only 256 by 224 pixels, as the top and bottom 8 scanlines are not visible on most television sets. For additional video memory bandwidth, it was possible to turn off the screen before the raster reached the very bottom.*/
+
+
+Standard map is 64x64
+
+Map specifications :
+66 row's and columns
+Sign's 1-64 in each row gives the playable ground, sign's 65 and 66 are map border (symbolized by "rr")
+column's 1-64 in each row gives the playable ground, sign's 65 and 66 are map border (symbolized by "rr")
+
+Map Legend :
+
+")" = Sand
+"^" = rock buildable
+"%" = rock to sand border (buildable, surrounds normal rock always)
+"R" = high rock (infantry only, not buildable)
+"-" = spice field
+"+" = spice field double
+"r" = map border (also seen surrounded by R, maybe its unpassable rock xD)
+
+There are other which i could not identify exactly at the moment :
+"$" = maybe incomplete normal rock (not buildable) - just a guess
+"(" = not sure, seen this within normal rock and outside it
+"#" = no guess
+
+
+
+
+/*
+      +-----------+-----------+-----+------------+
+      | Sprite #0 | Sprite #1 | ... | Sprite #63 |
+      +-+------+--+-----------+-----+------------+
+        |      |   
+        +------+----------+--------------------------------------+
+        + Byte | Bits     | Description                          |
+        +------+----------+--------------------------------------+
+        |  0   | YYYYYYYY | Y Coordinate - 1. Consider the coor- |
+        |      |          | dinate the upper-left corner of the  |
+        |      |          | sprite itself.                       |
+        |  1   | IIIIIIII | Tile Index #                         |
+        |  2   | vhp000cc | Attributes                           |
+        |      |          |   v = Vertical Flip   (1=Flip)       |
+        |      |          |   h = Horizontal Flip (1=Flip)       |
+        |      |          |   p = Background Priority            |
+        |      |          |         0 = In front                 |
+        |      |          |         1 = Behind                   |
+        |      |          |   c = Upper two (2) bits of colour   |
+        |  3   | XXXXXXXX | X Coordinate (upper-left corner)     |
+        +------+----------+--------------------------------------+
+
+    The Tile Index # is obtained the same way as Name Table data.
+
+    Sprites which are 8x16 in size function a little bit differently. A
+    8x16 sprite which has an even-numbered Tile Index # use the Pattern
+    Table at $0000 in VRAM; odd-numbered Tile Index #s use $1000.
+    *NOTE*: Register $2000 has no effect on 8x16 sprites.
+
+    All 64 sprites contain an internal priority; sprite #0 is of a higher
+    priority than sprites #63 (sprite #0 should be drawn last, etc.).
+
+    Only eight (8) sprites can be displayed per scan-line. Each entry in
+    SPR-RAM is checked to see if it's in a horizontal range with the other
+    sprites. Remember, this is done on a per scan-line basis, not on a per
+    sprite basis (e.g. done 256 times, not 256/8 or 256/16 times).
+
+    (NOTE: On a real NES unit, if sprites are disabled (D4 of $2001 is 0)
+    for a long period of time, SPR-RAM will gradually degrade. A proposed
+    concept is that SPR-RAM is actually DRAM, and D4 controls the DRAM
+    refresh cycle).
+
+
+
+
+PPU Control Register 1 ($2000), bits:
+0-1 - Name table address, changes between the
+      four name tables at $2000 (0), $2400 (1),
+      $2800 (2) and $2C00 (3).
+2   - Specifies amount to increment address by,
+      either 1 if this is 0 or 32 if this is 1.
+3   - Identifies which pattern table sprites are
+      stored in, either $0000 (0) or $1000 (1).
+4   - Identifies which pattern table the background
+      is stored in, either $0000 (0) or $1000 (1).
+5   - Specifies the size of sprites in pixels, 8x8 if
+      this is 0, otherwise 8x16.
+6   - Changes PPU between master and slave modes. This
+      is not used by the NES.
+7   - Indicates whether a NMI should occur upon V-Blank.
+
+
+PPU Control Register 2 ($2001), bits:
+0   - Indicates whether the system is in colour (0) or
+      monochrome mode (1),
+1   - Specifies whether to clip the background, that is
+      whether to hide the background in the left 8 pixels on
+      screen (0) or to show them (1).
+2   - Specifies whether to clip the sprites, that is whether
+      to hide sprites in the left 8 pixels on screen (0) or
+      to show them (1).
+3   - If this is 0, the background should not be displayed.
+4   - If this is 0, sprites should not be displayed.
+5-7 - Indicates background colour in monochrome mode or
+      colour intensity in colour mode.
+
+*/
+
+
+
+
+
+
+
+#define N 6
+#define SPIRAL_SIZE (N*2)
+#define SPIRAL_STEP 1
+/*
+7|8|9|10
+-+-+-+--
+6|1|2|11
+-+-+-+--
+5|4|3|12
+-+-+-+--
+      13
+*/
+void spiral() {
+  u1 s[SPIRAL_SIZE][SPIRAL_SIZE];
+  s1 x = SPIRAL_SIZE/2 - 1;
+  s1 y = SPIRAL_SIZE/2 - 1;
+  u1 r = 0;
+  u1 j = 1;
+  s1 dx, dy;
+  u1 n = 0;
+  u1 i = 0;
+  memset(s, 0, SPIRAL_SIZE*SPIRAL_SIZE);
+
+  for(;;) {
+    if(!i--) {
+      i = r;
+      if(n&1) {
+        r += SPIRAL_STEP;
+        if(r == N*2) break;
+      }
+
+      switch(n++&3) {
+      case 0: dx= 1;dy= 0;break;
+      case 1: dx= 0;dy= 1;break;
+      case 2: dx=-1;dy= 0;break;
+      case 3: dx= 0;dy=-1;break;
+      }
+
+    }
+    s[y][x] = j++;
+    x += dx;
+    y += dy;
+    printf("%d,%d\n",x,y);
+  }
+  printf("r=%d,n=%d,i=%d\n", r, n,i);
+
+  for(y = 0; y < SPIRAL_SIZE; y++) {
+    for(x = 0; x < SPIRAL_SIZE; x++)
+      printf("%3d|", s[y][x]);
+    printf("\n");
+  }
+}
+
+void trace() {
+#define M(x,y) m[(y)*16 + (x)]
+#define B(x,y) ((x) < 0 || (y) < 0 || (x) >= 16 || (y) >= 16 || M((x),(y)) == 1)
+#define SX 4
+#define SY 8
+#define MOVE   0
+#define TRACE  1
+  u1 i,j;
+  u1 l = 200;
+  u1 o;
+  u1 s=MOVE;
+  s1 nx, ny;
+  s1 dx, dy;
+  s1 x=SX,y=SY;
+  s1 tx=4,ty=1;
+  s1 x0,y0,x1,y1;
+  u1 m[16*16] = {
+    0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,
+    0,1,1,1,1,1,1,1,0,1,0,0,1,0,0,0,
+    0,1,1,1,1,1,1,1,0,1,0,0,1,0,0,0,
+    0,1,1,1,1,1,1,1,0,1,0,0,1,0,0,0,
+    0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,
+    0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,
+    0,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,
+    0,0,1,1,1,1,1,0,0,0,0,0,1,0,0,0,
+    0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,
+    0,0,0,0,1,1,0,0,0,0,1,1,1,0,0,0,
+    0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  };
+
+  //dx1*dy2 = dx2*dy1
+  while((x != tx || y != ty) && l--) {
+    if(s == MOVE) {
+move_begin:
+      dx = sign8(tx-x);
+      dy = sign8(ty-y);
+      nx = x+dx;
+      ny = y+dy;
+
+      if(B(nx,ny)) {
+        if(abs8(dx) == abs8(dy)) {
+          if(!B(x+dx,y)) {
+            ny -= dy;
+            goto commit_move;
+          }
+          if(!B(x,y+dy)) {
+            nx -= dx;
+            goto commit_move;
+          }
+        }
+        x0 = x;
+        y0 = y;
+        x1 = nx;
+        y1 = ny;
+        do {
+          if      (dx > 0) x1++;
+          else if (dx < 0) x1--;
+          else if (dy > 0) y1++;
+          else             y1--;
+        } while(B(x1,y1));
+        o = v_to_o(dx,dy);
+        s = TRACE;
+        goto trace_begin;
+      }
+    } else {
+      if(x == x0 && y == y0) { // are we moving in circles?
+        dx = tx-x;
+        dy = ty-y;
+        do {
+          if      (dx > 0) x1++;
+          else if (dx < 0) x1--;
+          else if (dy > 0) y1++;
+          else             y1--;
+        } while(!B(x1,y1));
+
+        do {
+          if      (dx > 0) x1++;
+          else if (dx < 0) x1--;
+          else if (dy > 0) y1++;
+          else             y1--;
+        } while(B(x1,y1));
+      }
+
+trace_begin:
+      for(i=0;;) {
+        nx = x+ovec[o][0];
+        ny = y+ovec[o][1];
+        if(!B(nx,ny)) {
+          if(!i) { // obstacle itself moved from our way?
+            s = MOVE;
+            goto move_begin;
+          }
+
+          // keep hand on the obstacle
+          o = (o-3)&7;
+          while(!B(nx+ovec[o][0],ny+ovec[o][1])) {
+            o = o_add45(o);
+          }
+          //if(l == 186) printf("%d,%d\n",x,y);
+          break;
+        }
+        o = o_add45(o);
+        if(++i == 8) { // we got circled
+          goto abort_trace;
+        }
+      }
+      if(nx == x1 && ny == y1) { // got around obstacle?
+        s = MOVE;
+        goto move_begin;
+      }
+    }
+commit_move:
+    x=nx;
+    y=ny;
+    M(x,y) = 2;
+  }
+
+abort_trace:
+
+  for(j = 0; j < 16; j++) {
+    for(i = 0; i < 16; i++) {
+      if(j == ty && i == tx) printf("T,");
+      else if(j == y && i == x) {
+        if(o == 0) printf("^,");
+        else if(o == 1) printf("/,");
+        else if(o == 2) printf(">,");
+        else if(o == 3) printf("\\,");
+        else if(o == 4) printf("V,");
+        else if(o == 5) printf("%%,");
+        else if(o == 6) printf("<,");
+        else if(o == 7) printf("`,");
+        else printf("C,");
+      } else if(j == SY && i == SX) printf("S,");
+      else printf("%d,", M(i,j));
+    }
+    printf("\n");
+  }
+}
+
+void color_a(u1 *p, int x, int y) {
+  *p++ = 0xff;
+  *p++ = 0;
+  *p++ = 0;
+}
+
+void color_b(u1 *p, int x, int y) {
+  *p++ = 0;
+  *p++ = 0;
+  *p++ = 0xff;
+}
+
+//time dithering / temporal dithering 
+void draw_scene() {
+  int x,y;
+  //memset(screen->pixels, 0, NES_HEIGHT*screen->pitch);
+  static int c = 0;
+  for(y = 0; y < NES_HEIGHT; y++) {    
+    for(x = 0; x < NES_WIDTH; x++) {
+      u1 *p = screen->pixels + y*screen->pitch + x*screen->format->BytesPerPixel;
+      if(c&1) {
+        if(y&1) color_a(p, x, y);
+        else color_b(p, x, y);
+      } else {
+        if(y&1) color_b(p, x, y);
+        else color_a(p, x, y);
+      }
+      p += 4;
+    }
+  }
+  c++;
+}
+
+void gen_square_tbl() {
+  u2 i = 0;
+  while(i < 256) {
+    printf("%5d,", i*i);
+    i++;
+    if(!(i&0x7)) printf("\n");
+  }
+}
+
+u1 sqrt8(u1 v) {
+  int i;
+  for(i = 0; i < 128; i++)
+    if(i*i > v) return i - 1;
+  return 0;
+}
+void gen_sqrt_tbl() {
+  int i = 0;
+  while(i < 255) {
+    printf("%d, ", sqrt8(i));
+    ++i;
+    if(!(i & 0xf)) printf("\n");
+  }
+}
+
+
+/*void gen_radi_bitmap(u1 r) {
+  u1 x, y;
+  u1 p = r/8;  // line pitch
+  u1 s = r*p;  // size of bitmap
+  u1 b[s];     // bitmap
+  memset(b, 0, s);
+
+  for(y = 0; y < r; y++)
+    for(x = 0; x < r; x++) {
+      if(inrng8(0,0,x,y,r)) {
+        printf("*");
+        b[y*p] |= (1<<x);
+      } else {
+        printf(" ");
+      }
+      if(x == r-1) printf("\n");
+    }
+
+  printf("u1 radi[] = {");
+  for(y = 0; y < s; y++) {
+     printf("%d", b[y]);
+     printf("%s", y == s-1 ? "\n" : ", ");
+  }
+  printf("}\n");
+}*/
+
+
+
+u2 htdt[] = {10000, 1000, 100, 10};
+void htd(u2 v) {
+  u1 i, r;
+  for(i = 0; i < 4; i++) {
+    r = 0;
+    for(r = 0; v >= htdt[i]; r++) v-= htdt[i];
+    printf("%d", r);
+  }
+  printf("%d", v);
+  printf("\n");
+}
+
+
+
+
+// quotient and remainder returned by div10
+u1 quot, rem;
+void div10(u1 i) {
+  // approximate the quotient as q = i*0.000110011 (binary)
+  quot = ((i>>1) + i) >> 1; // times 0.11 
+  quot = ((quot>>4) + quot) >> 3; // times 0.000110011
+
+  // compute the remainder as r = i - 10*q
+  rem = ((quot<<2) + quot) << 1; // times 1010.
+  rem = i - rem;
+
+  // fixup if approximate remainder out of bounds
+  if(rem >= 10) {
+    rem -= 10;
+    quot++;
+  }
+}
+
+
+// with overflow check
+void htd_oc(u2 n) {
+  u1 t1, d4, d3, d2, d1, d0;
+  u2 t2;
+
+  d0 = n       & 0xF;
+  d1 = (n>>4)  & 0xF;
+  d2 = (n>>8)  & 0xF;
+  d3 = (n>>12) & 0xF;
+
+  // t = 6*(u2)(d3+d2+d1) + d0;
+  t2 = d3+d2+d1, t2 = ((t2+t2+t2)<<1) + d0;
+
+  if(t2 > 255) { // overflow
+    printf("hello\n");
+    div10(t2&0xFF);
+    quot += 25;
+    d0 = rem + 6;
+    if(d0 >= 10) {
+      d0 -= 10;
+      quot++;
+    }
+  } else { // no overflow
+    div10(t2);
+    d0 = rem;
+  }
+
+  //div10(quot + 9*d3 + 5*d2 + d1);
+  t1 = d3+d3+d3+d2;
+  div10(quot + t1+t1+t1 + (d2<<1) + d1), d1 = rem;
+  div10(quot + (d2<<1)), d2 = rem;
+  div10(quot + (d3<<2)), d3 = rem;
+  d4 = quot;
+
+  printf("%d%d%d%d%d\n",d4,d3,d2,d1,d0);
+}
+
+// without overflow checks it gives right result up to around 48000
+void htd(u2 n) {
+  u1 t, d4, d3, d2, d1, d0;
+
+  d0 = n       & 0xF;
+  d1 = (n>>4)  & 0xF;
+  d2 = (n>>8)  & 0xF;
+  d3 = (n>>12) & 0xF;
+
+  // t = 6*(u2)(d3+d2+d1) + d0;
+  t = d3+d2+d1;
+  div10(((t+t+t)<<1) + d0), d0 = rem;
+
+  //div10(quot + 9*d3 + 5*d2 + d1);
+  t = d3+d3+d3+d2;
+  div10(quot + t+t+t + (d2<<1) + d1), d1 = rem;
+  div10(quot + (d2<<1)), d2 = rem;
+  div10(quot + (d3<<2)), d3 = rem;
+  d4 = quot;
+
+  printf("%d%d%d%d%d\n",d4,d3,d2,d1,d0);
+}
