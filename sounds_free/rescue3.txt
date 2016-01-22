@@ -1,0 +1,5 @@
+Authors: The FreeCol Team
+License: GPLv2
+Origin: http://www.freecol.org
+
+based of french.ogg
