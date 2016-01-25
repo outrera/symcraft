@@ -1,0 +1,3 @@
+author: Sebastien Angibaud <sebastien.angibaud@gamned.org>, Philip Bradbury <ptbcomposer@gmail.com>, Julien Jorge <julien.jorge@gamned.org>
+license: CC-BY-SA
+origin: http://www.stuff-o-matic.com/plee-the-bear/
