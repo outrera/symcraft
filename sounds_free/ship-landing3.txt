@@ -1,0 +1,6 @@
+Author: Extreme Tux Racer Team, Nikita Sadkov
+License: GPL2
+Origin: https://sourceforge.net/projects/extremetuxracer/
+        https://sourceforge.net/projects/tuxracer/
+
+based of ice_slide.wav from tux racer

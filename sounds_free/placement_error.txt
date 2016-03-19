@@ -1,0 +1,3 @@
+Author: The FreeCol Team
+License: GPLv2
+Origin: http://www.freecol.org

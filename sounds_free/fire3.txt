@@ -1,0 +1,3 @@
+Author: stendhal team
+License: GPL2
+Origin: https://sourceforge.net/projects/arianne/
