@@ -1,0 +1,7 @@
+author: Jason Oppel
+license: GPL2
+origin: http://www.worldforge.org/index.php/develop/media/
+        https://svn.worldforge.org:886/svn/media/trunk/
+        http://www.worldforge.org/index.php/downloads/
+
+heavy_item_slid_on_floor2_11khz_mono_jo.wav
