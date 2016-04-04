@@ -1,0 +1,492 @@
+EXE version 1.33 File Format
+
+03:7FF1-03:81F4   L Offsets for 129 fixup table entries
+        Value+381F5=place of fixup record
+03:81F5-05:C2A3   L Fixup table,entry record like this
+
+        Index :   Feature :
+
+        00 B      Should be 07
+        01 B      If 00 , then entry lenght=7
+            If 10 , then entry length=9
+        02 W      12 bit offset to location of code
+            in the page
+            *Real location =
+            = this_offset+5C2A4+(1000h*entry#),
+        04 B      1 = code segment
+            2 = data segment
+        05 W/L   Depends on section length
+            Call value , the same value is on
+            place pointed by Real_location
+            computed like above
+            This value is frequently offset to
+            code section,so Value+5C2A4=asm code
+:
+:
+:
+07:7B34-07:7BA1   B A byte for first 106 units , unknown ???
+07:7B9E-07:7C07   B Identity flag for each unit ,
+        if false War2 could crash
+:
+:
+:
+0C:DFD8-0C:E18F   L Function Z , sets various variables
+        based on the number of units of this
+        type you have. Sets number of different
+        types of units , number of buildings , 
+        amount of produced food . 
+:
+:
+:
+0C:E22D-0C:E286   B After death animation for first 58 units
+        0=nothing,1=human corp , 2=orcish corp , 3=sink
+:
+:
+:
+0C:E2D0-0C:E39F   L 52 dwords victory conditions , record like this
+
+        Index :   Meaning :
+
+        00 B      Victory condition level
+
+            00=own 4 farms and 1 barracks
+              01=own 4 oil platforms and 1 shipyard
+            02=any oil refineries in game
+            03=kill attack peasants,build castle,
+               destroy enemy
+            04=never used
+             05=free mages and peasants,destroy
+               castle
+            06=destroy transports,oil platforms and
+                 shipyards
+            07=never used
+            08=destroy dark portal
+            09=destroy castle,have runestone at end
+            0A=build shipyard and fortress by circle
+               of power
+            0B=destroy death knights and their
+               temple , Grom must survive
+            0C=get violet player units,destory green,
+               rescue white and have all heroes
+            0D=destroy all,Teron must survive
+            0E=capture dragons,capture dragon roost
+            0F=destroy all enemy ships,have
+               5 shipyards
+            10=kill daemon
+            11=destroy human buildings,rescue mage,
+               return him to circle of power
+            12=destroy all mage towers,destroy 
+               violet player
+            13=destroy all humans,capture dark portal
+            14=rescue X units , Alleria , Danath ,
+               Turalyon must survive
+            15=destroy all,Danath must survive
+            16=destroy all strongholds and fortresses,
+               Turalyon must survive,rescue X units
+            17=destroy enemy,have castle
+            18=destroy enemy shipyards , have 3 owns
+            19=destroy orange,bring Turalyon and
+               Danath to circle
+            1A=Kill Deathwing,Khadgar , Alleria ,
+               Kurdran must survive
+            1B=destroy black fortress,raze altar
+            1C=play until retreat,heroes must survive
+            1D=destroy enemy,heroes must survive
+            1E=destroy dark prtal,only Khadgar can
+               do this,must survive
+
+        01 B      1=kill all
+            2=rescue by contitions below
+        02 W      Always set to 0000 ???
+
+0C:E3A0-0C:E46F   L 52 dwords rescue numbers
+
+        Index :   Meaning :
+
+        00 B      Number of units to rescue
+        01 B      00=rescue any units
+            10=rescue hero-flag units
+        02 W      Region flag ???
+
+0C:E470-0C:E53F   L Unit and buildings allowed
+        flags , for 1 player for 52 levels
+
+        b00:   Footman/Grunt
+        b01:   Peasant/Peon
+        b02:   Ballista/Catapult
+        b03:   Knight/Ogre
+        b04:   Archer/Axe Thrower
+        b05:   Mage/Death Knight
+        b06:   Tanker
+        b07:   Destroyer
+        b08:   Transport
+        b09:   Battleship/Juggernaught
+        b0A:   Submarine/Giant Turtle
+        b0B:   Flying Machine/Gobblin Zeppelin
+        b0C:   Gryphon/Dragon
+        b0D:   Unused       
+        b0E:   Dwarves/Sappers
+        b0F:   Aviary/Roost
+        b10:   Farm
+        b11:   Barracks
+        b12:   Lumber Mill
+        b13:   Stables/Mound
+        b14:   Mage Tower/Temple
+        b15:   Foundry
+        b16:   Refinery
+        b17:   Inventor/Alchemists
+        b18:   Church/Altar of Storms
+        b19:   Tower
+        b1A:   Town Hall/Great Hall
+        b1B:   Keep/Stronghold
+        b1C:   Castle/Fortress
+        b1D:   Blacksmith
+        b1E:   Shipyard
+        b1F:   Wall in multiplayer
+
+0C:E540-0C:E60F   L Upgrade allowed flags , 52 levels
+
+        b00   Arrow 1
+        b01   Arrow 2
+        b02   Sword 1
+        b03   Sword 2
+        b04   Shield 1
+        b05   Shield 2
+        b06   Ship Cannon 1
+        b07   Ship Cannon 2
+        b08   Ship Armor 1
+        b09   Ship Armor 2
+        b0A   Unused
+        b0B   Unused
+        b0C   Ballista 1
+        b0D   Ballista 2
+        b0E   Unused
+        b0F   Unused
+        b10   Elven Rangers
+        b11   Longbow
+        b12   Scouting
+        b13   Ranger Markmanship
+        b14   Paladins
+        b15   Unused
+        :   Unused
+        b1F   Unused
+
+0C:E610-0C:E6DF   L Spells allowed flags,52 levels
+        b00:   Holy Vision
+        b01:   Healing
+        b02:   Unused
+        b03:   Exorcism
+        b04:   Flame Shield
+        b05:   Fireball
+        b06:   Slow
+        b07:   Invisibility
+        b08:   Polymorph
+        b09:   Blizzard
+        b0A:   Eye of Killrog
+        b0B:   Bloodlust
+        b0C:   Unused
+        b0D:   Raise Dead
+        b0E:   Death Coil
+        b0F:   Whirlwind
+        b10:   Haste
+        b11:   Unholy Armor
+        b12:   Runes
+        b13:   Death and Decay
+        b14:   Unused
+        :   Unused
+        b1F:   Unused
+:
+:
+:
+0C:E728-0C:E9D9   W Human Sound Table 345 sounds with
+        references to entry number in which
+        is sound stored , respect archive offsets
+        Highest 3 bits are flags
+
+        b07   ???
+        b06   ???
+        b05   Repeat , first unit which uses the
+         same sound don't have it,others must
+         or the game will crash on exit
+
+0C:E9DA-0C:E9DB   W Just for dword align ???
+
+0C:E9DC-0C:EC8D   W Orc Sound Table , 345 references,see above
+:
+:
+:
+0C:EF4C-0C:EFBF   W First 58 units number of attack
+        sound in sound table for its race
+0C:EFC0-0C:F0A7   L First 58 unit acknowledge function number
+        Plays random acknowledge sound
+0C:F0A8-0C:F11B   W First 58 units number of ready
+        sound in sound table for its race
+0C:F11C-0C:F203   L First 58 units selected function number
+        Plays appropriate random selected or annoyed
+        sound
+0C:F204-0C:F23D   W Sound played when missile hits target
+        *Missile types order
+        00   Lightning
+        01   Griffon Hammer
+        02   Dragon Breath and Fireball
+        03   Fireball by Flame Shield
+        04   Flame Shield
+        05   Blizzard
+        06   Death and Deacy
+        07   Big Cannon
+        08   Exorcism
+        09   Heal Effect
+        0A   Touch of Death
+        0B   Rune
+        0C   Whirlwind
+        0D    Catapult Rock
+        0E   Ballista Bolt
+        0F   Arrow
+        10   Axe
+        11   Submarine Missile
+        12   Turtle Missile
+        13   Small Fire
+        14   Big Fire
+        15   Ballista and Catapult impact
+        16   Normal Spell
+        17   Explosion
+        18    Small Cannon
+        19   Cannon Explosion
+        1A   Cannon Tower Explosion
+        1B   Daemon Fire
+        1C   Green Cross
+        1D    None
+:
+:
+0D:061C-0D:070F   L Action function A calls , action legal target ???
+0D:0710-0D:0803   L Action function B calls , action to take ???
+        *All spells have the same
+0D:0804-0D:08F7   L Action function C calls , for spells action to
+        take when casting , for other actions set to 0
+0D:08F8-0D:0934   B A byte for each action , various numbers from 0 to 6
+0D:0935-0D:0971   B A byte for each action , from 0 to 2
+0D:0972-0D:09EB W Word for each action , action flags ???
+0D:09EC-0D:0A28   B Action range , for action order see Action mana
+
+:
+:
+:
+0D:2304-0D:237D   W Action mana cost , used for spells
+        *Action offsets
+        00   Unkonown
+        01   Unknown
+        02   Stop
+        03   Move 
+        04   Unknown
+        05   Patrol
+        08   Attack
+        :
+        0D   Stand Ground
+        :
+        11   Attack Ground
+        12   Unknown
+        13   Demolish
+        :
+        17   Harvest
+        18   Return with Goods
+        :
+        1B   Repair
+        1C   Unknown
+        1D   Unload Passengers
+        :
+        26   Holy Vision
+        27   Healing
+        28   Unknown
+        29   Exorcism
+        2A   Flame Shield
+        2B   Fireball
+        2C   Slow
+        2D   Invisibility
+        2E   Polymorph
+        2F   Blizzard
+        30   Eye of Kilrogg
+        31   Bloodlust
+        32   Raise Dead
+        33   Death Coil
+        34   Whirlwind
+        35   Haste
+        36   Unholy Armor
+        37   Runes
+        38   Death and Decay
+        :
+        3C   Unknown
+:
+:
+0D:2380-0D:3CEF   R12 Unit commands , command offsets point here
+
+      Index :      Meaning :
+
+      00 W      Position of icon , 0=left upper
+            9 = right down , from left to right
+      02 W      Picture index , icon number
+      04 L      Req Fn , requirements function
+            for icon to appear
+      08 L      Act Fn , what action to perform call
+      0C B      Requirement fuction variable
+            (for example 0,1,2 for upgrade levels)
+      0D B      Action function variable
+            (for example unit nr. for barracks)
+      0E W      Showed string index
+      10 W      Unknown , some flags
+      
+0D:3CF0-0D:3FBF   R06 Extended unit data (110 units,10 specials)
+
+      Index :      Meaning :
+
+      00 W      Number of commands
+      02 L      Call to command data section
+            Value+CC2A4=offset
+            of first command
+            *Change command following this proc:
+            Fup_tbl_entr=(file_pos-5C2A4) div 1000h
+            Srch_offs=(file_pos-5C2A4) mod 1000h
+            Get offset of section Fup_tbl_entr in
+            fixup table and begin search for Srch_offs
+            If You find it , change in Fixup Table
+            record (see Fixup table ) command value
+            on offset 5 of fixup record
+
+        *Units order
+
+        00   Footman
+        01   Grunt
+        02   Peasant
+        03   Peon
+        04   Ballista
+        05   Catapult
+        06   Knight
+        07   Ogre
+        08   Archer
+        09   Axethrower
+        0A   Mage
+        0B   Death Knight
+        0C   Paladin
+        0D   Ogre Mage
+        0E   Dwarves
+        0F   Goblin Sappers
+        10   Attack Peasant
+        11   Attack Peon
+        12   Ranger
+        13   Berserker
+        14   Alleria
+        15   Teron Gorefiend
+        16   Kurdan and Sky'ree
+        17   Dentarg
+        18   Khadgar
+        19   Grom Hellscream
+        1A   Tanker H
+        1B   Tanker O
+        1C   Transport H
+        1D   Transport O
+        1E   Elven Destroyer
+        1F   Troll Destroyer
+        20   Battleship
+        21   Juggernaught
+        22   Nothing
+        23   Deathwing
+        24   Nothing
+        25   Nothing
+        26   Gnomish Submarine
+        27   Giant Turtle
+        28   Gnomish Flying Machine
+        29   Goblin Zeppelin
+        2A   Gryphon Rider
+        2B   Dragon
+        2C   Turalyon
+        2D   Eye of Kilrogg
+        2E   Danath
+        2F   Korgath Bladefist
+        30   Nothing
+        31   Cho'gall
+        32   Lothar
+        33   Gul'dan
+        34   Uther Lightbringer
+        35   Zuljin
+        36   Nothing
+        37   Skeleton
+        38   Daemon
+        39   Critter
+        3A   Farm
+        3B   Pig Farm
+        3C   Barracks H
+        3D   Barracks O
+        3E   Church
+        3F   Altar of Storms
+        40   Scout Tower H
+        41   Scout Tower O
+        42   Stables
+        43   Ogre Mound
+        44   Gnomish Inventor
+        45   Goblin Alchemist
+        46   Gryphon Aviary
+        47   Dragon Roost
+        48   Shipyard H
+        49   Shipyard O
+        4A   Town Hall
+        4B   Great Hall
+        4C   Elven lumber mill
+        4D   Troll Lumber Mill
+        4E   Foundry H
+        4F   Foundry O
+        50   Mage Tower
+        51   Temple of the Damned
+        52   Blacksmith H
+        53   Blacksmith O
+        54   Refinery H
+        55   Refinery O
+        56   Oil Platform H
+        57   Oil Platform O
+        58   Keep
+        59   Stronghold
+        5A   Castle
+        5B   Fortress
+        5C   Gold Mine
+        5D   Oil Patch
+        5E   Start Location H
+        5F   Start Location O
+        60   Guard Tower H
+        61   Guard Tower O
+        62   Cannon Tower H
+        63   Cannon Tower O
+        64   Circle of Power
+        65   Dark Portal
+        66   Runestone
+        67   Wall H - not yet build
+        68   Wall O - not yet build
+        69   Dead Body
+        6A   1x1 Destroyed Place
+        6B   2x2 Destroyed Place
+        6C   3x3 Destroyed Place
+        6D   4x4 Destroyed Place
+        6E   Blank
+        6F   Human Basic Build
+        70   Human Advanced Build
+        71   Orc Basic Build
+        72   Orc Advanced Build
+        73   Cancel
+        74   Cancel #2 ???
+        75   Cancel Group
+        76   Command Group of Humans
+        77   Command Group of Orcs
+
+0D:3FC0-0D:45C3   R0E Unit data (110 units) , record like this
+          *For units order see above
+
+        Index :      Meaning :
+
+        00 W      Unit Icon number
+        02 W      Unknown , but
+            0 = Dead body,start loc,destr site
+            1 = Live units,farms,mine,circle,
+                runestone but no magiks
+            2 = Mage,D.Knight,Paladin,Ogre Mage
+            3 = Other buildings??
+        04 W      Unit name string number
+        06 L      Function A,right click ???
+        0A L      Function B,stats which are
+            shown on the bar(food usage..)

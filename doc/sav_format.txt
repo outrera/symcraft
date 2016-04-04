@@ -1,0 +1,150 @@
+Warcraft 2: Tides of Darkness and Beyond The Dark Portal - Offset List
+By Mordor  mailto:mordor@opnt.optimus.wroc.pl
+v1.00 ENGLISH (01/18/97)
+You will need any hex editor to perform these cheats. With editor load open savegame file (*.sav). 
+
+PLAYERS STATUS:
+
+2F4h RED
+2F5h BLUE (default for human)
+2F6h GREEN
+2F7h VIOLET
+2F8h ORANGE
+2F9h BLACK (default for orc)
+2FAh WHITE
+2FBh YELLOW
+Status :
+00h Human
+01h Computer
+02h In prison
+03h None
+OBJECTS (132 bytes):
+
+368882 (5A0F2h) First object
+289650 (46B72h) Last object (numbering starts from -1 and goes down)
+OBJECT RECORD:
+
+Offs Name Type Max Description
+
++00
++1E Energy WORD (FF FF)
++21 Type BYTE (00h - 68h) in new scenarios bigger values are used 
++22 Magic BYTE (FF)
++23 Bitmap BYTE (FF) in original version equal to type
++27 Menu BYTE (FF) in original version equal to type
++28 Side BYTE (00h - 07h, 0Fh - neutral)
++29 Color BYTE (00h - 07h)
++7E Resources WORD (FF FF) value * 100
+UNIT TYPES (BE - Beyond the Dark Portal):
+
+00h Footman
+01h Grunt
+02h Peasant
+03h Peon
+04h Ballista
+05h Catapult
+06h Knight
+07h Ogre
+08h Elven Archer
+09h Troll Axethrower
+0ah Mage
+0bh Death Knight
+0ch Paladin
+0dh Ogre-Mage
+0eh Dwarven Demolition Squad
+0fh Goblin Sappers
+10h Peasant
+11h Peon
+12h Ranger
+13h Berserker
+14h Alleria (BE)
+15h Teron Gorefiend (BE)
+16h Kurdran (BE)
+17h Dentorg (BE)
+18h Khadgar (BE)
+19h Grom Hellscream (BE)
+1ah Oil Tanker
+1bh Oil Tanker
+1ch Transport
+1dh Transport
+1eh Elven Destroyer
+1fh Troll Destroyer
+20h Battleship
+21h Ogre Juggernaught
+22h
+23h Deathwing (BE)
+24h
+25h
+26h Gnomish Submarine
+27h Giant Turtle
+28h Gnomish Flying Machine
+29h Goblin Zeppelin
+2ah Gryphon Rider
+2bh Dragon
+2ch Turalyon (BE)
+2dh Eye Of Kilrogg
+2eh Danath (BE)
+2fh Korgath Bladefist (BE)
+30h
+31h Cho'gall
+32h Lothar
+33h Gul'dan
+34h Uther Lightbringer
+35h Zuljin
+36h
+37h Skeleton
+38h Daemon
+39h Critter
+3ah Farm
+3bh Pig Farm
+3ch Barracks
+3dh Barracks
+3eh Church
+3fh Altar Of Storms
+40h Scout Tower
+41h Watch Tower
+42h Stables
+43h Ogre Mound
+44h Gnomish Inventor
+45h Goblin Alchemist
+46h Gryphon Aviary
+47h Dragon Roost
+48h Shipyard
+49h Shipyard
+4ah Town Hall
+4bh Great Hall
+4ch Elven Lumber Mill
+4dh Troll Lumber Mill
+4eh Foundry
+4fh Foundry
+50h Mage Tower
+51h Temple Of The Damned
+52h Blacksmith
+53h Blacksmith
+54h Refinery
+55h Refinery
+56h Oil Platform
+57h Oil Platform
+58h Keep
+59h Stronghold
+5ah Castle
+5bh Fortress
+5ch Gold Mine
+5dh Oil Patch
+5eh Entry Point
+5fh Entry Point
+60h Guard Tower
+61h Guard Tower
+62h Cannon Tower
+63h Cannon Tower
+64h Circle Of Power
+65h Dark Portal
+66h Runestone
+67h Wall
+68h Wall
+DISCLAIMER: THIS DOCUMENT OR ITS AUTHOR IS IN NO WAY CONNECTED IN ANY WAY WITH BLIZZARD OR ANY OF ITS AFFILIATES OR PARENT COMPANIES. USE THIS AT YOUR OWN RISK. 
+
+Savegame editor is available as FREEWARE. All above information is used to write it. It was tested with Beyond the Dark Portal expansion.
+If you know something to make this document better please send your comments to: mordor@opnt.optimus.wroc.pl
+
+ENJOY,
