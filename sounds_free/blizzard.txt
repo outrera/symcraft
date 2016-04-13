@@ -1,0 +1,5 @@
+author: `Nooskewl Games`
+license: `Public Domain`
+origin: `http://opengameart.org/content/sound-effects-from-monster-rpg-2`
+
+//originally battle.ogg
