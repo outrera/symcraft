@@ -1,0 +1,580 @@
+PUD Maximum File Format
+
+00:0000-00:0003	$ Header description "TYPE"
+00:0004-00:0007	L Following data w/o header length (16 B)
+00:0008-00:000F	$ Identification "WAR2 MAP"
+00:0010-00:0013	L Always set to FF0A0000h
+00:0014-00:0017	L Id Tag for synchronize Puds in multiplayer mode
+00:0018-00:001B	$ Header description "VER "
+00:001C-00:001F	L Version data length ( 2 B)
+00:0020-00:0021	W Version number
+		  11h=normal,13h=expansion
+		  *If expansion is not installed,it won't show 1.3 PUDs
+00:0022-00:0025	$ Header description "DESC"
+00:0026-00:0029	L Description data length ( 32 B)
+00:002A-00:0049	$ Scenario description + line terminator $00
+00:004A-00:004D	$ Header description "OWNR"
+00:004E-00:0051	L Owner data length (16 B)
+00:0052-00:0061	B Players(0..15) controllers
+		  2=Comp (P),3=Nobody,4=Comp (A),5=Person
+		  6=Rescue (P),7=Rescue (A),
+		  *0=Comp (P),1=Comp (A),8-255=Comp (P)
+00:0062-00:0065	$ Header description "ERA "
+00:0066-00:0069	L Era data length ( 2 B)
+00:006A-00:006B	W Era number
+		  0=Forest,1=Icelands,2=Wastelands,3=Swamps
+		  *4-255=forest
+00:006C-00:006F	$ Header description "ERAX"
+00:0070-00:0073	L Expansion era data length ( 2 B)
+00:0074-00:0075	W Expansion Era number
+		  0=Forest,1=Icelands,2=Wastelands,3=Swamps
+		  *4-255=forest
+00:0076-00:0079	$ Header description "DIM "
+00:007A-00:007D	L Dimensions data length ( 4 B)
+00:007E-00:0081	W Map X and Y dimensions (0 ?? .. 128max)
+		  *Map is always loaded only by Y size
+		  *i.e. Y*Y map size
+00:0082-00:0085	$ Header description "UDTA"
+00:0086-00:0089	L Unit data length ( 5950 B )
+00:008A-00:008B	W Set if Should be used default data
+		  0=no,1=yes
+00:008C-00:0167	W Overlap frames for each unit (0..109)
+		  * group to belong number
+		  * see "UNIT" section for units order
+00:0168-00:0265	W Obsolete General grafix frames
+		  b00
+		  :	Entry number counting all archives
+		  b0C
+		  b0D	Flag #2
+		  b0E	Flag #1
+		  b0F	Repeat flag
+		  *FFFF means no frame available
+		  *Units from 0-126
+00:0266-00:0363	W Obsolete Forest grafix frames
+		  *see above
+00:0364-00:0461	W Obsolete Winter grafix frames
+		  *see above
+00:0462-00:055F	W Obsolete Wastelands grafix frames
+		  *see above
+00:0560-00:0717	L Units sight range (110 units)
+00:0718-00:07F3	W Units hit points (110 units)
+00:07F4-00:0861	B Flag if unit is magic
+		  0=no,1=yes
+00:0862-00:08CF	B Units build time
+		  * 6 = one second
+00:08D0-00:093D	B Units gold cost divided by 10
+00:093E-00:09AB	B Units lumber cost divided by 10
+00:09AC-00:0A19	B Units oil cost divided by 10
+00:0A1A-00:0BD1	L Units size in tiles , first X , then Y
+00:0BD2-00:0D89	L Units box size in pixels , first X , then Y
+00:0D8A-00:0DF7	B Units attack range
+00:0DF8-00:0E65	B Computer units reaction range
+00:0E66-00:0ED3	B Person units reaction range
+00:0ED4-00:0F41	B Units armor amount
+00:0F42-00:0FAF	B Selectable thru rectangle
+		  0=no,1=yes
+00:0FB0-00:101D	B Priority , AI treatment, high x low
+00:101E-00:108B	B Basic damage
+00:108C-00:10F9	B Piercing damage
+00:10FA-00:1167	B Weapon upgradable
+		  0=no,1=yes
+00:1168-00:11D5	B Armor upgradable
+		  0=no,1=yes
+00:11D6-00:1243	B Missile weapon type
+		  00	Lightning
+		  01	Griffon Hammer
+		  02	Dragon Breath and Fireball
+		  03	Fireball by Flame Shield
+		  04	Flame Shield
+		  05	Blizzard
+		  06	Death and Deacy
+		  07	Big Cannon
+		  08	Exorcism
+		  09	Heal Effect
+		  0A	Touch of Death
+		  0B	Rune
+		  0C	Whirlwind
+		  0D    Catapult Rock
+		  0E	Ballista Bolt
+		  0F	Arrow
+		  10	Axe
+		  11	Submarine Missile
+		  12	Turtle Missile
+		  13	Small Fire
+		  14	Big Fire
+		  15	Ballista and Catapult impact
+		  16	Normal Spell
+		  17	Explosion
+		  18    Small Cannon
+		  19	Cannon Explosion
+		  1A	Cannon Tower Explosion
+		  1B	Daemon Fire
+		  1C	Green Cross
+		  1D    None
+		  *1E-FF ???
+00:1244-00:12B1	B Unit type
+		  0=land,1=fly,2=naval
+		  *changes only appearance
+00:12B2-00:131F	B Decay rate
+		  *dies in dacay * 6 , 0=never
+		  *only for units created via spell
+00:1320-00:138D	B Annoy computer factor
+00:138E-00:13C7	B Second mouse button click
+		  01	Attack
+		  02	Move
+		  03	Harvest
+		  04	Haul Oil
+		  05	Demolish
+		  06	Sail
+		  *only the first 58 units
+00:13C8-00:14A3	W Point value for killing unit
+00:14A4-00:1511	B Which terrain can unit target
+		  00	Nothing
+		  01	Land
+		  02	Sea
+		  03	Land and Sea
+		  04	Air
+		  05	Land and Air
+		  06	Land and Sea
+		  07	Everything
+		  *Some missiles can not hit air units
+00:1512-00:16C9	L Unit flags
+		  b00:	Land unit 
+		  b01:	Air unit
+		  b02:	Explode when killed (used on catapult)
+		  b03:	Sea unit
+		  b04:	Critter 
+		  b05:	Is a building
+		  b06:	Is a submarine
+		  b07:	Can see submarine
+		  b08:	Is a peon
+		  b09:	Is a tanker
+		  b0A:	Is a transport
+		  b0B:	Is a place to get oil
+		  b0C:	Is a storage for gold
+		  b0D:	Not used
+		  b0E:	Can ground attack (only catapult and ships)
+		  b0F:	Is undead (exorcism work on them)
+		  b10:	Is a Shore building
+		  b11:	Can cast spell
+		  b12:	Is a storage for wood
+		  b13:	Can attack
+		  b14:	Is a tower
+		  b15:	Is an oil patch
+		  b16:	Is a mine
+		  b17:	Is a hero
+		  b18:	Is a storage for oil
+		  b19:	Invisibility/Unholy armor kill this unit
+		  b1A:	This unit act like a mage
+		  b1B:	Is this unit organic (spells)
+		  b1C:	Not used
+		  b1D:	Not used
+		  b1E:	Not used
+		  b1F:	Not used
+00:16CA-00:17C7	W Obsolete Swamps grafix frames
+		  *see Obsolete General grafix frames for info
+00:17C8-00:17CB	$ Header description "ALOW"
+00:17CC-00:17CF	L Allowed things data length ( 384 B)
+00:17D0-00:180F	L Units and buildings allowed flags (16 players)
+		  b00:	Footman/Grunt
+		  b01:	Peasant/Peon
+		  b02:	Ballista/Catapult
+		  b03:	Knight/Ogre
+		  b04:	Archer/Axe Thrower
+		  b05:	Mage/Death Knight
+		  b06:	Tanker
+		  b07:	Destroyer
+		  b08:	Transport
+		  b09:	Battleship/Juggernaught
+		  b0A:	Submarine/Giant Turtle
+		  b0B:	Flying Machine/Gobblin Zeppelin
+		  b0C:	Gryphon/Dragon
+		  b0D:	Unused       
+		  b0E:	Dwarves/Sappers
+		  b0F:	Aviary/Roost
+		  b10:	Farm
+		  b11:	Barracks
+		  b12:	Lumber Mill
+		  b13:	Stables/Mound
+		  b14:	Mage Tower/Temple
+		  b15:	Foundry
+		  b16:	Refinery
+		  b17:	Inventor/Alchemists
+		  b18:	Church/Altar of Storms
+		  b19:	Tower
+		  b1A:	Town Hall/Great Hall
+		  b1B:	Keep/Stronghold
+		  b1C:	Castle/Fortress
+		  b1D:	Blacksmith
+		  b1E:	Shipyard
+		  b1F:	Wall in multiplayer
+00:1810-00:184F	L Spells to start with flags (16 players)
+		  b00:	Holy Vision
+		  b01:	Healing
+		  b02:	Unused
+		  b03:	Exorcism
+		  b04:	Flame Shield
+		  b05:	Fireball
+		  b06:	Slow
+		  b07:	Invisibility
+		  b08:	Polymorph
+		  b09:	Blizzard
+		  b0A:	Eye of Killrog
+		  b0B:	Bloodlust
+		  b0C:	Unused
+		  b0D:	Raise Dead
+		  b0E:	Death Coil
+		  b0F:	Whirlwind
+		  b10:	Haste
+		  b11:	Unholy Armor
+		  b12:	Runes
+		  b13:	Death and Decay
+		  b14:	Unused
+		  :	Unused
+		  b1F:	Unused
+00:1850-00:188F	L Spells allowed to research flags
+		  *bits like above
+00:1890-00:18CF	L Spells currently researching
+		  *bits like above
+00:18D0-00:190F	L Upgrade allowed
+		  b00	Arrow 1
+		  b01	Arrow 2
+		  b02	Sword 1
+		  b03	Sword 2
+		  b04	Shield 1
+		  b05	Shield 2
+		  b06	Ship Cannon 1
+		  b07	Ship Cannon 2
+		  b08	Ship Armor 1
+		  b09	Ship Armor 2
+		  b0A	Unused
+		  b0B	Unused
+		  b0C	Ballista 1
+		  b0D	Ballista 2
+		  b0E	Unused
+		  b0F	Unused
+		  b10	Elven Rangers
+		  b11	Longbow
+		  b12	Scouting
+		  b13	Ranger Markmanship
+		  b14	Paladins
+		  b15	Unused
+		  :	Unused
+		  b1F	Unused
+00:1910-00:194F	L Upgrades currently being acquired
+		  *bits like above
+00:1950-00:1953	$ Header description "UGRD"
+00:1954-00:1957	L Upgrade data length ( 782 B)
+00:1958-00:1959	W Use default data
+		  0=no,1=yes
+00:195A-00:198D	B Upgrade time
+		  *Upgrade type offsets
+		  00	Sword 1
+		  01	Sword 2
+		  02	Axe 1
+		  03	Axe 2
+		  04	Arrow 1
+		  05	Arrow 2
+		  06	Spear 1
+		  07	Spear 2
+		  08	Human Shield 1
+		  09	Human Shield 2
+		  0A	Orc Shield 1
+		  0B	Orc Shield 2
+		  0C	Human Ship Cannon 1
+		  0D	Human Ship Cannon 2
+		  0E	Orc Ship Cannon 1
+		  0F	Orc Ship Cannon 2
+		  10	Human Ship Armor 1
+		  11	Human Ship Armor 2
+		  12	Orc Ship Armor 1
+		  13	Orc Ship Armor 2
+		  14	Catapult 1
+		  15	Catapult 2
+		  16	Ballista 1
+		  17	Ballista 2
+		  18	Train Rangers
+		  19	Longbow
+		  1A	Ranger Scouting
+		  1B	Ranger Marksmanship
+		  1C	Train Berserkers
+		  1D	Lighter Axes
+		  1E	Berserker Scouting
+		  1F	Berserker Regeneration
+		  20	Train Ogre Mages
+		  21	Train Paladins
+		  22	Holy Vision
+		  23	Healing
+		  24	Exorcism
+		  25	Flame Shield
+		  26	Fireball
+		  27	Slow
+		  28	Invisibility
+		  29	Polymorph
+		  2A	Blizzard
+		  2B	Eye of Killrogg
+		  2C	Bloodlust
+		  2D	Raise Dead
+		  2E	Death Coil
+		  2F	Whirlwind
+		  30	Haste
+		  31	Unholy Armor
+		  32	Runes
+		  33	Death and Decay
+00:198E-00:19F5	W Upgrade gold cost
+00:19F6-00:1A5D	W Upgrade lumber cost
+00:1A5E-00:1AC5	W Upgrade oil cost
+00:1AC6-00:1B2D	W Upgrade icon
+00:1B2E-00:1B95	W Upgrade group applies to
+00:1B96-00:1C65	L Affect flags,what upgrade gives 
+		  *For flags see ALOW section
+00:1C66-00:1C69	$ Header description "SIDE"
+00:1C6A-00:1C6D	L Race data length ( 16 B)
+00:1C6E-00:1C7D	B Player race
+		  0=Human,1=Orc,2=Neutral
+		  *3-255=Neutral
+00:1C7E-00:1C81	$ Header description "SGLD"
+00:1C82-00:1C85	L Starting gold data length ( 32 B)
+00:1C86-00:1CA5	W Players (0..15) starting gold
+00:1CA6-00:1CA9	$ Header description "SLBR"
+00:1CAA-00:1CAD	L Starting lumber data length ( 32 B)
+00:1CAE-00:1CCD	W Players (0..15) starting lumber
+00:1CCE-00:1CD1	$ Header description "SOIL"
+00:1CD2-00:1CD5	L Starting oil data length ( 32 B)
+00:1CD6-00:1CF5	W Players (0..15) starting oil
+00:1CF6-00:1CF9	$ Header description "AIPL"
+00:1CFA-00:1CFD	L Artificial intelligence data length
+00:1CFE-00:1D0D	B Players (0..15) arificial intelligence
+		  00	Land Attack
+		  01	Passive
+		  02	Orc 3
+		  03	Human 4
+		  04	Orc 4
+		  05	Human 5
+		  06	Orc 5
+		  07	Human 6
+		  08	Orc 6
+		  09	Human 7
+		  0A	Orc 7
+		  0B	Human 8
+		  0C	Orc 8
+		  0D	Human 9
+		  0E	Orc 9
+		  0F	Human 10
+		  10	Orc 10
+		  11	Human 11
+		  12	Orc 11
+		  13	Human 12
+		  14	Orc 12
+		  15	Human 13
+		  16	Orc 13
+		  17	Human 14 (Orange)
+		  18	Orc 14 (Blue)
+		  19	Sea Attack
+		  1A	Air Attack
+		  1B	Human 14 (Red)
+		  1C	Human 14 (White)
+		  1D	Human 14 (Black)
+		  1E	Orc 14 (Green)
+		  1F	Orc 14 (White)
+		  20	Expansion 1
+        	  :
+		  :
+		  52	Expansion 51
+00:1D0E-00:1D11	$ Header description "MTXM"
+00:1D12-00:1D15	L Visible tiles map data length ( 32 768 B)
+00:1D16-00:9D15	W Visible tiles map
+		  *Solid tiles
+		  001X	Light Water
+		  002X	Dark Water
+		  003X	Light Dirt
+		  004X	Dark Dirt
+		  005X	Light Grass
+		  006X	Dark Grass
+		  007X	Trees
+		  008X	Rocks
+		  009X	Human Wall
+		  00AX	Orc Wall
+		  00BX	Human Wall
+		  00CX	Orc Wall
+		  *Boundry tiles
+		  01..	Dark Water and Light Water
+		  02..	Light Water and Light Dirt
+		  03..	Dark Dirt and Light Dirt
+		  04..	Rocks and Light Dirt
+		  05..	Light Dirt and Grass
+		  06..	Dark Grass and Light Grass
+		  07..	Forest and Light Grass
+		  08..	Human Wall
+		  09..	Orc Wall
+		  *Where .. is:
+		  Filled	Clear
+		  0X		DX	Upper Left
+		  1X		CX	Upper Right
+		  2X		BX	Upper Half
+		  3X		AX	Lower Left
+		  4X		9X	Left Half
+		  7X		6X	Lower Right
+		  8X		5X	Upper Left,Lower Right
+		  *Tiles with no swamp counterpart
+		  003A,003B,004A,004B
+00:9D16-00:9D19	$ Header description "SQM "
+00:9D1A-00:9D1D	L Movement tiles map data length ( 32 768 B)
+00:9D1E-01:1D1D	W Movement tiles map
+		  0000	Bridge (Land,Navy,Air)
+		  0001	Land
+		  0002	Coast (corner?)
+		  0011	Dirt
+		  0040	Water
+		  0081	Forest and Rocks
+		  0082	Coast
+		  008D	Walls (crashes if not really a wall)
+		  01XX	Here is already Land unit
+		  02XX	Here is already Air unit
+		  04XX	Here is already Water unit
+		  08XX	Here is already Building
+		  0FXX	Space (Nothing can through)
+01:1D1E-01:1D21	$ Header description "OILM"
+01:1D22-01:1D25	L Oil map data length ( 16 384 B)
+01:1D26-01:5D25	B Oil concentration map
+		  *Alpha version remainder , set 0..7
+01:5D26-01:5D29	$ Header description "REGM"
+01:5D2A-01:5D2D	L Reaction map data length
+01:5D2E-01:DD2D	W Reaction map tiles
+		  0000	Water
+		  4000	Land
+		  FAFF	Island (No Trans, no Land)
+		  FBFF	Wall
+		  FDFF	Rocks
+		  FEFF	Forest
+01:DD2E-01:DD31	$ Header description "UNIT"
+01:DD32-01:DD35	L Units records data length
+01:DD36-01:EFF5	R08 Units (0..599) records , record like this
+		
+		  Index :	Feature :	
+
+		  00 W		X Position
+		  02 W		Y Position
+		  04 B		Unit type
+
+  		  00	Footman
+		  01	Grunt
+		  02	Peasant
+		  03	Peon
+		  04	Ballista
+		  05	Catapult
+		  06	Knight
+		  07	Ogre
+		  08	Archer
+		  09	Axethrower
+		  0A	Mage
+		  0B	Death Knight
+		  0C	Paladin
+		  0D	Ogre Mage
+		  0E	Dwarves
+		  0F	Goblin Sappers
+		  10	Attack Peasant
+		  11	Attack Peon
+		  12	Ranger
+		  13	Berserker
+		  14	Alleria
+		  15	Teron Gorefiend
+		  16	Kurdan and Sky'ree
+		  17	Dentarg
+		  18	Khadgar
+		  19	Grom Hellscream
+		  1A	Tanker H
+		  1B	Tanker O
+		  1C	Transport H
+		  1D	Transport O
+		  1E	Elven Destroyer
+		  1F	Troll Destroyer
+		  20	Battleship
+		  21	Juggernaught
+		  22	Nothing
+		  23	Deathwing
+		  24	Nothing
+		  25	Nothing
+		  26	Gnomish Submarine
+		  27	Giant Turtle
+		  28	Gnomish Flying Machine
+		  29	Goblin Zeppelin
+		  2A	Gryphon Rider
+		  2B	Dragon
+		  2C	Turalyon
+		  2D	Eye of Kilrogg
+		  2E	Danath
+		  2F	Korgath Bladefist
+		  30	Nothing
+		  31	Cho'gall
+		  32	Lothar
+		  33	Gul'dan
+		  34	Uther Lightbringer
+		  35	Zuljin
+		  36	Nothing
+		  37	Skeleton
+		  38	Daemon
+		  39	Critter
+		  3A	Farm
+		  3B	Pig Farm
+		  3C	Barracks H
+		  3D	Barracks O
+		  3E	Church
+		  3F	Altar of Storms
+		  40	Scout Tower H
+		  41	Scout Tower O
+		  42	Stables
+		  43	Ogre Mound
+		  44	Gnomish Inventor
+		  45	Goblin Alchemist
+		  46	Gryphon Aviary
+		  47	Dragon Roost
+		  48	Shipyard H
+		  49	Shipyard O
+		  4A	Town Hall
+		  4B	Great Hall
+		  4C	Elven lumber mill
+		  4D	Troll Lumber Mill
+		  4E	Foundry H
+		  4F	Foundry O
+		  50	Mage Tower
+		  51	Temple of the Damned
+		  52	Blacksmith H
+		  53	Blacksmith O
+		  54	Refinery H
+		  55	Refinery O
+		  56	Oil Platform H
+		  57	Oil Platform O
+		  58	Keep
+		  59	Stronghold
+		  5A	Castle
+		  5B	Fortress
+		  5C	Gold Mine
+		  5D	Oil Patch
+		  5E	Start Location H
+		  5F	Start Location O
+		  60	Guard Tower H
+		  61	Guard Tower O
+		  62	Cannon Tower H
+		  63	Cannon Tower O
+		  64	Circle of Power
+		  65	Dark Portal
+		  66	Runestone
+		  67	Wall H - not yet build
+		  68	Wall O - not yet build
+		  69	Dead Body
+		  6A	1x1 Destroyed Place
+		  6B	2x2 Destroyed Place
+		  6C	3x3 Destroyed Place
+		  6D	4x4 Destroyed Place
+		  6E
+		  :	Warcraft II Crashes
+		  FF
+
+		  05 B		Unit owner (0..15)
+		  06 W		If oil patch or gold mine,then
+		  		gold/oil amount divided by 2500
+		  		else 0=passive,1=active
+
+01:EFF6		< End of File
+
