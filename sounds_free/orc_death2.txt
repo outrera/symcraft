@@ -1,0 +1,3 @@
+Author: Dungeon Craft Contributors
+License: GPL2
+Origin: http://sourceforge.net/projects/uaf/
