@@ -25,11 +25,11 @@ TTypes = t // tile types
   wallR   | t base block   mc [air land] rm 0
   wallCR  | t base block   mc [air land] rm 0
 
-foldEdges X = X.i.map{[I V]=>V.digits{2}</3*I}.fold{0 ?++??}
+foldEdges X = X.i.map{[I V]=>V.digits{2}<,3*I}.fold{0 ?+,??}
 
 calcEdges X =
 | T = X.transpose
-| [X.0 T.2 X.2 T.0]^foldEdges ++ X.1.1</12
+| [X.0 T.2 X.2 T.0]^foldEdges +, X.1.1<,12
 
 type cell.entity type base rm mask tileId gfxId gfx edges mc hp armor resource gold wood
                  id xy disp neibs content sensors real_xy mm_color visited
@@ -53,7 +53,7 @@ loadTileset P =
 | for [K Type @Gs] "[P]tiles.txt"^cfg
   | Tr."[K]_[Type]" <= N
   | T = TTypes.Type
-  | Mask = T.mc{}{MCs.?}.fold{T.hp^($0 0=>MCs.dead) ?++??}
+  | Mask = T.mc{}{MCs.?}.fold{T.hp^($0 0=>MCs.dead) ?+,??}
   | for [I G] Gs.i
     | C = cell
     | C.type <= Type
