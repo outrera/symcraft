@@ -58,7 +58,7 @@ world.init_cell XY Tile =
 world.new O T delay/6.rand =
 | T = if T.is_utype then T else $main.types.T
 | Id = $free_ids.($used_ids)
-| !$used_ids + 1
+| $used_ids++
 | U = $units.Id
 | U.type <= T
 | U.mana <= T.mana
@@ -76,7 +76,7 @@ world.upd_area Rect F =
 
 world.update =
 | for U $active_units^uncons{active_next}: U.update
-| !$cycle+1
+| $cycle++
 
 PudTilesets = [summer winter wasteland swamp]
 PudTeams = t nobody(0) neutral(0) capturable(0) computer(1) person(2) rescueable(2)
@@ -119,7 +119,7 @@ world.load_pud Path =
   'AIPL' | Xs => Xs.i{}{$0[I 1]=>$players.I.passive<=1}
   'MTXM' | Xs => | M = Xs.group{2}{?u2}
                  | I = -1
-                 | for P $rect.points: $init_cell{P M.(!I+1)}
+                 | for P $rect.points: $init_cell{P M.(|I++;I)}
   'UNIT' | @r$0 [2/X.u2 2/Y.u2 I O 2/D.u2 @Xs] =>
            | XY = [X Y]
            | T = case I 57 Critters.($tileset_name) _ $main.pud.I
@@ -127,7 +127,7 @@ world.load_pud Path =
              No | bad "Invalid unit slot: [I]"
              player | $players.O.xy <= XY
                     | $players.O.view <= XY*32 - [224 224]
-             _ | [[XY O T D] @!Units]
+             _ | push [XY O T D] Units
            | r Xs
 | Cs = Path.get^(@r$[] [4/M.utf8 4/L.u4 L/D @Xs] => [[M D] @Xs^r])
 | less Cs^is{[[\TYPE _]@_]}: bad "Invalid PUD file: [Path]"
@@ -147,7 +147,7 @@ world.load_pud Path =
   | when!it U.resource: U.resources.it <= D*2500
   | Rs = P.resources
   | have Rs.food 0
-  | !Rs.food + (U.supply - U.cost.food)
+  | Rs.food += U.supply - U.cost.food
   | less U.building: U.dir <= Dirs.rand
   | U.deploy{XY}
 | $palette <= $tileset.tiles.0.gfx.cmap

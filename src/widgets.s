@@ -53,8 +53,8 @@ font.draw G X Y Tint Text =
     | I = C.code-CodePoint
     | W = Ws.I
     | G.blit{CX CY Gs.I.recolor{Palette}}
-    | W+1+!CX
-  | !CY + H
+    | CX += W+1
+  | CY += H
 
 type txt.widget{Value size/small tint/white}
      w h value_ size/Size tint/Tint font
@@ -161,7 +161,7 @@ droplist.draw G PX PY =
   | Y = 0
   | for R $rs
     | G.blit{PX PY+Y R}
-    | !Y + R.h
+    | Y += R.h
 | less $drop
   | G.blit{PX PY $rs.$picked}
   | A = skin "arrow/down-normal"
@@ -248,12 +248,12 @@ slider_.draw G PX PY =
 | when $dir >< v
   | while I < $size
     | G.blit{PX PY+I BG.rect{0 0 BG.w (min BG.h $size-I)}}
-    | !I + BG.h
+    | I += BG.h
   | G.blit{PX+1 PY+$pos.int*($size-K.h)/$size+1 K}
 | when $dir >< h
   | while I < $size
     | G.blit{PX+I PY BG.rect{0 0 (min BG.w $size-I) BG.h}}
-    | !I + BG.w
+    | I += BG.w
   | G.blit{PX+$pos.int*($size-K.w)/$size+1 PY+1 K}
 slider_.input In = case In
   [mice_move _ P] | when $state >< pressed
@@ -284,7 +284,7 @@ slider D @Rest =
 | S = slider_ D @Rest
 | if D >< v
   then layV [(arrow up (=>S.dec)) S (arrow down (=>S.inc))]
-  else layH [(arrow left (=>!S.dec)) S (arrow right (=>S.inc))]
+  else layH [(arrow left (=>S.dec)) S (arrow right (=>S.inc))]
 
 type folder_litems.$litems{Root f/(V=>)} root/Root f/F litems
 | when $root.last <> '/': $root <= "[$root]/"
@@ -339,8 +339,8 @@ icon.draw G PX PY =
 | when $fg^address <> $last_fg^address or $tint^address <> $last_tint^address:
   | $g.blit{2 2 $fg.recolor{$tint}}
 | when $pressed:
-  | !PX + 1
-  | !PY + 1
+  | PX++
+  | PY++
 | G.blit{PX PY $g}
 | when $over: G.rectangle{#A0A0A0 0 PX-2 PY-2 54 46}
 | $last_fg <= $fg

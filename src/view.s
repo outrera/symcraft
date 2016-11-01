@@ -47,8 +47,8 @@ panel.render =
           @$unit.trains^act_types{Ts train 'Train'}
           @$unit.morphs^act_types{Ts morph 'Upgrade to'}
           @$unit.researches^act_types{Ts 'research' 'Research'}]
-  | when $unit.builds.size: [@!As [do 0 Ts.build_basic]]
-  | when $unit.builds.size > 8: [@!As [do 0 Ts.build_advanced]]
+  | when $unit.builds.size: As <= [@As [do 0 Ts.build_basic]]
+  | when $unit.builds.size > 8: As <= [@As [do 0 Ts.build_advanced]]
   | for [I [What Pref Type]] As.pad{9 [0 0 0]}.i
     | Tabs = $act_icons.I
     | FG = Type and Type.icon.Side^~{0}
@@ -187,12 +187,12 @@ view.render =
   | PX = IX
   | while X < EX
     | C = Cs.X
-    | when!it C.content: [it@!Vs]
+    | when!it C.content: push it Vs
     | G.blit{PX PY C.gfx}
-    | !PX + 32
-    | !X + 1
-  | !PY + 32
-  | !Y + 1
+    | PX += 32
+    | X++
+  | PY += 32
+  | Y++
 | for U $selection: U.last_selected <= $frame
 | Vs = Vs{?^uncons{content_next}}.join.uniq
 | Vs = Vs.sort{[?layer ?disp.1] < [??layer ??disp.1]}
@@ -203,7 +203,7 @@ view.render =
   | [X Y W H] = $mice_rect
   | when [W H].abs >> 10.0: G.rectangle{#00ff00 0 X Y W H}
 | less $frame: (get_gui).add_timer{1.0/120.0 (=>$update)}
-| !$frame + 1
+| $frame++
 | get_gui{}.focus_widget <= Me //ensure we always have keyboard focus
 | G
 

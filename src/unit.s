@@ -30,7 +30,7 @@ unit.mark =
 | $world.upd_area{[@$xy @$size]
   | C => | $content_next <= C.content
          | C.content <= Me
-         | !C.mask-,$layer}
+         | C.mask <= C.mask---$layer}
 | $world.upd_area{[@($xy-[S S]) @($size+[2*S 2*S])]
   | C => | $sensor_next <= C.sensors
          | C.sensors <= Me}
@@ -68,7 +68,7 @@ unit.can_move_to P =
 VisitCycle = 0
 
 aStar Limit StartCell Found Heuristic CanMoveTo =
-| !VisitCycle+1
+| VisitCycle++
 | Q = heap //priority queue
 | Q.push{0 [StartCell 0 0]}
 | while !it Q.pop:
@@ -103,12 +103,12 @@ unit.rotate_facing =
 
 unit.update_anim =
 | A = $anim.$anim_index
-| !$anim_index + 1
+| $anim_index++
 | case A
   [Frame Wait @Move]
     | $frame <= Frame
     | $anim_wait <= Wait
-    | case Move [V]: !$disp + |$dir*V
+    | case Move [V]: $disp += $dir*V
   rotate
     | less 100.rand: $rotate_facing
     | $update
@@ -121,7 +121,7 @@ unit.update_anim =
   Else | bad "invalid anim: [A]"
 
 unit.update =
-| when $anim_wait: leave !$anim_wait - 1
+| when $anim_wait: leave $anim_wait--
 | when $anim_index < $anim.size: leave $update_anim
 | less $new_goal.0: $stop
 | $goal.init{$new_goal}

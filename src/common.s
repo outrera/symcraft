@@ -51,7 +51,7 @@ utype.type = Me
 
 type main{Data} world data/Data sounds/"[Data]sounds"
                 tilesets/0 types/(t) roles/(t) upgrades/(t) cache/(t)
-                pf_range/2**14 ts_names pud/(t) unitSetters player_colors
+                pf_range/2^^14 ts_names pud/(t) unitSetters player_colors
                 ui_colors minimap/gfx{128 128} view_w/448 view_h/448
 | $init_tiles
 | $ts_names <= $tilesets{}{?0}
@@ -125,7 +125,7 @@ main.load_type_hlp Path T =
   | U.sprite <= Gs
 | have U.sprite: DummySprite
 | MC = U.move_class{}{|X<1.is_int=>X+5; X=>X}{MCs.?}
-| U.mask <= MC.fold{U.layer<,5 ?+,??}
+| U.mask <= MC.fold{U.layer<<<5 ?+++??}
 | when U.building: U.selection <= U.size*32
 | have U.selection: U.size*32
 | U.icon <= t
@@ -150,7 +150,7 @@ main.load_type_hlp Path T =
          | C = $types.'_corpse'
          | G = C.sprite.default
          | O = U.sprite.default.size
-         | [@!U.anims.death @(C.anims.Corpse){[?0+O ?1]}]
+         | U.anims.death <= [@U.anims.death @(C.anims.Corpse){[?0+O ?1]}]
          | U.sprite <= @table: map [K V] U.sprite [K [@V @G]]
 | have U.anims.still StillAnim
 | have U.anims.death DeathAnim
@@ -158,16 +158,16 @@ main.load_type_hlp Path T =
 | have U.sounds.selected "[$sounds]click.wav"
 | less U.hp
   | if U.range
-    then | //when!it U.splash: case !U.effect [E V] [E V/(it+1)] // FIXME
-         | @fold !U.mask (A B=>A+,B) 10{MCs.?}
-    else !U.mask+,MCs.invuln
+    then | //when!it U.splash: U.effect <= case U.effect [E V] [E V/(it+1)] // FIXME
+         | U.mask <= @fold U.mask (A B=>A+++B) 10{MCs.?}
+    else U.mask <= U.mask+++MCs.invuln
 | when got!it U.pud: $pud.it <= T
 | when!it U.upgrades: map U it
   | have $upgrades.U []
-  | [@!$upgrades.U T]
+  | $upgrades.U <= [@$upgrades.U T]
 | when!it U.role:
   | have $roles.it []
-  | [@!$roles.it T]
+  | $roles.it <= [@$roles.it T]
 | U
 
 main.load_type Path =
